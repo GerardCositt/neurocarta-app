@@ -7,8 +7,10 @@
 
         <title>NeuroCarta.ai® · Acceso</title>
 
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap">
+        <!-- Fonts (igual que la landing) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap">
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
@@ -22,7 +24,9 @@
                 margin: 0;
                 background: #0F0F0F;
                 color: #ffffff;
-                font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+                font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
             .nc-bg-glow {
                 position: fixed;
