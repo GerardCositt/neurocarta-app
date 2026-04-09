@@ -3,7 +3,10 @@
         <div style="text-align: center;">
             {{ $logo }}
             <p style="margin: 14px 0 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.72);">
-                Accede a tu panel. Si aún no tienes cuenta, solicita acceso.
+                Accede a tu panel. Si aún no tienes cuenta,
+                <span style="display:inline-flex;align-items:center;border-radius:9999px;border:1px solid rgba(255,193,7,.35);background:rgba(255,193,7,.10);padding:6px 10px;font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#FFC107;">
+                    solicita acceso
+                </span>.
             </p>
         </div>
 
