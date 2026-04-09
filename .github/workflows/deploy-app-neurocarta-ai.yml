@@ -70,12 +70,16 @@ jobs:
           ssh -p "${PORT}" "${USER}@${HOST}" "bash -lc 'set -euo pipefail
             cd \"${APP_PATH}\"
 
+            # Laravel necesita estas rutas existentes antes de correr cualquier artisan
+            mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
+            chmod -R ug+rwX storage bootstrap/cache || true
+
             if command -v composer >/dev/null 2>&1; then
-              composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+              composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-scripts
             else
               php -r \"copy(\\\"https://getcomposer.org/installer\\\", \\\"composer-setup.php\\\");\"
               php composer-setup.php --quiet
-              php composer.phar install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+              php composer.phar install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-scripts
             fi
 
             mkdir -p \"$HOME/app.neurocarta.ai/httpdocs\"
@@ -103,6 +107,7 @@ jobs:
               php artisan migrate --force || true
             fi
 
+            php artisan package:discover --ansi || true
             php artisan config:cache || true
             php artisan route:cache || true
             php artisan view:cache || true
