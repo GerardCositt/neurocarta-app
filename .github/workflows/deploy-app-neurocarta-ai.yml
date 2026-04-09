@@ -85,7 +85,7 @@ jobs:
             # Publicación en Plesk: copiamos el contenido de public/ a httpdocs/public/
             # (más compatible que symlink cuando el document root apunta a /public)
             mkdir -p \"\\$HOME/app.neurocarta.ai/httpdocs/public\"
-            rsync -az --delete \"${APP_PATH}/public/\" \"\\$HOME/app.neurocarta.ai/httpdocs/public/\"
+            rsync -az --delete \"./public/\" \"\\$HOME/app.neurocarta.ai/httpdocs/public/\"
 
             if [ ! -f .env ]; then
               cp .env.example .env
