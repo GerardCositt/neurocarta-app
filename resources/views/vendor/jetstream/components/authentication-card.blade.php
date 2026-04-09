@@ -12,7 +12,7 @@
         </div>
 
         <div style="margin-top: 16px; text-align: center; font-size: 12px; color: rgba(255,255,255,.50);">
-            © {{ date('Y') }} NeuroCarta<span style="color:#FFC107;">.ai</span><span style="vertical-align: super; font-size: 10px; color: rgba(255,255,255,.65);" aria-label="marca registrada">®</span>
+            © {{ date('Y') }} <span style="color:#ffffff;">NeuroCarta</span><span style="color:#FFC107;font-weight:700;">.ai</span><span style="vertical-align: super; font-size: 10px; color: rgba(255,255,255,.65);" aria-label="marca registrada">®</span>
         </div>
     </div>
 </div>
