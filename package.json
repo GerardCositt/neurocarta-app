@@ -1,0 +1,36 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production",
+        "e2e:ensure-user": "php artisan e2e:ensure-user --email=test@test.com --password=Password123!",
+        "e2e": "E2E_BASE_URL=http://127.0.0.1:8000 npm run e2e:ensure-user && npx playwright test",
+        "e2e:ui": "E2E_BASE_URL=http://127.0.0.1:8000 npm run e2e:ensure-user && npx playwright test --ui",
+        "e2e:report": "npx playwright show-report"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.58.2",
+        "@tailwindcss/forms": "^0.2.1",
+        "@tailwindcss/typography": "^0.3.0",
+        "alpinejs": "^2.7.3",
+        "autoprefixer": "^10.0.2",
+        "axios": "^1.7.9",
+        "dotenv": "^16.6.1",
+        "laravel-mix": "^6.0.6",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "postcss-import": "^12.0.1",
+        "tailwindcss": "^2.0.1"
+    },
+    "overrides": {
+        "yaml": "1.10.3"
+    },
+    "dependencies": {
+        "flatpickr": "^4.6.13"
+    }
+}

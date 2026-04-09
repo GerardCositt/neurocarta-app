@@ -1,0 +1,45 @@
+{
+  "name": "carta-barjaen (Laravel + MariaDB en contenedor)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "containerEnv": {
+    "DB_CONNECTION": "mysql",
+    "DB_HOST": "127.0.0.1",
+    "DB_PORT": "3306",
+    "DB_DATABASE": "carta_v2",
+    "DB_USERNAME": "carta",
+    "DB_PASSWORD": "carta",
+    "COMPOSER_MEMORY_LIMIT": "-1",
+    "NODE_OPTIONS": "--max-old-space-size=3072"
+  },
+  "mounts": [
+    "source=carta-barjaen-mysql-data,target=/var/lib/mysql,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php"
+      }
+    }
+  },
+  "postStartCommand": "bash -c 'bash .devcontainer/start-db.sh || true'",
+  "postCreateCommand": "bash -c 'chmod +x .devcontainer/start-db.sh .devcontainer/setup.sh .devcontainer/first-run.sh 2>/dev/null; exit 0'",
+  "forwardPorts": [8000, 3306],
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel (php artisan serve)",
+      "onAutoForward": "notify"
+    },
+    "3306": {
+      "label": "MariaDB",
+      "onAutoForward": "silent"
+    }
+  },
+  "remoteUser": "vscode"
+}

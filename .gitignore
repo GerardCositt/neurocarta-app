@@ -1,0 +1,32 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+
+# Carpeta duplicada accidental (copia del repo dentro del repo)
+/carta-barjaen-v2
+
+# macOS / Finder
+.DS_Store
+
+# E2E / Playwright
+/playwright-report
+/test-results
+/tests-e2e/.playwright
+
+# Local dev database (si se usa sqlite)
+/storage/database.sqlite
+
+# Scripts ad hoc en la raíz (no versionar)
+/tmp_*.php

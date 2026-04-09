@@ -1,0 +1,1 @@
+@livewire('category.show')

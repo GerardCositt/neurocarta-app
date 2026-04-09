@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config('app.name') }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css">
+
+</head>
+<body class="bg-gray-800">
+
+<!-- Section 1 -->
+<section
+    class="relative py-16 bg-gradient-to-r from-gray-400 to-gray-900 min-w-screen animation-fade animation-delay align-middle">
+    <div class="container px-0 px-8 mx-auto sm:px-12 xl:px-5">
+        <p class="text-xs font-bold text-left text-yellow-500 uppercase sm:mx-6 sm:text-center sm:text-normal sm:font-bold">
+            Marisquería </p>
+        <h3 class="mt-1 text-2xl font-bold text-left text-yellow-50 sm:mx-6 sm:text-3xl md:text-4xl lg:text-5xl sm:text-center sm:mx-0">
+            {{ config('app.name') }}
+        </h3>
+        -----
+        <!-- Button trigger modal -->
+        <button type="button"
+                class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">
+            Launch demo modal dialog scrollable
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+             id="exampleModalScrollable" tabindex="-1" aria-labelledby="exampleModalScrollableLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable relative w-auto pointer-events-none">
+                <div
+                    class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+                    <div
+                        class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+                        <h5 class="text-xl font-medium leading-normal text-gray-800" id="exampleModalScrollableLabel">
+                            AVISO IMPORTANTE
+                        </h5>
+                        <button type="button"
+                                class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body relative p-4">
+                        <p>Contenido del aviso.</p>
+                    </div>
+                    <div
+                        class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                        <button type="button"
+                                class="inline-block px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
+                                data-bs-dismiss="modal">
+                            Visto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        -----
+        <br/>
+        @if($showOffer)
+            <section
+                class=" md:max-w-2xl  mx-auto flex  md:flex-nowrap items-center bg-gray-800 shadow-lg rounded-2xl py-6 md:py-4 px-6 md:pr-5 space-y-6 md:space-y-0 md:space-x-2">
+                <p class="flex-auto text-yellow-500 text-lg font-medium align-middle">
+                    Ofertas</p>
+                <a href="{{route('offer')}}"
+                   class="flex-none bg-yellow-500 hover:bg-gray-100 transition-colors duration-200 text-gray-900 font-semibold rounded-lg py-3 px-4 align-middle">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="28" height="28"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </section>
+            <br/>
+        @endif
+        @foreach($categories as $category)
+            @if ($category->products->count() >= 1)
+
+
+                <section
+                    class=" md:max-w-2xl  mx-auto flex  md:flex-nowrap items-center bg-gray-800 shadow-lg rounded-2xl py-6 md:py-4 px-6 md:pr-5 space-y-6 md:space-y-0 md:space-x-2 align-middle">
+                    <p class="flex-auto text-yellow-500 text-lg font-medium align-middle"><a
+                            href="/list/{{$category->id}}">
+                            {{$category->name}}</a></p>
+                    @if($categories->count() == 1)
+                        <a href="/"
+                           class="flex-none bg-yellow-500 align-middle hover:bg-gray-100 transition-colors duration-200 text-gray-900 font-semibold rounded-lg py-3 px-4 align-middle">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="28"
+                                 height="28" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                            </svg>
+                        </a>
+                    @else
+                        <a href="{{route('menulist',$category)}}"
+                           class="flex-none bg-yellow-500 hover:bg-gray-100 transition-colors duration-200 text-gray-900 font-semibold rounded-lg py-3 px-4 align-middle">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="28"
+                                 height="28" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    @endif
+                </section>
+                <br/>
+            @endif
+            @if($categories->count() == 1)
+                @foreach( $category->products as $product)
+                    @if ($product->active == 0)
+                        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+
+                            <div class="md:flex">
+                                <div class="md:flex-shrink-0 bg-red-500">
+                                    <img class="h-48 w-full object-cover md:w-48"
+                                         src="/storage/{{$product->photo ? $product->photo : 'img/noimg.png'}}"
+                                         alt="{{$product->name}}">
+                                </div>
+                                <div class="p-8">
+                                    @if($product->offer)
+                                        <div class="animate-bounce flex space-x-5">
+                                            <div class="uppercase tracking-wide text-sm text-red-500 font-semibold">
+                                                Oferta
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div
+                                            class="uppercase tracking-wide text-sm text-indigo-500 font-semibold"></div>
+                                    @endif
+                                    <a href="#"
+                                       class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">{{$product->name}}</a>
+                                    <p class="mt-2 text-gray-500">{{$product->description}}
+                                        @if ($product->aller)
+                                            <br/>Alérgenos: {{$product->aller}}
+                                        @endif
+                                        @if ($product->pairing_id)
+                                            <br/>Maridaje: {{$product->pairing->description}}
+                                        @endif
+                                    </p>
+                                    @if ($product->offer)
+                                        <p class="text-right line-through">Precio: {{$product->price}}</p>
+                                        <p class=" uppercase tracking-wide text-sm text-red-500 font-semibold text-right">
+                                            Oferta: {{$product->offer_price}}</p>
+                                    @else
+                                        <p class=" uppercase tracking-wide text-sm text-black font-semibold text-right">
+                                            Precio: {{$product->price}}</p>
+
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                    @endif
+                @endforeach
+            @endif
+        @endforeach
+
+    </div>
+    <div class="copyright text-center text-white">
+        &copy;
+        <script>
+            document.write(new Date().getFullYear())
+        </script>
+        , made with <span class=" align-middle	 text-3xl text-red-500 ">♥</span> by
+        <a href="https://cositt.com/" target="_blank">Cositt Technology&reg;</a> for a better web.
+    </div>
+</section>
+
+<!-- AlpineJS Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+
+</body>
+</html>

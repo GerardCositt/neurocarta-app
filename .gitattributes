@@ -1,0 +1,2 @@
+# Evita CRLF en scripts del contenedor (postCreate fallaría con \r).
+*.sh text eol=lf

@@ -1,0 +1,156 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
+/*
+ * Casillas de verificación: esquinas rectas en toda la app (admin, formularios, @tailwindcss/forms).
+ * Sobrescribe utilidades .rounded en inputs checkbox.
+ */
+input[type='checkbox'] {
+    border-radius: 0 !important;
+}
+
+/* Estilos de calendario solo en el área admin (Avisos y futuros pickers en backoffice). */
+.admin-main .flatpickr-calendar {
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+    padding: 10px 14px 12px;
+    font-family: inherit;
+    z-index: 90 !important;
+    width: 384px;
+    min-width: 384px;
+    overflow: visible;
+}
+
+.admin-main .flatpickr-calendar.static {
+    top: auto;
+    bottom: calc(100% + 10px);
+}
+
+.admin-main .flatpickr-calendar.static.arrowTop:before,
+.admin-main .flatpickr-calendar.static.arrowTop:after {
+    top: 100%;
+    bottom: auto;
+}
+
+.admin-main .flatpickr-calendar.static.arrowTop:before {
+    border-bottom-color: transparent;
+    border-top-color: rgba(226, 232, 240, 0.95);
+}
+
+.admin-main .flatpickr-calendar.static.arrowTop:after {
+    border-bottom-color: transparent;
+    border-top-color: #fff;
+}
+
+.admin-main .flatpickr-calendar .flatpickr-innerContainer,
+.admin-main .flatpickr-calendar .flatpickr-rContainer {
+    overflow: visible;
+}
+
+.admin-main .flatpickr-calendar .flatpickr-days,
+.admin-main .flatpickr-calendar .dayContainer {
+    width: 356px;
+    min-width: 356px;
+    max-width: none;
+}
+
+.admin-main .flatpickr-calendar .dayContainer {
+    padding-left: 2px;
+    padding-right: 2px;
+    box-sizing: border-box;
+}
+
+.admin-main .flatpickr-months {
+    margin-bottom: 8px;
+}
+
+.admin-main .flatpickr-current-month {
+    padding-top: 6px;
+}
+
+.admin-main .flatpickr-current-month .flatpickr-monthDropdown-months,
+.admin-main .flatpickr-current-month input.cur-year {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.admin-main .flatpickr-weekdays {
+    margin-bottom: 6px;
+}
+
+.admin-main span.flatpickr-weekday {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.admin-main .flatpickr-day {
+    border-radius: 12px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.admin-main .flatpickr-day.selected,
+.admin-main .flatpickr-day.startRange,
+.admin-main .flatpickr-day.endRange,
+.admin-main .flatpickr-day.selected:hover,
+.admin-main .flatpickr-day.startRange:hover,
+.admin-main .flatpickr-day.endRange:hover {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    color: #fff;
+}
+
+.admin-main .flatpickr-day.today {
+    border-color: #fbbf24;
+}
+
+.admin-main .flatpickr-time {
+    border-top: 1px solid #f1f5f9;
+    max-height: 46px;
+}
+
+.admin-main .flatpickr-time input,
+.admin-main .flatpickr-time .flatpickr-am-pm {
+    color: #111827;
+    font-weight: 600;
+}
+
+.admin-main .flatpickr-alt-input[readonly],
+.admin-main .flatpickr-input[readonly] {
+    background-color: #fff;
+}
+
+html[data-effective-theme="dark"] .admin-main .flatpickr-calendar {
+    background: #111827;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+html[data-effective-theme="dark"] .admin-main .flatpickr-current-month .flatpickr-monthDropdown-months,
+html[data-effective-theme="dark"] .admin-main .flatpickr-current-month input.cur-year,
+html[data-effective-theme="dark"] .admin-main .flatpickr-time input,
+html[data-effective-theme="dark"] .admin-main .flatpickr-time .flatpickr-am-pm {
+    color: #f3f4f6;
+}
+
+html[data-effective-theme="dark"] .admin-main span.flatpickr-weekday {
+    color: #9ca3af;
+}
+
+html[data-effective-theme="dark"] .admin-main .flatpickr-day {
+    color: #e5e7eb;
+}
+
+html[data-effective-theme="dark"] .admin-main .flatpickr-day.today {
+    border-color: #fbbf24;
+}
+
+html[data-effective-theme="dark"] .admin-main .flatpickr-time {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
