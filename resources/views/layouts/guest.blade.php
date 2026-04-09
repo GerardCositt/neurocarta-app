@@ -15,10 +15,26 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
+
+        <style>
+            :root { color-scheme: dark; }
+            body {
+                margin: 0;
+                background: #0F0F0F;
+                color: #ffffff;
+                font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            }
+            .nc-bg-glow {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(197,36,57,0.18), transparent);
+            }
+        </style>
     </head>
-    <body class="bg-[#0F0F0F] text-white antialiased">
-        <div class="min-h-screen font-sans" style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
-            <div class="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(197,36,57,0.18),transparent)]"></div>
+    <body>
+        <div class="min-h-screen">
+            <div class="nc-bg-glow"></div>
             {{ $slot }}
         </div>
     </body>

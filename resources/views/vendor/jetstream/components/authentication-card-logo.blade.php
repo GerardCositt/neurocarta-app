@@ -1,9 +1,13 @@
-<a href="{{ url('/') }}" class="inline-flex items-center justify-center gap-2">
-    <span class="text-lg font-black tracking-tight text-white">
-        NeuroCarta<span class="text-[#FFC107]">.ai</span><span class="align-super text-[10px] text-white/70" aria-label="marca registrada">®</span>
+<a href="{{ url('/') }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;">
+    <span style="font-size:18px;font-weight:900;letter-spacing:-0.02em;color:#fff;">
+        NeuroCarta<span style="color:#FFC107;">.ai</span><span style="vertical-align:super;font-size:10px;color:rgba(255,255,255,.70);" aria-label="marca registrada">®</span>
     </span>
-    <span class="hidden sm:inline-flex items-center rounded-full border border-[#FFC107]/35 bg-[#FFC107]/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-[#FFC107]">
+    <span style="display:none;align-items:center;border-radius:9999px;border:1px solid rgba(255,193,7,.35);background:rgba(255,193,7,.10);padding:6px 10px;font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#FFC107;" class="nc-badge-access">
         Acceso
     </span>
 </a>
+
+<style>
+  @media (min-width: 640px) { .nc-badge-access { display: inline-flex !important; } }
+</style>
 
