@@ -82,11 +82,11 @@ jobs:
               php composer.phar install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-scripts
             fi
 
-            mkdir -p \"$HOME/app.neurocarta.ai/httpdocs\"
-            if [ -e \"$HOME/app.neurocarta.ai/httpdocs/public\" ] && [ ! -L \"$HOME/app.neurocarta.ai/httpdocs/public\" ]; then
-              rm -rf \"$HOME/app.neurocarta.ai/httpdocs/public\"
+            mkdir -p \"\\$HOME/app.neurocarta.ai/httpdocs\"
+            if [ -e \"\\$HOME/app.neurocarta.ai/httpdocs/public\" ] && [ ! -L \"\\$HOME/app.neurocarta.ai/httpdocs/public\" ]; then
+              rm -rf \"\\$HOME/app.neurocarta.ai/httpdocs/public\"
             fi
-            ln -sfn \"${APP_PATH}/public\" \"$HOME/app.neurocarta.ai/httpdocs/public\"
+            ln -sfn \"${APP_PATH}/public\" \"\\$HOME/app.neurocarta.ai/httpdocs/public\"
 
             if [ ! -f .env ]; then
               cp .env.example .env
