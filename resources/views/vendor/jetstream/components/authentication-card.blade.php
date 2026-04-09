@@ -7,7 +7,7 @@
             </p>
         </div>
 
-        <div style="margin-top: 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); padding: 22px; box-shadow: 0 30px 80px -40px rgba(0,0,0,.75);">
+        <div style="margin-top: 22px; border-radius: 16px; border: 1px solid rgba(255,193,7,.18); background: rgba(255,255,255,.04); padding: 22px; box-shadow: 0 30px 80px -40px rgba(0,0,0,.75), 0 0 0 1px rgba(197,36,57,.18) inset;">
             {{ $slot }}
         </div>
 
