@@ -1,0 +1,79 @@
+# NeuroCarta — Contexto del proyecto
+
+## Proyectos relacionados
+
+| Proyecto | Ruta local | Repo GitHub |
+|---|---|---|
+| App Laravel (panel admin + carta pública) | `../neurocarta-app` | `GerardCositt/neurocarta-app` |
+| Landing page (React/Vite) | `../neurocarta-ai-landings/neurocarta-conversion` | `GerardCositt/neurocarta-ai-landings` |
+
+---
+
+## Arquitectura de despliegue
+
+### Staging (activo)
+- **App**: https://neurocarta-staging.onrender.com
+- **Plataforma**: Render (Docker, PHP 8.2 + Apache)
+- **Base de datos**: PostgreSQL en Render
+- **Subdominio detectado**: `neurocarta-staging` (guardado en tabla `restaurants`)
+- **Usuario de prueba**: test@test.com / test1234
+- **Health check**: `/up` → devuelve 200 OK
+- **Keep-alive**: UptimeRobot hace ping a `/up` cada 5 min
+
+### Producción / Plesk (app.neurocarta.ai)
+- Redirige a staging con `.htaccess` (301 → neurocarta-staging.onrender.com)
+- Ruta en servidor: `/var/www/vhosts/neurocarta.ai/app.neurocarta.ai/laravel/public/.htaccess`
+
+### Landing (neurocarta.ai)
+- **Plataforma**: Plesk (servidor COSITT, IP 217.154.188.235)
+- **Usuario SSH**: `neurocarta.ai_d8ugncl8ukj`
+- **Ruta httpdocs**: `/var/www/vhosts/neurocarta.ai/httpdocs/`
+- Los archivos del `dist` se suben por SCP directamente a `httpdocs/`
+- La landing NO usa deploy automático — hay que subir el `dist` manualmente por SCP tras cada build
+
+---
+
+## Flujo de deploy
+
+### App (staging en Render)
+1. `git push` a `main` → Render detecta el push y despliega automáticamente
+2. El `Dockerfile` hace build de assets Node + PHP
+3. `docker/entrypoint.sh` corre `php artisan migrate --force` al arrancar
+
+### Landing (neurocarta.ai)
+1. Editar `src/App.jsx` (u otros archivos fuente)
+2. `npm run build` en `neurocarta-ai-landings/neurocarta-conversion`
+3. Subir por SCP:
+   ```bash
+   scp -r "/ruta/local/neurocarta-conversion/dist/." neurocarta.ai_d8ugncl8ukj@217.154.188.235:/var/www/vhosts/neurocarta.ai/httpdocs/
+   ```
+
+---
+
+## Variables de entorno en Render (staging)
+
+| Variable | Valor |
+|---|---|
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `true` (cambiar a false cuando sea estable) |
+| `DB_CONNECTION` | `pgsql` |
+| `SESSION_DRIVER` | `cookie` |
+| `APP_URL` | `https://neurocarta-staging.onrender.com` |
+
+---
+
+## Decisiones técnicas relevantes
+
+- **PostgreSQL en lugar de SQLite**: La app original usaba SQLite. Se migró a PostgreSQL para Render. Los booleanos usan `true`/`false` en lugar de `1`/`0`.
+- **Detección de restaurante por subdominio**: El middleware `DetectRestaurant` lee el subdominio para cargar el restaurante. En staging el subdominio es `neurocarta-staging`.
+- **SESSION_DRIVER=cookie**: Necesario porque Render no persiste el filesystem entre deploys.
+- **Logout redirige a /login**: Configurado en `AppServiceProvider` via `LogoutResponse` de Fortify.
+- **Botón "Solicita acceso" eliminado** del login (`vendor/jetstream/components/authentication-card.blade.php`).
+
+---
+
+## Pendiente / próximos pasos
+
+- [ ] Cambiar `APP_DEBUG=false` en Render cuando el staging sea estable
+- [ ] Implementar flujo de registro real para nuevos restaurantes (ahora no hay signup público)
+- [ ] Evaluar si subir landing a deploy automático o mantener SCP manual
