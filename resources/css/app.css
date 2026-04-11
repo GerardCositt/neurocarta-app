@@ -1,6 +1,9 @@
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './admin-shell.css';
+@import './admin-overrides.css';
 @import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 /*
@@ -75,7 +78,7 @@ input[type='checkbox'] {
 .admin-main .flatpickr-current-month input.cur-year {
     font-size: 15px;
     font-weight: 700;
-    color: #111827;
+    color: var(--text);
 }
 
 .admin-main .flatpickr-weekdays {
@@ -92,7 +95,7 @@ input[type='checkbox'] {
 .admin-main .flatpickr-day {
     border-radius: 12px;
     font-weight: 600;
-    color: #374151;
+    color: var(--text-muted);
 }
 
 .admin-main .flatpickr-day.selected,
@@ -101,13 +104,13 @@ input[type='checkbox'] {
 .admin-main .flatpickr-day.selected:hover,
 .admin-main .flatpickr-day.startRange:hover,
 .admin-main .flatpickr-day.endRange:hover {
-    background: #f59e0b;
-    border-color: #f59e0b;
-    color: #fff;
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--nav-active-fg);
 }
 
 .admin-main .flatpickr-day.today {
-    border-color: #fbbf24;
+    border-color: var(--gold-light);
 }
 
 .admin-main .flatpickr-time {
@@ -117,7 +120,7 @@ input[type='checkbox'] {
 
 .admin-main .flatpickr-time input,
 .admin-main .flatpickr-time .flatpickr-am-pm {
-    color: #111827;
+    color: var(--text);
     font-weight: 600;
 }
 
@@ -127,7 +130,7 @@ input[type='checkbox'] {
 }
 
 html[data-effective-theme="dark"] .admin-main .flatpickr-calendar {
-    background: #111827;
+    background: var(--surface-el);
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
