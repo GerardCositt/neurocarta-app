@@ -18,7 +18,8 @@ mix.js('resources/js/app.js', 'js')
         require('postcss-import'),
         require('tailwindcss'),
         require('autoprefixer'),
-    ]);
+    ])
+    .postCss('resources/css/carta-design-tokens.css', 'public/css', [require('autoprefixer')]);
 
 if (mix.inProduction()) {
     mix.version();
