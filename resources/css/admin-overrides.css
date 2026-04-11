@@ -1,0 +1,160 @@
+/**
+ * DEBE IMPORTARSE AL FINAL de app.css (después de Tailwind utilities).
+ * Las utilidades Tailwind (.bg-white, .text-gray-600, etc.) ganaban a admin-shell.css
+ * cuando este iba antes de @tailwind utilities.
+ */
+
+/* Tipografía carta en todo el shell */
+.admin-shell,
+.admin-shell .admin-main,
+.admin-shell .admin-sidebar {
+    font-family: var(--font-body) !important;
+}
+
+/* Títulos de página (slot header) — Playfair + oro (html… vence reglas en admin-shell) */
+html[data-effective-theme="dark"] .admin-shell .admin-page-header h2,
+html[data-effective-theme="light"] .admin-shell .admin-page-header h2,
+.admin-shell .admin-page-header h2,
+.admin-shell h2.admin-page-title-carta {
+    font-family: var(--font-title) !important;
+    color: var(--color-brand, var(--gold)) !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+}
+
+/* Sidebar: sin borde derecho (alineado con carta / gris neutro) */
+.admin-shell .admin-sidebar {
+    border-right: none !important;
+    background: var(--surface) !important;
+}
+
+/* Tarjetas / fondos blancos → token superficie (vence a .bg-white) */
+.admin-shell .bg-white,
+.admin-shell .admin-main .bg-white,
+.admin-shell .admin-sidebar .bg-white {
+    background-color: var(--surface) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .bg-white,
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-white,
+html[data-effective-theme="dark"] .admin-shell .admin-sidebar .bg-white {
+    background-color: var(--surface-el) !important;
+}
+
+/* Contenedor tabla productos */
+.admin-shell .admin-main div.bg-white.rounded-2xl.shadow-sm.border {
+    border-color: var(--gold-border-soft) !important;
+    border-radius: 1.25rem !important;
+    box-shadow: 0 8px 30px color-mix(in srgb, var(--gold) 12%, transparent), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ── Marca: sidebar (#adminSidebar) — ítems inactivos en oro (vence .text-gray-* y admin-shell) ── */
+/* Nota: sin `>` en `a` — submenú Ajustes va dentro de <details>, no es hijo directo de nav */
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav a.text-gray-600,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav button.text-gray-600,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar details > summary.text-gray-600 {
+    color: var(--color-brand-light) !important;
+}
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav a.text-gray-600,
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav button.text-gray-600,
+html[data-effective-theme="light"] .admin-shell #adminSidebar details > summary.text-gray-600 {
+    color: var(--color-brand) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav a.text-gray-600:hover,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav button.text-gray-600:hover,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar details > summary.text-gray-600:hover {
+    background-color: var(--chip-bg) !important;
+    color: var(--color-brand) !important;
+}
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav a.text-gray-600:hover,
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav button.text-gray-600:hover,
+html[data-effective-theme="light"] .admin-shell #adminSidebar details > summary.text-gray-600:hover {
+    background-color: var(--chip-bg) !important;
+    color: var(--color-brand-light) !important;
+}
+
+/* Activo: texto marca + borde más visible */
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav .admin-nav-active {
+    color: var(--color-brand-light) !important;
+    border-color: var(--gold-border-hover) !important;
+}
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav .admin-nav-active {
+    color: var(--color-brand) !important;
+    border-color: var(--gold-border-hover) !important;
+}
+
+/* Tablas admin: cabeceras en marca */
+.admin-shell .admin-main table thead th.text-gray-400,
+.admin-shell .admin-main table thead th.uppercase {
+    color: var(--color-brand) !important;
+    border-bottom: 2px solid var(--gold-border-soft) !important;
+}
+
+/* Ajustes y formularios: títulos de sección */
+.admin-shell .admin-main h3.text-lg.font-semibold.text-gray-800,
+.admin-shell .admin-main h2.text-xl.font-semibold.text-gray-800 {
+    color: var(--color-brand) !important;
+}
+
+/* Etiquetas destacadas en ajustes (bloques de formulario) */
+.admin-shell .admin-main label.text-sm.font-medium.text-gray-700 {
+    color: var(--color-brand) !important;
+}
+
+/* Selector de tema (apariencia): opción activa */
+.admin-shell .admin-theme-btn[aria-pressed="true"] {
+    color: var(--color-brand) !important;
+    background-color: color-mix(in srgb, var(--color-brand) 28%, transparent) !important;
+}
+html[data-effective-theme="dark"] .admin-shell .admin-theme-btn[aria-pressed="true"] {
+    color: var(--color-brand-light) !important;
+    background-color: color-mix(in srgb, var(--color-brand) 34%, transparent) !important;
+}
+
+/* Inputs / selects barra filtros (clases border-gray-200 bg-white) */
+.admin-shell .admin-main input[type="search"],
+.admin-shell .admin-main input[type="text"],
+.admin-shell .admin-main input[type="number"],
+.admin-shell .admin-main input[type="email"],
+.admin-shell .admin-main input[type="url"],
+.admin-shell .admin-main input[type="password"],
+.admin-shell .admin-main input[type="date"],
+.admin-shell .admin-main select,
+.admin-shell .admin-main textarea {
+    border-radius: 1rem !important;
+    border-color: color-mix(in srgb, var(--gold) 40%, var(--divider)) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main input[type="search"],
+html[data-effective-theme="light"] .admin-shell .admin-main select {
+    background-color: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main input[type="search"],
+html[data-effective-theme="dark"] .admin-shell .admin-main select,
+html[data-effective-theme="dark"] .admin-shell .admin-main textarea {
+    background-color: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+/* Botón primario tipo carta (sustituye ámbar Tailwind en masa) */
+.admin-shell .btn-carta-primary {
+    background-color: var(--gold) !important;
+    color: var(--nav-active-fg) !important;
+    border-radius: 0.75rem !important;
+    font-weight: 600 !important;
+    border: 1px solid var(--gold-dim) !important;
+}
+.admin-shell .btn-carta-primary:hover {
+    background-color: var(--gold-light) !important;
+    filter: brightness(1.03);
+}
+
+/* Focus ring acento carta (inputs con focus:ring-amber-300 en Blade) */
+.admin-shell .admin-main .focus\:ring-amber-300:focus {
+    --tw-ring-opacity: 1 !important;
+    --tw-ring-color: color-mix(in srgb, var(--gold) 50%, transparent) !important;
+}
