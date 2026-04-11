@@ -22,6 +22,21 @@ use App\Http\Controllers\UserLocaleController;
 // Health check para Render
 Route::get('/up', fn () => response('OK', 200));
 
+// Diagnóstico temporal — ELIMINAR tras resolver el 500
+Route::get('/debug-info', function () {
+    try {
+        \DB::connection()->getPdo();
+        $db = 'DB OK: ' . \DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        $db = 'DB ERROR: ' . $e->getMessage();
+    }
+    return response()->json([
+        'db'      => $db,
+        'env'     => app()->environment(),
+        'app_key' => env('APP_KEY') ? 'set' : 'missing',
+    ]);
+});
+
 //Route::get('/', function () {
 //    return view('menu');
 //});
