@@ -1,5 +1,7 @@
 # NeuroCarta — Contexto del proyecto
 
+> **Instrucción para Claude Code**: Al final de cada conversación, antes de despedirte, pregunta siempre al usuario si quiere actualizar este archivo `CLAUDE.md` con los cambios o decisiones relevantes de la sesión. Si dice que sí, actualízalo y haz commit + push.
+
 ## Proyectos relacionados
 
 | Proyecto | Ruta local | Repo GitHub |
