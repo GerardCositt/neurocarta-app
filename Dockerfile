@@ -33,8 +33,8 @@ COPY --from=frontend /app/public/css ./public/css
 COPY --from=frontend /app/public/js ./public/js
 COPY --from=frontend /app/public/mix-manifest.json ./public/mix-manifest.json
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data bootstrap/cache \
+RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data bootstrap/cache \
+    && composer install --no-dev --optimize-autoloader --no-interaction \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
