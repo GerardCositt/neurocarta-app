@@ -37,6 +37,6 @@ class Category extends Model
     // categorías visibles (active=0 en la lógica actual)
     public function scopeVisible($query)
     {
-        return $query->where('active', 0)->orderBy('order');
+        return $query->where('active', false)->orderBy('order');
     }
 }

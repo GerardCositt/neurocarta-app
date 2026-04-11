@@ -340,7 +340,7 @@ class ProductController extends Controller
     public function offer()
     {
 
-        $products = Product::where('active', 0)->where('offer', 1)->get();
+        $products = Product::where('active', false)->where('offer', true)->get();
 
         return view('menulist', compact('products'));
 

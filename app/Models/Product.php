@@ -56,16 +56,16 @@ class Product extends Model
         return $this->belongsTo(Pairing::class);
     }
 
-    // productos visibles (active=0 en la lógica actual)
+    // productos visibles (active=false en la lógica actual)
     public function scopeVisible($query)
     {
-        return $query->where('active', 0);
+        return $query->where('active', false);
     }
 
     // productos con oferta activa ahora
     public function scopeWithActiveOffer($query)
     {
-        return $query->where('offer', 1)
+        return $query->where('offer', true)
             ->where(function ($q) {
                 $q->whereNull('offer_start')->orWhere('offer_start', '<=', now());
             })
@@ -85,7 +85,7 @@ class Product extends Model
         return $query->orderByDesc('featured')
             ->orderByDesc('recommended')
             ->orderByRaw(
-                '(CASE WHEN offer = 1 AND (offer_start IS NULL OR offer_start <= ?) AND (offer_end IS NULL OR offer_end >= ?) THEN 1 ELSE 0 END) DESC',
+                '(CASE WHEN offer = true AND (offer_start IS NULL OR offer_start <= ?) AND (offer_end IS NULL OR offer_end >= ?) THEN 1 ELSE 0 END) DESC',
                 [$now, $now]
             )
             ->orderBy('order');
