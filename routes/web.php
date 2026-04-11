@@ -19,6 +19,9 @@ use App\Http\Controllers\UserLocaleController;
 |
 */
 
+// Health check para Render
+Route::get('/up', fn () => response('OK', 200));
+
 //Route::get('/', function () {
 //    return view('menu');
 //});
