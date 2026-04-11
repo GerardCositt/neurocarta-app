@@ -1,5 +1,5 @@
 # Publicación con Docker (VPS, nube, demo online).
-# PHP 8.1 + Apache; front compilado en capa Node.
+# PHP 8.2 + Apache; front compilado en capa Node.
 
 FROM node:18-alpine AS frontend
 WORKDIR /app
@@ -10,7 +10,7 @@ COPY resources ./resources
 COPY public ./public
 RUN npm run production
 
-FROM php:8.1-apache-bookworm
+FROM php:8.2-apache-bookworm
 
 RUN a2enmod rewrite headers \
     && sed -ri 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
