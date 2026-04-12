@@ -21,38 +21,20 @@
     {{-- Grid de planes --}}
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;max-width:940px;">
 
-        {{-- Trial --}}
-        <a href="{{ route('register.plan', 'trial') }}" style="text-decoration:none;">
-            <div class="plan-card" style="border:1px solid rgba(255,193,7,.35);background:rgba(255,193,7,.05);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                    <span style="font-size:13px;font-weight:700;color:#FFC107;text-transform:uppercase;letter-spacing:.06em;">Trial</span>
-                    <span style="font-size:11px;background:rgba(255,193,7,.18);color:#FFC107;padding:3px 8px;border-radius:20px;font-weight:700;">7 días gratis</span>
-                </div>
-                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">0€</div>
-                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Sin tarjeta</div>
-                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
-                    <li>✓ Acceso total sin límites</li>
-                    <li>✓ IA + traducciones incluidas</li>
-                    <li>✓ Soporte incluido</li>
-                </ul>
-                <div class="plan-btn" style="margin-top:24px;background:#FFC107;color:#0F0F0F;">Empezar gratis</div>
-            </div>
-        </a>
-
-        {{-- Básico --}}
-        <a href="{{ route('register.plan', 'basico') }}" style="text-decoration:none;">
+        {{-- Premium --}}
+        <a href="{{ route('register.plan', 'premium') }}" style="text-decoration:none;">
             <div class="plan-card" style="border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);">
                 <div style="margin-bottom:14px;">
-                    <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Básico</span>
+                    <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Premium</span>
                 </div>
-                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">59€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
+                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">249€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
                 <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Facturación anual</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
-                    <li>✓ 100 productos</li>
-                    <li>✓ 20 categorías</li>
-                    <li>✗ Sin IA ni traducciones</li>
+                    <li>✓ 2.000 productos</li>
+                    <li>✓ 200 categorías</li>
+                    <li>✓ IA ilimitada</li>
                 </ul>
-                <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Básico</div>
+                <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Premium</div>
             </div>
         </a>
 
@@ -76,20 +58,38 @@
             </div>
         </a>
 
-        {{-- Premium --}}
-        <a href="{{ route('register.plan', 'premium') }}" style="text-decoration:none;">
+        {{-- Básico --}}
+        <a href="{{ route('register.plan', 'basico') }}" style="text-decoration:none;">
             <div class="plan-card" style="border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);">
                 <div style="margin-bottom:14px;">
-                    <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Premium</span>
+                    <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Básico</span>
                 </div>
-                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">249€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
+                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">59€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
                 <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Facturación anual</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
-                    <li>✓ 2.000 productos</li>
-                    <li>✓ 200 categorías</li>
-                    <li>✓ IA ilimitada</li>
+                    <li>✓ 100 productos</li>
+                    <li>✓ 20 categorías</li>
+                    <li>✗ Sin IA ni traducciones</li>
                 </ul>
-                <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Premium</div>
+                <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Básico</div>
+            </div>
+        </a>
+
+        {{-- Trial --}}
+        <a href="{{ route('register.plan', 'trial') }}" style="text-decoration:none;">
+            <div class="plan-card" style="border:1px solid rgba(255,193,7,.35);background:rgba(255,193,7,.05);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                    <span style="font-size:13px;font-weight:700;color:#FFC107;text-transform:uppercase;letter-spacing:.06em;">Trial</span>
+                    <span style="font-size:11px;background:rgba(255,193,7,.18);color:#FFC107;padding:3px 8px;border-radius:20px;font-weight:700;">7 días gratis</span>
+                </div>
+                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">0€</div>
+                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Sin tarjeta</div>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
+                    <li>✓ Acceso total sin límites</li>
+                    <li>✓ IA + traducciones incluidas</li>
+                    <li>✓ Soporte incluido</li>
+                </ul>
+                <div class="plan-btn" style="margin-top:24px;background:#FFC107;color:#0F0F0F;">Empezar gratis</div>
             </div>
         </a>
 
