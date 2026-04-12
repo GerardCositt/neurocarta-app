@@ -44,5 +44,14 @@
                 </x-jet-button>
             </div>
         </form>
+
+        <div class="mt-6 flex flex-col items-center gap-2">
+            <a href="{{ route('register') }}" class="text-sm text-white/60 hover:text-white transition-colors">
+                ¿No tienes cuenta? <span class="underline">Crear cuenta gratis</span>
+            </a>
+            <a href="https://neurocarta.ai" class="text-sm text-white/35 hover:text-white/60 transition-colors">
+                ← Volver a neurocarta.ai
+            </a>
+        </div>
     </x-jet-authentication-card>
 </x-guest-layout>
