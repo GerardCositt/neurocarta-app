@@ -85,20 +85,15 @@
 
         {{ \Filament\Facades\Filament::getThemeLink() }}
 
+        <link rel="stylesheet" href="{{ asset('css/filament-neurocarta.css') }}?v={{ filemtime(public_path('css/filament-neurocarta.css')) }}">
+
         {{ \Filament\Facades\Filament::renderHook('styles.end') }}
 
         @if (config('filament.dark_mode'))
             <script>
-                const theme = localStorage.getItem('theme')
-
-                if (
-                    theme === 'dark' ||
-                    (!theme &&
-                        window.matchMedia('(prefers-color-scheme: dark)')
-                            .matches)
-                ) {
-                    document.documentElement.classList.add('dark')
-                }
+                // NeuroCarta: siempre dark mode
+                document.documentElement.classList.add('dark')
+                localStorage.setItem('theme', 'dark')
             </script>
         @endif
 

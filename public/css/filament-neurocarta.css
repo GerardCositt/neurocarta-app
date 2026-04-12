@@ -1,0 +1,63 @@
+/* NeuroCarta.ai — Tema Filament */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap');
+
+:root {
+    --primary: #c52439;
+    --primary-dark: #a01e2f;
+}
+
+/* Fuente global */
+body, .filament-brand, .filament-sidebar, .filament-main {
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif !important;
+}
+
+/* Color primario → rojo NeuroCarta */
+.bg-primary-600, .hover\:bg-primary-500:hover, .focus\:ring-primary-500 {
+    background-color: #c52439 !important;
+}
+.text-primary-600, .text-primary-500 {
+    color: #c52439 !important;
+}
+.border-primary-600 {
+    border-color: #c52439 !important;
+}
+.ring-primary-600 {
+    --tw-ring-color: #c52439 !important;
+}
+
+/* Sidebar activo */
+.filament-sidebar-item-active {
+    background-color: rgba(197, 36, 57, 0.15) !important;
+    color: #c52439 !important;
+}
+.filament-sidebar-item-active svg {
+    color: #c52439 !important;
+}
+
+/* Botón primario */
+button[type="submit"],
+.filament-button-color-primary {
+    background-color: #c52439 !important;
+    border-color: #c52439 !important;
+}
+button[type="submit"]:hover {
+    background-color: #a01e2f !important;
+}
+
+/* Dark mode: fondo sidebar */
+.dark .filament-sidebar {
+    background-color: #111111 !important;
+    border-right: 1px solid rgba(255,255,255,0.06) !important;
+}
+.dark .filament-main {
+    background-color: #0F0F0F !important;
+}
+.dark .filament-card {
+    background-color: #1a1a1a !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Glow rojo en la cabecera */
+.dark .filament-sidebar-header {
+    border-bottom: 1px solid rgba(197, 36, 57, 0.3) !important;
+}
