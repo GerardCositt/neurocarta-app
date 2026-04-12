@@ -1,50 +1,101 @@
 /* NeuroCarta.ai — Tema Filament */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap');
 
-:root {
-    --primary: #c52439;
-    --primary-dark: #a01e2f;
-}
-
 /* Fuente global */
 body, .filament-brand, .filament-sidebar, .filament-main {
     font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif !important;
 }
 
-/* Color primario → rojo NeuroCarta */
-.bg-primary-600, .hover\:bg-primary-500:hover, .focus\:ring-primary-500 {
-    background-color: #c52439 !important;
-}
-.text-primary-600, .text-primary-500 {
-    color: #c52439 !important;
-}
-.border-primary-600 {
-    border-color: #c52439 !important;
-}
-.ring-primary-600 {
-    --tw-ring-color: #c52439 !important;
+/* ── Inputs: solo borde dorado, sin fondo rojo ── */
+input:focus, textarea:focus, select:focus,
+.filament-text-input:focus-within,
+[type="text"]:focus, [type="email"]:focus,
+[type="number"]:focus, [type="tel"]:focus,
+[type="search"]:focus {
+    border-color: #FFC107 !important;
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2) !important;
+    outline: none !important;
+    background-color: transparent !important;
 }
 
-/* Sidebar activo */
-.filament-sidebar-item-active {
-    background-color: rgba(197, 36, 57, 0.15) !important;
-    color: #c52439 !important;
-}
-.filament-sidebar-item-active svg {
-    color: #c52439 !important;
+/* Quitar fondo rojo de los inputs */
+input, textarea, select,
+.filament-text-input {
+    background-color: rgba(255,255,255,0.05) !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
 }
 
-/* Botón primario */
-button[type="submit"],
-.filament-button-color-primary {
-    background-color: #c52439 !important;
-    border-color: #c52439 !important;
+/* Buscador */
+.filament-tables-search-input {
+    background-color: rgba(255,255,255,0.05) !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+}
+.filament-tables-search-input:focus {
+    border-color: #FFC107 !important;
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2) !important;
+    background-color: rgba(255,255,255,0.05) !important;
+}
+
+/* ── Botones primarios: solo borde dorado, fondo sutil ── */
+.filament-button-color-primary,
+button.filament-button-color-primary,
+a.filament-button-color-primary {
+    background-color: transparent !important;
+    border: 1.5px solid #FFC107 !important;
+    color: #FFC107 !important;
+}
+.filament-button-color-primary:hover {
+    background-color: rgba(255, 193, 7, 0.12) !important;
+}
+
+/* Botón guardar / submit */
+button[type="submit"] {
+    background-color: transparent !important;
+    border: 1.5px solid #FFC107 !important;
+    color: #FFC107 !important;
+    box-shadow: none !important;
 }
 button[type="submit"]:hover {
-    background-color: #a01e2f !important;
+    background-color: rgba(255, 193, 7, 0.12) !important;
 }
 
-/* Dark mode: fondo sidebar */
+/* ── Botón Borrar / danger: borde rojo suave ── */
+.filament-button-color-danger,
+button.filament-button-color-danger {
+    background-color: transparent !important;
+    border: 1.5px solid #c52439 !important;
+    color: #c52439 !important;
+}
+.filament-button-color-danger:hover {
+    background-color: rgba(197, 36, 57, 0.1) !important;
+}
+
+/* ── Sidebar activo: acento dorado ── */
+.filament-sidebar-item-active {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+    color: #FFC107 !important;
+}
+.filament-sidebar-item-active svg {
+    color: #FFC107 !important;
+}
+
+/* ── Link editar en tablas ── */
+.filament-link-color-primary,
+.filament-tables-link-action {
+    color: #FFC107 !important;
+}
+
+/* ── Paginación y selects de tabla ── */
+.filament-tables-pagination select,
+select.filament-select-input {
+    background-color: rgba(255,255,255,0.05) !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+}
+
+/* ── Fondos dark ── */
 .dark .filament-sidebar {
     background-color: #111111 !important;
     border-right: 1px solid rgba(255,255,255,0.06) !important;
@@ -52,12 +103,16 @@ button[type="submit"]:hover {
 .dark .filament-main {
     background-color: #0F0F0F !important;
 }
-.dark .filament-card {
-    background-color: #1a1a1a !important;
+.dark .filament-card,
+.dark .filament-tables-container {
+    background-color: #161616 !important;
     border: 1px solid rgba(255,255,255,0.06) !important;
 }
-
-/* Glow rojo en la cabecera */
 .dark .filament-sidebar-header {
-    border-bottom: 1px solid rgba(197, 36, 57, 0.3) !important;
+    border-bottom: 1px solid rgba(255, 193, 7, 0.2) !important;
+}
+
+/* ── Ring / focus global → dorado ── */
+*:focus {
+    --tw-ring-color: rgba(255, 193, 7, 0.4) !important;
 }
