@@ -24,7 +24,7 @@ class RestaurantSwitcher extends Component
 
     public function mount(): void
     {
-        $this->restaurants = Restaurant::orderBy('name')->get();
+        $this->restaurants = $this->userRestaurants();
         $this->currentId   = session('admin_restaurant_id') ?? optional($this->restaurants->first())->id;
     }
 
@@ -104,7 +104,7 @@ class RestaurantSwitcher extends Component
             $restaurant->delete();
         });
 
-        $this->restaurants = Restaurant::orderBy('name')->get();
+        $this->restaurants = $this->userRestaurants();
     }
 
     public function createRestaurant(): void
@@ -148,7 +148,7 @@ class RestaurantSwitcher extends Component
         $this->showForm     = false;
         $this->newName      = '';
         $this->newSubdomain = '';
-        $this->restaurants  = Restaurant::orderBy('name')->get();
+        $this->restaurants  = $this->userRestaurants();
 
         $this->redirect(request()->header('Referer') ?: route('dashboard'));
     }
@@ -156,5 +156,18 @@ class RestaurantSwitcher extends Component
     public function render()
     {
         return view('livewire.admin.restaurant-switcher');
+    }
+
+    private function userRestaurants()
+    {
+        $user = auth()->user();
+        $accountIds = $user->accounts()->pluck('accounts.id');
+
+        if ($accountIds->isEmpty()) {
+            // Usuario legacy sin account (ej. test@test.com) — ve todos
+            return Restaurant::orderBy('name')->get();
+        }
+
+        return Restaurant::whereIn('account_id', $accountIds)->orderBy('name')->get();
     }
 }
