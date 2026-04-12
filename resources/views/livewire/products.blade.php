@@ -210,12 +210,12 @@
                             @endif
                         </button>
                     </th>
-                    <th class="px-4 py-3 w-6 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
-                    <th class="px-3 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
+                    <th class="px-2 py-3 w-6 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
+                    <th class="px-2 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-125" style="width:260px;min-width:200px">
                         {{ __('admin.products.th_name') }}
                     </th>
-                    <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-30" style="width:8rem;min-width:8rem">{{ __('admin.products.th_category') }}</th>
+                    <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:9rem">{{ __('admin.products.th_category') }}</th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_price') }}</th>
                     <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_offer') }}</th>
                     <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_featured_title') }}">{{ __('admin.products.th_featured_short') }}</th>
@@ -239,7 +239,7 @@
                     </td>
 
                     {{-- Handle (arrastrar) — icono hamburguesa 3 líneas --}}
-                    <td class="px-4 py-3 drag-handle admin-sticky-col admin-sticky-left-4" title="{{ __('admin.products.drag_sort') }}">
+                    <td class="px-2 py-3 drag-handle admin-sticky-col admin-sticky-left-4" title="{{ __('admin.products.drag_sort') }}">
                         <svg class="w-4 h-4 text-gray-300 group-hover:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"/>
                         </svg>
@@ -308,14 +308,14 @@
                     </td>
 
                     {{-- Categoría --}}
-                    <td class="px-2 py-3 admin-sticky-col admin-sticky-left-30" style="width:8rem;min-width:8rem">
+                    <td class="px-2 py-3" style="min-width:9rem">
                         <span class="text-sm text-gray-500 {{ $product->active ? 'line-through' : '' }}">
                             {{ $product->category->name }}
                         </span>
                     </td>
 
                     {{-- Precio --}}
-                    <td class="px-2 py-3">
+                    <td class="px-2 py-3 whitespace-nowrap">
                         <span class="text-sm font-semibold text-gray-700 {{ $product->offer ? 'line-through text-gray-400' : '' }}">
                             {{ $product->price }}
                         </span>
