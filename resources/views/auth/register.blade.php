@@ -58,9 +58,9 @@
             {{-- Aviso legal --}}
             <p style="margin:18px 0 0;font-size:12px;color:rgba(255,255,255,.40);line-height:1.5;">
                 Al registrarte aceptas los
-                <a href="{{ route('terms.show') }}" target="_blank" style="color:rgba(255,255,255,.65);text-decoration:underline;">Términos de servicio</a>
+                <a href="https://neurocarta.ai/terminos" target="_blank" style="color:rgba(255,255,255,.65);text-decoration:underline;">Términos de servicio</a>
                 y la
-                <a href="{{ route('policy.show') }}" target="_blank" style="color:rgba(255,255,255,.65);text-decoration:underline;">Política de privacidad</a>.
+                <a href="https://neurocarta.ai/privacidad" target="_blank" style="color:rgba(255,255,255,.65);text-decoration:underline;">Política de privacidad</a>.
             </p>
 
             {{-- Cloudflare Turnstile --}}
