@@ -247,11 +247,11 @@ return [
             'alignment' => 'right',
         ],
         'sidebar' => [
-            'is_collapsible_on_desktop' => false,
+            'is_collapsible_on_desktop' => true,
             'groups' => [
                 'are_collapsible' => true,
             ],
-            'width' => null,
+            'width' => '16rem',
             'collapsed_width' => null,
         ],
     ],
