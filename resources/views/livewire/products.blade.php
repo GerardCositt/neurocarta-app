@@ -212,14 +212,14 @@
                     </th>
                     <th class="px-4 py-3 w-6 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
                     <th class="px-3 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
-                    <th class="px-3 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-125" style="width:500px;min-width:500px">
+                    <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-125" style="width:260px;min-width:200px">
                         {{ __('admin.products.th_name') }}
                     </th>
-                    <th class="px-3 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-45" style="width:9rem;min-width:9rem">{{ __('admin.products.th_category') }}</th>
-                    <th class="px-3 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_price') }}</th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_offer') }}</th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_featured_title') }}">{{ __('admin.products.th_featured_short') }}</th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_rec_title') }}">{{ __('admin.products.th_rec_short') }}</th>
+                    <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-30" style="width:8rem;min-width:8rem">{{ __('admin.products.th_category') }}</th>
+                    <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_price') }}</th>
+                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_offer') }}</th>
+                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_featured_title') }}">{{ __('admin.products.th_featured_short') }}</th>
+                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_rec_title') }}">{{ __('admin.products.th_rec_short') }}</th>
                     <th class="px-3 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_hide') }}</th>
                 </tr>
             </thead>
@@ -256,7 +256,7 @@
                     </td>
 
                     {{-- Nombre + alérgenos en línea debajo (compacto) --}}
-                    <td class="px-3 py-3 align-top admin-sticky-col admin-sticky-left-125" style="width:500px;min-width:500px;max-width:500px">
+                    <td class="px-2 py-3 align-top admin-sticky-col admin-sticky-left-125" style="width:260px;min-width:200px;max-width:260px">
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                                 <button type="button"
@@ -308,14 +308,14 @@
                     </td>
 
                     {{-- Categoría --}}
-                    <td class="px-3 py-3 admin-sticky-col admin-sticky-left-45" style="width:9rem;min-width:9rem">
+                    <td class="px-2 py-3 admin-sticky-col admin-sticky-left-30" style="width:8rem;min-width:8rem">
                         <span class="text-sm text-gray-500 {{ $product->active ? 'line-through' : '' }}">
                             {{ $product->category->name }}
                         </span>
                     </td>
 
                     {{-- Precio --}}
-                    <td class="px-3 py-3">
+                    <td class="px-2 py-3">
                         <span class="text-sm font-semibold text-gray-700 {{ $product->offer ? 'line-through text-gray-400' : '' }}">
                             {{ $product->price }}
                         </span>
@@ -327,7 +327,7 @@
                     </td>
 
                     {{-- Oferta: activar abre la ficha; desactivar quita la oferta en el listado --}}
-                    <td class="px-3 py-3 text-center">
+                    <td class="px-2 py-3 text-center">
                         <label class="inline-flex items-center cursor-pointer" title="{{ $product->offer ? __('admin.products.offer_toggle_title_on') : __('admin.products.offer_toggle_title_off') }}">
                             {{-- wire:key evita que la casilla quede “pegada” en marcada: con wire:click.prevent morphdom no siempre actualiza el estado checked del input. --}}
                             <input type="checkbox"
@@ -339,7 +339,7 @@
                     </td>
 
                     {{-- Destacado --}}
-                    <td class="px-3 py-3 text-center">
+                    <td class="px-2 py-3 text-center">
                         <label class="inline-flex items-center cursor-pointer" title="{{ __('admin.products.featured_toggle_title') }}">
                             <input type="checkbox"
                                    wire:key="featured-toggle-{{ $product->id }}-{{ $product->featured ? '1' : '0' }}"
@@ -350,7 +350,7 @@
                     </td>
 
                     {{-- Recomendado --}}
-                    <td class="px-3 py-3 text-center">
+                    <td class="px-2 py-3 text-center">
                         <label class="inline-flex items-center cursor-pointer" title="{{ __('admin.products.recommended_toggle_title') }}">
                             <input type="checkbox"
                                    wire:key="recommended-toggle-{{ $product->id }}-{{ $product->recommended ? '1' : '0' }}"
@@ -361,7 +361,7 @@
                     </td>
 
                     {{-- Toggle ocultar --}}
-                    <td class="px-3 py-3 text-center">
+                    <td class="px-2 py-3 text-center">
                         <label class="inline-flex items-center cursor-pointer" title="{{ $product->active ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
                             <input type="checkbox"
                                    wire:key="active-toggle-{{ $product->id }}-{{ $product->active ? '1' : '0' }}"

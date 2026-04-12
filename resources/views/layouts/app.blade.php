@@ -208,7 +208,7 @@
             .admin-sticky-left-4 { left: 4rem; }      /* after checkbox col */
             .admin-sticky-left-7 { left: 7rem; }      /* after checkbox + drag */
             .admin-sticky-left-125 { left: 12.5rem; } /* after checkbox + drag + image */
-            .admin-sticky-left-45 { left: 45.25rem; } /* after checkbox + drag + image + nombre (500px + px-3×2) */
+            .admin-sticky-left-30 { left: 29.75rem; } /* after checkbox + drag + image + nombre (260px + px-2×2) */
             html[data-effective-theme="dark"] .admin-sidebar .admin-brand-title { color: #f3f4f6 !important; }
             html[data-effective-theme="dark"] .admin-sidebar .admin-brand-sub { color: #9ca3af !important; }
             html[data-effective-theme="dark"] .admin-sidebar nav a {
