@@ -32,6 +32,14 @@
                 </label>
             </div>
 
+            {{-- Cloudflare Turnstile --}}
+            <div class="mt-4">
+                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark"></div>
+                @error('cf-turnstile-response')
+                    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-white/70 hover:text-white" href="{{ route('password.request') }}">

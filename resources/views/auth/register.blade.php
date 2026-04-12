@@ -63,6 +63,14 @@
                 <a href="{{ route('policy.show') }}" target="_blank" style="color:rgba(255,255,255,.65);text-decoration:underline;">Política de privacidad</a>.
             </p>
 
+            {{-- Cloudflare Turnstile --}}
+            <div style="margin-top:18px;">
+                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark"></div>
+                @error('cf-turnstile-response')
+                    <p style="margin:4px 0 0;font-size:12px;color:#f87171;">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div style="margin-top:20px;">
                 <button type="submit" style="width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;font-size:15px;font-weight:800;letter-spacing:-0.01em;
                     {{ $plan === 'trial' ? 'background:#FFC107;color:#0F0F0F;' : 'background:#c52439;color:#fff;' }}">

@@ -8,6 +8,7 @@ use App\Models\Restaurant;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,19 @@ class CreateNewUser implements CreatesNewUsers
 
     public function create(array $input): User
     {
+        // Verificar Cloudflare Turnstile
+        $turnstileResponse = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+            'secret'   => config('services.turnstile.secret_key'),
+            'response' => $input['cf-turnstile-response'] ?? '',
+        ]);
+
+        if (! $turnstileResponse->successful() || ! $turnstileResponse->json('success')) {
+            Validator::make([], [])->errors(); // para lanzar con el formato correcto
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'cf-turnstile-response' => ['Verifica que no eres un robot.'],
+            ]);
+        }
+
         $plan = $input['plan'] ?? 'trial';
         $validPlans = ['trial', 'basico', 'pro', 'premium'];
         if (! in_array($plan, $validPlans, true)) {

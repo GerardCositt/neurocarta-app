@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'orders.enabled'     => \App\Http\Middleware\EnsureOrdersEnabled::class,
         'detect.restaurant'  => \App\Http\Middleware\DetectRestaurant::class,
         'admin.restaurant'   => \App\Http\Middleware\AdminRestaurant::class,
+        'turnstile'          => \App\Http\Middleware\VerifyTurnstile::class,
     ];
 }

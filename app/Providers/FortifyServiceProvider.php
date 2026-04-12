@@ -2,11 +2,16 @@
 
 namespace App\Providers;
 
+use App\Actions\Fortify\CheckTurnstile;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\RegisterResponse;
+use Laravel\Fortify\Actions\AttemptToAuthenticate;
+use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -25,6 +30,17 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot()
     {
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        // Añadir Turnstile al pipeline de login
+        Fortify::authenticateThrough(function () {
+            return [
+                CheckTurnstile::class,
+                EnsureLoginIsNotThrottled::class,
+                RedirectIfTwoFactorAuthenticatable::class,
+                AttemptToAuthenticate::class,
+                PrepareAuthenticatedSession::class,
+            ];
+        });
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
