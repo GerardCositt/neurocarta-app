@@ -26,9 +26,15 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'locale',
     ];
+
+    public function accounts()
+    {
+        return $this->belongsToMany(Account::class, 'account_user')->withTimestamps();
+    }
 
     /**
      * The attributes that should be hidden for arrays.

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Pairings;
 use App\Http\Livewire\Products;
+use App\Http\Controllers\Auth\SetPasswordController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\ReorderController;
 use App\Http\Controllers\Api\StoreOrderController;
@@ -21,6 +22,37 @@ use App\Http\Controllers\UserLocaleController;
 
 // Health check para Render
 Route::get('/up', fn () => response('OK', 200));
+
+// ─── Registro: selector de plan + formulario ───────────────────────────────
+// Rutas estáticas ANTES del parámetro dinámico {plan}
+
+// GET /register/check-email → pantalla "revisa tu correo"
+Route::get('/register/check-email', function () {
+    return view('auth.check-email');
+})->middleware('guest')->name('register.check-email');
+
+// GET /register/{plan} → formulario de registro con plan preseleccionado
+Route::get('/register/{plan}', function (string $plan) {
+    $validPlans = ['trial', 'basico', 'pro', 'premium'];
+    if (! in_array($plan, $validPlans, true)) {
+        return redirect()->route('register');
+    }
+    return view('auth.register', ['plan' => $plan]);
+})->middleware('guest')->name('register.plan');
+
+// Stub Stripe para planes de pago (próximamente)
+Route::get('/checkout/pending', function () {
+    return view('auth.checkout-pending');
+})->middleware('guest')->name('checkout.pending');
+
+// ─── Crear contraseña (enlace del email) ───────────────────────────────────
+Route::get('/set-password', [SetPasswordController::class, 'show'])
+    ->middleware('guest')
+    ->name('set-password.show');
+
+Route::post('/set-password', [SetPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('set-password.store');
 
 //Route::get('/', function () {
 //    return view('menu');
