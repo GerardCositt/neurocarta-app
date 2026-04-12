@@ -37,7 +37,7 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessFilament(): bool
     {
         return (bool) $this->is_admin
-            || $this->email === env('FILAMENT_ADMIN_EMAIL');
+            || $this->email === config('services.filament.admin_email');
     }
 
     public function accounts()

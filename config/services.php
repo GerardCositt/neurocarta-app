@@ -39,4 +39,8 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY', ''),
     ],
 
+    'filament' => [
+        'admin_email' => env('FILAMENT_ADMIN_EMAIL', ''),
+    ],
+
 ];
