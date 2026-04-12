@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +11,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -29,7 +30,14 @@ class User extends Authenticatable
         'phone',
         'password',
         'locale',
+        'is_admin',
     ];
+
+    // Solo usuarios con is_admin=true acceden al panel Filament
+    public function canAccessFilament(): bool
+    {
+        return (bool) $this->is_admin;
+    }
 
     public function accounts()
     {
