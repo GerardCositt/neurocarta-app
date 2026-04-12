@@ -103,13 +103,17 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         // 6. Enviar email con enlace firmado para crear contraseña (válido 3 días)
-        $setPasswordUrl = URL::temporarySignedRoute(
-            'set-password.show',
-            now()->addDays(3),
-            ['user' => $user->id]
-        );
+        try {
+            $setPasswordUrl = URL::temporarySignedRoute(
+                'set-password.show',
+                now()->addDays(3),
+                ['user' => $user->id]
+            );
 
-        Mail::to($user->email)->send(new WelcomeSetPassword($user, $setPasswordUrl));
+            Mail::to($user->email)->send(new WelcomeSetPassword($user, $setPasswordUrl));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('WelcomeSetPassword mail failed: ' . $e->getMessage());
+        }
 
         return $user;
     }
