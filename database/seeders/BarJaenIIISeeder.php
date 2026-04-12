@@ -21,12 +21,14 @@ class BarJaenIIISeeder extends Seeder
 {
     public function run(): void
     {
-        $restaurant = Restaurant::where('name', 'Bar Jaen III')->first();
+        $restaurant = Restaurant::orderBy('id')->first();
 
         if (! $restaurant) {
-            $this->command->error('No se encontró el restaurante "Bar Jaen III". Ejecuta antes: php artisan db:seed --class=RestaurantSeeder');
+            $this->command->error('No hay ningún restaurante en la BD. Ejecuta antes: php artisan db:seed --class=RestaurantSeeder');
             return;
         }
+
+        $this->command->info('Insertando carta para: "' . $restaurant->name . '" (subdomain: ' . $restaurant->subdomain . ', id: ' . $restaurant->id . ')');
 
         if (Category::where('restaurant_id', $restaurant->id)->exists()) {
             $this->command->info('Ya existen categorías para "Bar Jaen III". Omitiendo seeder.');
