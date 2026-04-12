@@ -74,8 +74,53 @@
 
 ---
 
+## Planes y precios (cerrado 2026-04-12)
+
+| Plan | Precio | Límites |
+|---|---|---|
+| **Gratis (trial)** | 0€ / 7 días | Sin límites — acceso total |
+| **Básico** | €59/mes (fact. anual) | 100 productos, 20 cats, sin IA ni traducciones |
+| **Pro** | €129/mes (fact. anual) | 500 productos, 60 cats, IA + traducciones + CSV |
+| **Premium** | €249/mes (fact. anual) | 2.000 productos, 200 cats, IA ilimitada |
+
+## Flujo de registro y trial (cerrado 2026-04-12)
+
+### Entrada
+- Desde la landing (botón CTA) o desde el header (Crear cuenta)
+- Primero elige plan → luego registro
+
+### Registro (solo 3 campos)
+- Email
+- Nombre del restaurante
+- Teléfono
+
+### Trial (7 días)
+- Empieza al registrarse
+- Sin tarjeta — acceso total sin límites
+- Email aviso día 5 y día 7
+- Puede cambiar de plan durante el trial
+
+### Día 8 sin pago
+- Panel → pantalla bloqueada con selector de plan + Stripe
+- Carta pública → pantalla bloqueada
+- QR → redirige a la misma pantalla bloqueada (no a la carta)
+- Elige plan → pone tarjeta → todo se reactiva
+
+### Creación del restaurante
+- Automática al registrarse (no espera a Stripe)
+- Un usuario = un restaurante (de momento)
+
+### Anti-abuso de trial
+- Campo teléfono es la clave para detectar trials duplicados
+- Verificación por WhatsApp/SMS → **pendiente para más adelante**
+- IP de registro como capa secundaria (registrar, no bloquear)
+
 ## Pendiente / próximos pasos
 
 - [ ] Cambiar `APP_DEBUG=false` en Render cuando el staging sea estable
-- [ ] Implementar flujo de registro real para nuevos restaurantes (ahora no hay signup público)
+- [ ] Implementar flujo de registro con trial (ver sección arriba)
+- [ ] Crear planes en Stripe y conectar webhooks
+- [ ] Pantalla de bloqueo día 8 (panel + carta pública + QR)
+- [ ] Emails de aviso día 5 y día 7
+- [ ] Validación de teléfono por WhatsApp/SMS (anti-abuso trial)
 - [ ] Evaluar si subir landing a deploy automático o mantener SCP manual
