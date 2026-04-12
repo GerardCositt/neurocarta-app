@@ -189,7 +189,7 @@
             <table class="w-full min-w-[960px]">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="pl-3 pr-1 py-3 w-8 text-center align-middle admin-sticky-col admin-sticky-hdr admin-sticky-left-0" title="{{ __('admin.products.th_select_all_title') }}">
+                    <th class="pl-2 pr-0 py-3 w-8 text-center align-middle admin-sticky-col admin-sticky-hdr admin-sticky-left-0" title="{{ __('admin.products.th_select_all_title') }}">
                         <span class="sr-only">{{ __('admin.products.th_select_all') }}</span>
                         <button type="button"
                                 wire:click="toggleSelectCurrentPage"
@@ -210,9 +210,9 @@
                             @endif
                         </button>
                     </th>
-                    <th class="px-2 py-3 w-6 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
-                    <th class="px-2 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
-                    <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-125" style="width:260px;min-width:200px">
+                    <th class="px-1 py-3 w-5 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
+                    <th class="pl-1 pr-2 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
+                    <th class="pl-1 pr-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:200px">
                         {{ __('admin.products.th_name') }}
                     </th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:9rem">{{ __('admin.products.th_category') }}</th>
@@ -228,7 +228,7 @@
                 <tr wire:key="product-{{ $product->id }}" data-id="{{ $product->id }}"
                     class="border-b border-gray-50 hover:bg-gray-50 transition-colors group {{ $allowProductDragSort ? 'cursor-grab' : '' }}">
 
-                    <td class="pl-3 pr-1 py-3 text-center align-middle bulk-select-cell admin-sticky-col admin-sticky-left-0" wire:key="cb-{{ $product->id }}"
+                    <td class="pl-2 pr-0 py-3 text-center align-middle bulk-select-cell admin-sticky-col admin-sticky-left-0" wire:key="cb-{{ $product->id }}"
                         title="{{ __('admin.products.row_select_title') }}"
                         onclick="event.stopPropagation()">
                         <input type="checkbox"
@@ -239,14 +239,14 @@
                     </td>
 
                     {{-- Handle (arrastrar) — icono hamburguesa 3 líneas --}}
-                    <td class="px-2 py-3 drag-handle admin-sticky-col admin-sticky-left-4" title="{{ __('admin.products.drag_sort') }}">
+                    <td class="px-1 py-3 drag-handle admin-sticky-col admin-sticky-left-4" title="{{ __('admin.products.drag_sort') }}">
                         <svg class="w-4 h-4 text-gray-300 group-hover:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"/>
                         </svg>
                     </td>
 
                     {{-- Imagen --}}
-                    <td class="px-3 py-3 admin-sticky-col admin-sticky-left-7">
+                    <td class="pl-1 pr-2 py-2 admin-sticky-col admin-sticky-left-7">
                         <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                             <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
                                  alt="{{ $product->name }}"
@@ -256,7 +256,7 @@
                     </td>
 
                     {{-- Nombre + alérgenos en línea debajo (compacto) --}}
-                    <td class="px-2 py-3 align-top admin-sticky-col admin-sticky-left-125" style="width:260px;min-width:200px;max-width:260px">
+                    <td class="pl-1 pr-2 py-3 align-top" style="min-width:200px">
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                                 <button type="button"
