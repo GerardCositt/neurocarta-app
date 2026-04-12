@@ -21,17 +21,26 @@ class CreateNewUser implements CreatesNewUsers
 
     public function create(array $input): User
     {
-        // Verificar Cloudflare Turnstile
-        $turnstileResponse = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret'   => config('services.turnstile.secret_key'),
-            'response' => $input['cf-turnstile-response'] ?? '',
-        ]);
+        // Verificar Cloudflare Turnstile (solo si la secret key está configurada)
+        $secretKey = config('services.turnstile.secret_key');
+        if ($secretKey) {
+            try {
+                $turnstileResponse = Http::timeout(5)->asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                    'secret'   => $secretKey,
+                    'response' => $input['cf-turnstile-response'] ?? '',
+                ]);
 
-        if (! $turnstileResponse->successful() || ! $turnstileResponse->json('success')) {
-            Validator::make([], [])->errors(); // para lanzar con el formato correcto
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'cf-turnstile-response' => ['Verifica que no eres un robot.'],
-            ]);
+                if (! $turnstileResponse->successful() || ! $turnstileResponse->json('success')) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'cf-turnstile-response' => ['Verifica que no eres un robot.'],
+                    ]);
+                }
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                throw $e;
+            } catch (\Throwable $e) {
+                // Si la llamada a Cloudflare falla por red, dejamos pasar (log en producción)
+                \Illuminate\Support\Facades\Log::warning('Turnstile check failed: ' . $e->getMessage());
+            }
         }
 
         $plan = $input['plan'] ?? 'trial';
