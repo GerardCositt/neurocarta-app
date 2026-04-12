@@ -33,10 +33,11 @@ class User extends Authenticatable implements FilamentUser
         'is_admin',
     ];
 
-    // Solo usuarios con is_admin=true acceden al panel Filament
+    // Accede al panel Filament si es admin por BD o por variable de entorno
     public function canAccessFilament(): bool
     {
-        return (bool) $this->is_admin;
+        return (bool) $this->is_admin
+            || $this->email === env('FILAMENT_ADMIN_EMAIL');
     }
 
     public function accounts()
