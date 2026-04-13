@@ -16,15 +16,17 @@
 ### Producción — Jotelulu (activo desde 2026-04-13)
 - **App**: https://app.neurocarta.ai
 - **Plataforma**: Jotelulu VPS (Ubuntu 24.04, 2 vCPU, 2 GB RAM, 25 GB NVMe)
-- **IP pública**: 149.71.98.240
-- **Servidor**: SRV-COSI03-029 (nombre interno Jotelulu)
+- **IP pública**: 149.71.98.35
+- **Servidor**: SRV-COSI03-034 (nombre interno Jotelulu), nombre en panel: `server-neurocarta`
 - **Ruta app**: `/opt/neurocarta/`
 - **Docker**: 3 contenedores — `neurocarta-app-1` (PHP/Laravel), `neurocarta-db-1` (PostgreSQL 16), `neurocarta-nginx-1` (Nginx + SSL)
 - **SSL**: Let's Encrypt (certbot), renovación automática. Certs en `/etc/letsencrypt/live/app.neurocarta.ai/`
 - **Base de datos**: PostgreSQL 16 en contenedor, datos en volumen `neurocarta_db_data`
-- **Usuario de prueba**: test@test.com / test1234
-- **Deploy**: script `/opt/neurocarta/deploy.sh` → git pull + rebuild + migrate
-- **Clave SSH**: `~/.ssh/neurocarta_jotelulu` (Mac mini) → clave `neurocarta-mac` en Jotelulu
+- **Usuario de prueba**: test@test.com / test1234 (id=3, name=Admin)
+- **Deploy**: script `/opt/neurocarta/deploy.sh` → git pull + rebuild + migrate + cache:clear
+- **Deploy automático**: GitHub Action en `.github/workflows/deploy.yml` → push a main dispara deploy
+- **Clave SSH**: `~/.ssh/neurocarta_jotelulu2` (Mac mini) → clave `neurocarta-mac2` en Jotelulu
+- **Panel admin**: https://app.neurocarta.ai/admin (Filament), acceso con FILAMENT_ADMIN_EMAIL=test@test.com
 
 ### Staging — Render (legacy, mantener por ahora)
 - **App**: https://neurocarta-staging.onrender.com
@@ -86,6 +88,7 @@ Variables clave:
 | `MAIL_FROM_ADDRESS` | `noreply@neurocarta.ai` |
 | `TURNSTILE_SECRET_KEY` | vacía (desactivado en login) |
 | `TURNSTILE_SITE_KEY` | vacía (desactivado en login) |
+| `FILAMENT_ADMIN_EMAIL` | test@test.com |
 
 ---
 
