@@ -31,10 +31,8 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::createUsersUsing(CreateNewUser::class);
 
-        // Añadir Turnstile al pipeline de login
         Fortify::authenticateThrough(function () {
             return [
-                CheckTurnstile::class,
                 EnsureLoginIsNotThrottled::class,
                 RedirectIfTwoFactorAuthenticatable::class,
                 AttemptToAuthenticate::class,
