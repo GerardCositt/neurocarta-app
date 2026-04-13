@@ -14,8 +14,8 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H 149.71.98.240 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 149.71.98.35 >> ~/.ssh/known_hosts
 
       - name: Deploy via SSH
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@149.71.98.240 '/opt/neurocarta/deploy.sh'
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@149.71.98.35 '/opt/neurocarta/deploy.sh'
