@@ -20,6 +20,9 @@ class Setting extends Model
         $query = self::query()->where('key', $key);
         if ($restaurantId !== null) {
             $query->where('restaurant_id', $restaurantId);
+        } else {
+            // Ajustes globales: una fila por clave con restaurant_id NULL (no «el primero que coincida la key»)
+            $query->whereNull('restaurant_id');
         }
         $row = $query->first();
         if (! $row) {
@@ -41,12 +44,11 @@ class Setting extends Model
 
     public static function put(string $key, $value, ?int $restaurantId = null): void
     {
-        $conditions = ['key' => $key];
-        if ($restaurantId !== null) {
-            $conditions['restaurant_id'] = $restaurantId;
-        }
         self::query()->updateOrCreate(
-            $conditions,
+            [
+                'key' => $key,
+                'restaurant_id' => $restaurantId,
+            ],
             [
                 'value' => is_bool($value) ? ($value ? '1' : '0') : (string) $value,
                 'restaurant_id' => $restaurantId,

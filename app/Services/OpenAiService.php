@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -85,7 +86,7 @@ class OpenAiService
 
         if (!$response->successful()) {
             Log::error('OpenAI error', ['body' => $response->body()]);
-            throw new \RuntimeException('Error en la API de OpenAI: ' . $response->json('error.message', $response->status()));
+            throw new \RuntimeException('Error en la API de OpenAI: ' . $this->httpErrorMessage($response));
         }
 
         $content = $response->json('choices.0.message.content', '{}');
@@ -219,21 +220,38 @@ class OpenAiService
     {
         if (! $response->successful()) {
             Log::error('OpenAI image error', ['body' => $response->body()]);
-            throw new \RuntimeException('Error en la API de OpenAI: ' . $response->json('error.message', $response->status()));
+            throw new \RuntimeException('Error en la API de OpenAI (imagen): ' . $this->httpErrorMessage($response));
         }
 
         $base64 = (string) $response->json('data.0.b64_json', '');
-        if ($base64 === '') {
-            Log::error('OpenAI image response invalid', ['body' => $response->body()]);
-            throw new \RuntimeException('La IA no devolvió ninguna imagen válida.');
+        if ($base64 !== '') {
+            $binary = base64_decode($base64, true);
+            if ($binary !== false && $binary !== '') {
+                return $binary;
+            }
         }
 
-        $binary = base64_decode($base64, true);
-        if ($binary === false || $binary === '') {
-            throw new \RuntimeException('No se pudo decodificar la imagen generada por la IA.');
+        // Algunos modelos devuelven solo URL (p. ej. dall-e-3 con response_format=url por defecto).
+        $url = (string) $response->json('data.0.url', '');
+        if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL)) {
+            $binary = Http::timeout(120)->get($url)->body();
+            if ($binary !== '') {
+                return $binary;
+            }
         }
 
-        return $binary;
+        Log::error('OpenAI image response invalid', ['body' => $response->body()]);
+        throw new \RuntimeException('La IA no devolvió ninguna imagen válida (ni base64 ni URL descargable).');
+    }
+
+    private function httpErrorMessage(Response $response): string
+    {
+        $msg = $response->json('error.message');
+        if (is_string($msg) && $msg !== '') {
+            return $msg . ' (HTTP ' . $response->status() . ')';
+        }
+
+        return 'HTTP ' . $response->status() . ' — ' . substr($response->body(), 0, 500);
     }
 
     private function completeText(string $prompt): string
@@ -257,7 +275,7 @@ class OpenAiService
 
         if (! $response->successful()) {
             Log::error('OpenAI text error', ['body' => $response->body()]);
-            throw new \RuntimeException('Error en la API de OpenAI: ' . $response->json('error.message', $response->status()));
+            throw new \RuntimeException('Error en la API de OpenAI: ' . $this->httpErrorMessage($response));
         }
 
         $content = trim((string) $response->json('choices.0.message.content', ''));

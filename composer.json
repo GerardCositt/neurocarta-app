@@ -63,6 +63,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "setup": "@php artisan setup",
+        "reset-db": "@php artisan reset-db"
     }
 }

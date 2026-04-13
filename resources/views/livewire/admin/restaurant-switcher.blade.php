@@ -3,7 +3,7 @@
 {{-- ── Modo HEADER: píldora compacta en la barra superior ───────────────── --}}
 <details class="relative" id="restaurantHeaderPicker" style="position:relative;z-index:80">
     <summary class="list-none cursor-pointer select-none">
-        <div class="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm hover:bg-gray-50 transition-colors">
+        <div class="admin-cta-trigger flex items-center gap-2 px-3 py-2 rounded-xl shadow-sm transition-colors">
             <span class="w-2 h-2 rounded-full bg-gray-600 flex-shrink-0"></span>
             <div class="hidden sm:block text-left min-w-0 max-w-[160px]">
                 <p class="text-sm font-medium text-gray-800 truncate">{{ $restaurants->count() > 1 ? __('admin.restaurant_switcher.section_label_plural') : __('admin.restaurant_switcher.section_label') }}</p>

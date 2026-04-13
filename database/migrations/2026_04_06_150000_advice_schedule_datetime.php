@@ -12,6 +12,27 @@ use Illuminate\Support\Facades\Schema;
  */
 return new class extends Migration
 {
+    /**
+     * SQLite: dropColumn vía Schema usa Doctrine DBAL (conflictos con Carbon en este proyecto).
+     * SQLite 3.35+ soporta DROP COLUMN nativo.
+     *
+     * @param  string[]  $columns
+     */
+    private function dropColumnsCompat(string $table, array $columns): void
+    {
+        if (DB::getDriverName() === 'sqlite') {
+            foreach ($columns as $column) {
+                DB::statement('ALTER TABLE "'.$table.'" DROP COLUMN "'.$column.'"');
+            }
+
+            return;
+        }
+
+        Schema::table($table, function (Blueprint $blueprint) use ($columns) {
+            $blueprint->dropColumn($columns);
+        });
+    }
+
     public function up(): void
     {
         if (! Schema::hasColumn('advice', 'starts_at')) {
@@ -39,15 +60,11 @@ return new class extends Migration
                 }
             });
 
-            Schema::table('advice', function (Blueprint $table) {
-                $table->dropColumn(['start_date', 'end_date']);
-            });
+            $this->dropColumnsCompat('advice', ['start_date', 'end_date']);
         }
 
         if (Schema::hasColumn('advice', 'force_active')) {
-            Schema::table('advice', function (Blueprint $table) {
-                $table->dropColumn('force_active');
-            });
+            $this->dropColumnsCompat('advice', ['force_active']);
         }
     }
 
@@ -78,9 +95,7 @@ return new class extends Migration
                 }
             });
 
-            Schema::table('advice', function (Blueprint $table) {
-                $table->dropColumn(['starts_at', 'ends_at']);
-            });
+            $this->dropColumnsCompat('advice', ['starts_at', 'ends_at']);
         }
 
         if (! Schema::hasColumn('advice', 'force_active')) {

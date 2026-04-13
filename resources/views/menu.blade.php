@@ -17,120 +17,9 @@
     <title>{{ $restaurant->name ?? config('app.name') }} · {{ __('public_menu.page_title_suffix') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @php $cartaTokensV = @filemtime(public_path('css/carta-design-tokens.css')) ?: time(); @endphp
+    <link rel="stylesheet" href="{{ mix('css/carta-design-tokens.css') }}?v={{ $cartaTokensV }}">
     <style>
-        :root {
-            --bg: #0a0e17;
-            --surface: #111827;
-            --surface-el: #1a2235;
-            --gold: #c9a84c;
-            --gold-light: #dfc06e;
-            --gold-dim: #8a6d2b;
-            --text: #e8e4dc;
-            --text-muted: #9ca3af;
-            --red: #dc2626;
-            --font-title: 'Playfair Display', Georgia, serif;
-            --font-body: 'Montserrat', system-ui, sans-serif;
-            --radius: 12px;
-            --nav-bg: rgba(10, 14, 23, 0.95);
-            --nav-border: rgba(201, 168, 76, 0.12);
-            --hero-grad-from: #111827;
-            --nav-active-fg: #0a0e17;
-            --modal-scrim: rgba(10, 14, 23, 0.48);
-            --prod-border: rgba(255, 255, 255, 0.06);
-            --divider: rgba(255, 255, 255, 0.08);
-            --chip-bg: rgba(255, 255, 255, 0.04);
-            --modal-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-            --scroll-top-fg: #0a0e17;
-            --hero-glow: rgba(201, 168, 76, 0.14);
-            --gold-border-soft: rgba(201, 168, 76, 0.35);
-            --gold-border-hover: rgba(201, 168, 76, 0.52);
-            --gold-focus-ring: rgba(201, 168, 76, 0.24);
-        }
-
-        html[data-theme="light"] {
-            color-scheme: light;
-            --bg: #faf8f5;
-            --surface: #ffffff;
-            --surface-el: #f3f0eb;
-            --gold: #9a7328;
-            --gold-light: #b8923a;
-            --gold-dim: #7a5a1e;
-            --text: #1c1917;
-            --text-muted: #78716c;
-            --red: #b91c1c;
-            --nav-bg: rgba(255, 252, 248, 0.94);
-            --nav-border: rgba(154, 115, 40, 0.18);
-            --hero-grad-from: #ebe6dc;
-            --nav-active-fg: #1c1917;
-            --modal-scrim: rgba(28, 25, 23, 0.4);
-            --prod-border: rgba(0, 0, 0, 0.07);
-            --divider: rgba(0, 0, 0, 0.1);
-            --chip-bg: rgba(0, 0, 0, 0.04);
-            --modal-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-            --scroll-top-fg: #1c1917;
-            --hero-glow: rgba(154, 115, 40, 0.14);
-            --gold-border-soft: rgba(154, 115, 40, 0.35);
-            --gold-border-hover: rgba(154, 115, 40, 0.52);
-            --gold-focus-ring: rgba(154, 115, 40, 0.24);
-        }
-
-        @media (prefers-color-scheme: light) {
-            html[data-theme="system"] {
-                color-scheme: light;
-                --bg: #faf8f5;
-                --surface: #ffffff;
-                --surface-el: #f3f0eb;
-                --gold: #9a7328;
-                --gold-light: #b8923a;
-                --gold-dim: #7a5a1e;
-                --text: #1c1917;
-                --text-muted: #78716c;
-                --red: #b91c1c;
-                --nav-bg: rgba(255, 252, 248, 0.94);
-                --nav-border: rgba(154, 115, 40, 0.18);
-                --hero-grad-from: #ebe6dc;
-                --nav-active-fg: #1c1917;
-                --modal-scrim: rgba(28, 25, 23, 0.4);
-                --prod-border: rgba(0, 0, 0, 0.07);
-                --divider: rgba(0, 0, 0, 0.1);
-                --chip-bg: rgba(0, 0, 0, 0.04);
-                --modal-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-                --scroll-top-fg: #1c1917;
-                --hero-glow: rgba(154, 115, 40, 0.14);
-                --gold-border-soft: rgba(154, 115, 40, 0.35);
-                --gold-border-hover: rgba(154, 115, 40, 0.52);
-                --gold-focus-ring: rgba(154, 115, 40, 0.24);
-            }
-        }
-
-        @media (prefers-color-scheme: dark) {
-            html[data-theme="system"] {
-                color-scheme: dark;
-                --bg: #0a0e17;
-                --surface: #111827;
-                --surface-el: #1a2235;
-                --gold: #c9a84c;
-                --gold-light: #dfc06e;
-                --gold-dim: #8a6d2b;
-                --text: #e8e4dc;
-                --text-muted: #9ca3af;
-                --red: #dc2626;
-                --nav-bg: rgba(10, 14, 23, 0.95);
-                --nav-border: rgba(201, 168, 76, 0.12);
-                --hero-grad-from: #111827;
-                --nav-active-fg: #0a0e17;
-                --modal-scrim: rgba(10, 14, 23, 0.48);
-                --prod-border: rgba(255, 255, 255, 0.06);
-                --divider: rgba(255, 255, 255, 0.08);
-                --chip-bg: rgba(255, 255, 255, 0.04);
-                --modal-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-                --scroll-top-fg: #0a0e17;
-                --hero-glow: rgba(201, 168, 76, 0.14);
-                --gold-border-soft: rgba(201, 168, 76, 0.35);
-                --gold-border-hover: rgba(201, 168, 76, 0.52);
-                --gold-focus-ring: rgba(201, 168, 76, 0.24);
-            }
-        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -508,7 +397,7 @@
             line-height: 1.2;
         }
         .commercial-pill--featured {
-            background: linear-gradient(155deg, #f8efd0 0%, #e6d48a 28%, #c9a84c 58%, #9a7828 100%);
+            background: linear-gradient(155deg, #fff4d6 0%, #ffd78a 28%, #f5a623 58%, #b45309 100%);
             color: #1a1406;
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow:
@@ -688,7 +577,7 @@
             max-width: 420px;
             text-align: center;
         }
-        .modal-info--pairing { background: rgba(201,168,76,0.06); border-top-color: var(--gold); }
+        .modal-info--pairing { background: rgba(245,166,35,0.08); border-top-color: var(--gold); }
         .modal-allergens {
             display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
         }
@@ -696,7 +585,7 @@
             display: inline-flex; align-items: center; gap: 6px;
             font-size: 12px; color: var(--text-muted);
             padding: 6px 10px; background: var(--chip-bg);
-            border-radius: 8px; border: 1px solid rgba(201,168,76,0.15);
+            border-radius: 8px; border: 1px solid rgba(245,166,35,0.2);
         }
         .modal-allergen-chip img {
             width: 22px; height: 22px; object-fit: cover; border-radius: 4px;

@@ -10,13 +10,12 @@
 
     {{-- Logo / Marca --}}
     <div class="admin-sidebar-header px-5 py-6 flex items-start justify-between gap-3">
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 min-w-0" onclick="closeAdminSidebar()">
+        <a href="{{ route('dashboard') }}" class="admin-brand-cta flex items-center gap-3 min-w-0 rounded-xl px-3 py-2.5" onclick="closeAdminSidebar()">
             @if(filled($adminLogoPath ?? null))
                 <img src="{{ asset('storage/'.$adminLogoPath) }}" alt="Logo"
-                     class="w-9 h-9 rounded-lg object-cover flex-shrink-0 border border-black/5">
+                     class="w-9 h-9 rounded-lg object-cover flex-shrink-0 border border-white/25">
             @else
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                     style="background: linear-gradient(135deg,#64748b,#334155)">BJ</div>
+                <div class="admin-brand-cta-mark w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">BJ</div>
             @endif
             <div>
                 <p class="admin-brand-title text-sm font-semibold text-gray-800 leading-tight">{{ config('app.name') }}</p>
@@ -49,7 +48,7 @@
     <nav class="flex-1 px-3 pt-5 pb-44 space-y-0.5" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
 
         <a href="{{ url('/product') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
                   {{ request()->is('product*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -58,7 +57,7 @@
         </a>
 
         <a href="{{ url('/category') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
                   {{ request()->is('category*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
@@ -67,7 +66,7 @@
         </a>
 
         <a href="{{ url('/allergen') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
                   {{ request()->is('allergen*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -76,7 +75,7 @@
         </a>
 
         <a href="{{ url('/pairing') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
                   {{ request()->is('pairing*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -85,7 +84,7 @@
         </a>
 
         <a href="{{ url('/advice') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
                   {{ request()->is('advice*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -103,7 +102,7 @@
             $menuHref = ($qrMenuUrl ?? null) ?: $fallbackMenuUrl;
         @endphp
         <a href="{{ $menuHref }}" target="_blank" rel="noopener noreferrer"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -112,7 +111,7 @@
         </a>
 
         <button type="button" onclick="toggleSidebarQR()"
-                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
             </svg>
@@ -143,7 +142,7 @@
 
         {{-- Ajustes (última posición) --}}
         <details class="group" @if(request()->is('settings*') || request()->is('translations*')) open @endif>
-            <summary class="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer select-none
+            <summary class="flex items-center justify-between gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors cursor-pointer select-none
                            {{ request()->is('settings*') || request()->is('translations*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                 <span class="flex items-center gap-3 min-w-0">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true">

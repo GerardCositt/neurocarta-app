@@ -11,7 +11,9 @@
         "e2e:ensure-user": "php artisan e2e:ensure-user --email=test@test.com --password=Password123!",
         "e2e": "E2E_BASE_URL=http://127.0.0.1:8000 npm run e2e:ensure-user && npx playwright test",
         "e2e:ui": "E2E_BASE_URL=http://127.0.0.1:8000 npm run e2e:ensure-user && npx playwright test --ui",
-        "e2e:report": "npx playwright show-report"
+        "e2e:report": "npx playwright show-report",
+        "setup": "php artisan setup",
+        "reset-db": "php artisan reset-db"
     },
     "devDependencies": {
         "@playwright/test": "^1.58.2",

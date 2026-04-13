@@ -1,5 +1,5 @@
 <x-slot name="header">
-    <h2 class="text-xl font-semibold text-gray-800">{{ __('admin.products.page_title') }}</h2>
+    <h2 class="admin-page-title-carta text-xl font-semibold">{{ __('admin.products.page_title') }}</h2>
 </x-slot>
 
 <div>
@@ -119,7 +119,7 @@
                     </p>
                     <div class="flex flex-wrap gap-2 flex-1 min-w-0">
                         <button type="button" wire:click="bulkSetFeatured(true)"
-                                class="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs sm:text-sm font-semibold hover:bg-amber-700 cursor-pointer shadow-sm">
+                                class="px-3 py-1.5 btn-carta-primary text-xs sm:text-sm cursor-pointer shadow-sm">
                             {{ __('admin.products.bulk_feature') }}
                         </button>
                         <button type="button" wire:click="bulkSetFeatured(false)"

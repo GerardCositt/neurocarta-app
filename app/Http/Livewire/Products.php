@@ -839,7 +839,7 @@ class Products extends Component
                 'product_id' => $this->product_id,
                 'message' => $e->getMessage(),
             ]);
-            session()->flash('message', 'No se pudo generar la descripcion con IA.');
+            session()->flash('message', 'No se pudo generar la descripcion con IA: ' . $e->getMessage());
         }
     }
 
@@ -886,7 +886,7 @@ class Products extends Component
                 'product_id' => $this->product_id,
                 'message' => $e->getMessage(),
             ]);
-            session()->flash('message', 'No se pudo generar el texto de alergenos con IA.');
+            session()->flash('message', 'No se pudo generar el texto de alergenos con IA: ' . $e->getMessage());
         }
     }
 
@@ -942,7 +942,7 @@ class Products extends Component
                 'product_id' => $this->product_id,
                 'message' => $e->getMessage(),
             ]);
-            session()->flash('message', __('admin.products.flash_improve_fail'));
+            session()->flash('message', __('admin.products.flash_improve_fail') . ' ' . $e->getMessage());
         }
     }
 
@@ -1000,7 +1000,7 @@ class Products extends Component
                 'product_id' => $this->product_id,
                 'message' => $e->getMessage(),
             ]);
-            session()->flash('message', __('admin.products.flash_gen_fail'));
+            session()->flash('message', __('admin.products.flash_gen_fail') . ' ' . $e->getMessage());
         }
     }
 

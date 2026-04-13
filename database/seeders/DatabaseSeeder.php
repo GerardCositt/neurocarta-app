@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(MandatoryAllergensSeeder::class);
         $this->call(RestaurantSeeder::class);
+        $this->call(AdviceSeeder::class);
     }
 }

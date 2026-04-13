@@ -18,7 +18,11 @@ class DemoMenuSeeder extends Seeder
     {
         $restaurant = Restaurant::first();
         if (! $restaurant) {
-            $this->command->error('No hay restaurantes. Ejecuta antes: php artisan db:seed --class=RestaurantSeeder');
+            $this->call(RestaurantSeeder::class);
+            $restaurant = Restaurant::first();
+        }
+        if (! $restaurant) {
+            $this->command->error('No se pudo crear un restaurante de demo.');
 
             return;
         }
