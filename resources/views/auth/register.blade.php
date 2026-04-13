@@ -84,13 +84,22 @@
                 </button>
             </div>
 
+            <div id="loading-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;flex-direction:column;">
+                <div style="background:#1a1a1a;border-radius:20px;padding:40px 48px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+                    <div style="font-size:36px;margin-bottom:16px;">⚙️</div>
+                    <p style="font-size:20px;font-weight:800;color:#fff;margin:0 0 8px;">Ya estamos trabajando para usted</p>
+                    <p style="font-size:14px;color:rgba(255,255,255,0.5);margin:0;">Esto solo tardará unos segundos…</p>
+                </div>
+            </div>
+
             <script>
                 document.querySelector('form').addEventListener('submit', function() {
                     var btn = document.getElementById('submit-btn');
                     btn.disabled = true;
                     btn.style.opacity = '0.6';
                     btn.style.cursor = 'not-allowed';
-                    btn.textContent = 'Creando tu cuenta…';
+                    var overlay = document.getElementById('loading-overlay');
+                    overlay.style.display = 'flex';
                 });
             </script>
 
