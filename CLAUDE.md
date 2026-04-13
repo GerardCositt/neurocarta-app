@@ -13,18 +13,26 @@
 
 ## Arquitectura de despliegue
 
-### Staging (activo)
+### Producción — Jotelulu (activo desde 2026-04-13)
+- **App**: https://app.neurocarta.ai
+- **Plataforma**: Jotelulu VPS (Ubuntu 24.04, 2 vCPU, 2 GB RAM, 25 GB NVMe)
+- **IP pública**: 149.71.98.240
+- **Servidor**: SRV-COSI03-029 (nombre interno Jotelulu)
+- **Ruta app**: `/opt/neurocarta/`
+- **Docker**: 3 contenedores — `neurocarta-app-1` (PHP/Laravel), `neurocarta-db-1` (PostgreSQL 16), `neurocarta-nginx-1` (Nginx + SSL)
+- **SSL**: Let's Encrypt (certbot), renovación automática. Certs en `/etc/letsencrypt/live/app.neurocarta.ai/`
+- **Base de datos**: PostgreSQL 16 en contenedor, datos en volumen `neurocarta_db_data`
+- **Usuario de prueba**: test@test.com / test1234
+- **Deploy**: script `/opt/neurocarta/deploy.sh` → git pull + rebuild + migrate
+- **Clave SSH**: `~/.ssh/neurocarta_jotelulu` (Mac mini) → clave `neurocarta-mac` en Jotelulu
+
+### Staging — Render (legacy, mantener por ahora)
 - **App**: https://neurocarta-staging.onrender.com
 - **Plataforma**: Render (Docker, PHP 8.2 + Apache)
 - **Base de datos**: PostgreSQL en Render
-- **Subdominio detectado**: `neurocarta-staging` (guardado en tabla `restaurants`)
 - **Usuario de prueba**: test@test.com / test1234
 - **Health check**: `/up` → devuelve 200 OK
 - **Keep-alive**: UptimeRobot hace ping a `/up` cada 5 min
-
-### Producción / Plesk (app.neurocarta.ai)
-- Redirige a staging con `.htaccess` (301 → neurocarta-staging.onrender.com)
-- Ruta en servidor: `/var/www/vhosts/neurocarta.ai/app.neurocarta.ai/laravel/public/.htaccess`
 
 ### Landing (neurocarta.ai)
 - **Plataforma**: Plesk (servidor COSITT, IP 217.154.188.235)
@@ -37,10 +45,17 @@
 
 ## Flujo de deploy
 
-### App (staging en Render)
+### App (Jotelulu — producción)
+1. Editar código en el Mac y hacer `git push` a `main`
+2. En el servidor: `/opt/neurocarta/deploy.sh`
+   - Hace `git pull origin main`
+   - Reconstruye el contenedor app
+   - Copia `.env` al contenedor
+   - Limpia config cache
+   - Corre migraciones
+
+### App (Render — staging legacy)
 1. `git push` a `main` → Render detecta el push y despliega automáticamente
-2. El `Dockerfile` hace build de assets Node + PHP
-3. `docker/entrypoint.sh` corre `php artisan migrate --force` al arrancar
 
 ### Landing (neurocarta.ai)
 1. Editar `src/App.jsx` (u otros archivos fuente)
@@ -52,25 +67,37 @@
 
 ---
 
-## Variables de entorno en Render (staging)
+## Variables de entorno en Jotelulu (producción)
+
+El `.env` está en `/opt/neurocarta/.env` en el servidor (NO en el repo).
+Variables clave:
 
 | Variable | Valor |
 |---|---|
 | `APP_ENV` | `production` |
-| `APP_DEBUG` | `true` (cambiar a false cuando sea estable) |
+| `APP_DEBUG` | `false` |
+| `APP_URL` | `https://app.neurocarta.ai` |
 | `DB_CONNECTION` | `pgsql` |
+| `DB_HOST` | `db` (contenedor) |
+| `DB_DATABASE` | `neurocarta` |
+| `DB_USERNAME` | `neurocarta` |
 | `SESSION_DRIVER` | `cookie` |
-| `APP_URL` | `https://neurocarta-staging.onrender.com` |
+| `MAIL_HOST` | `neurocarta.ai` |
+| `MAIL_FROM_ADDRESS` | `noreply@neurocarta.ai` |
+| `TURNSTILE_SECRET_KEY` | vacía (desactivado en login) |
+| `TURNSTILE_SITE_KEY` | vacía (desactivado en login) |
 
 ---
 
 ## Decisiones técnicas relevantes
 
-- **PostgreSQL en lugar de SQLite**: La app original usaba SQLite. Se migró a PostgreSQL para Render. Los booleanos usan `true`/`false` en lugar de `1`/`0`.
-- **Detección de restaurante por subdominio**: El middleware `DetectRestaurant` lee el subdominio para cargar el restaurante. En staging el subdominio es `neurocarta-staging`.
-- **SESSION_DRIVER=cookie**: Necesario porque Render no persiste el filesystem entre deploys.
+- **PostgreSQL en lugar de SQLite**: La app original usaba SQLite. Se migró a PostgreSQL.
+- **Detección de restaurante por subdominio**: El middleware `DetectRestaurant` lee el subdominio.
+- **SESSION_DRIVER=cookie**: Necesario porque el filesystem de Docker no persiste entre recreaciones.
 - **Logout redirige a /login**: Configurado en `AppServiceProvider` via `LogoutResponse` de Fortify.
-- **Botón "Solicita acceso" eliminado** del login (`vendor/jetstream/components/authentication-card.blade.php`).
+- **BarJaenIIISeeder eliminado del entrypoint**: Se quitó de `docker/entrypoint.sh` porque pisaba datos reales de usuarios al desplegarse. Solo se lanza manualmente para demo.
+- **Turnstile desactivado en login**: El widget estaba fuera del `<form>` (token nunca se enviaba) y bloqueaba el login. Eliminado del blade y del pipeline de Fortify. Pendiente reactivar correctamente con claves reales de Cloudflare.
+- **DNS en Cloudflare**: `app.neurocarta.ai` → `149.71.98.240`, proxy desactivado (nube gris).
 
 ---
 
@@ -117,10 +144,11 @@
 
 ## Pendiente / próximos pasos
 
-- [ ] Cambiar `APP_DEBUG=false` en Render cuando el staging sea estable
 - [ ] Implementar flujo de registro con trial (ver sección arriba)
+- [ ] Reactivar Turnstile correctamente en login con claves reales de Cloudflare
 - [ ] Crear planes en Stripe y conectar webhooks
 - [ ] Pantalla de bloqueo día 8 (panel + carta pública + QR)
 - [ ] Emails de aviso día 5 y día 7
 - [ ] Validación de teléfono por WhatsApp/SMS (anti-abuso trial)
+- [ ] Migrar base de datos de Render a Jotelulu o descartar staging
 - [ ] Evaluar si subir landing a deploy automático o mantener SCP manual
