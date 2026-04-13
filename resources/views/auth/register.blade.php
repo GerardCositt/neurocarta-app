@@ -74,7 +74,7 @@
             @endif
 
             <div style="margin-top:20px;">
-                <button type="submit" style="width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;font-size:15px;font-weight:800;letter-spacing:-0.01em;
+                <button id="submit-btn" type="submit" style="width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;font-size:15px;font-weight:800;letter-spacing:-0.01em;
                     {{ $plan === 'trial' ? 'background:#FFC107;color:#0F0F0F;' : 'background:#c52439;color:#fff;' }}">
                     @if($plan === 'trial')
                         Crear cuenta gratis
@@ -83,6 +83,16 @@
                     @endif
                 </button>
             </div>
+
+            <script>
+                document.querySelector('form').addEventListener('submit', function() {
+                    var btn = document.getElementById('submit-btn');
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.style.cursor = 'not-allowed';
+                    btn.textContent = 'Creando tu cuenta…';
+                });
+            </script>
 
             <div style="margin-top:16px;text-align:center;font-size:13px;color:rgba(255,255,255,.45);">
                 ¿Ya tienes cuenta?
