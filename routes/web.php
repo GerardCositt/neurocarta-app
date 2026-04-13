@@ -29,7 +29,7 @@ Route::get('/up', fn () => response('OK', 200));
 // GET /register/check-email → pantalla "revisa tu correo"
 Route::get('/register/check-email', function () {
     return view('auth.check-email');
-})->middleware('guest')->name('register.check-email');
+})->name('register.check-email');
 
 // GET /register/{plan} → formulario de registro con plan preseleccionado
 Route::get('/register/{plan}', function (string $plan) {
