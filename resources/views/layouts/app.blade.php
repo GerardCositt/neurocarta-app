@@ -7,8 +7,8 @@
             var K = 'bjCartaTheme';
             function stored() {
                 try {
-                    var t = localStorage.getItem(K) || 'dark';
-                    if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'dark';
+                    var t = localStorage.getItem(K) || 'light';
+                    if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'light';
                     return t;
                 } catch (e) { return 'dark'; }
             }
@@ -16,7 +16,7 @@
                 if (pref === 'system') {
                     try {
                         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                    } catch (e) { return 'dark'; }
+                    } catch (e) { return 'light'; }
                 }
                 return pref;
             }
@@ -159,11 +159,11 @@
 
                 function getStoredTheme() {
                     try {
-                        var t = localStorage.getItem(THEME_KEY) || 'dark';
-                        if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'dark';
+                        var t = localStorage.getItem(THEME_KEY) || 'light';
+                        if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'light';
                         return t;
                     } catch (e) {
-                        return 'dark';
+                        return 'light';
                     }
                 }
 

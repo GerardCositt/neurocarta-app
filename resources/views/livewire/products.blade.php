@@ -186,7 +186,7 @@
     <div class="-mx-4 sm:-mx-6 lg:-mx-8">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 max-w-full min-w-0">
             <div class="overflow-x-auto overscroll-x-contain rounded-2xl">
-            <table class="w-full min-w-[960px]">
+            <table class="w-full min-w-[640px] sm:min-w-[960px]">
             <thead>
                 <tr class="border-b border-gray-100">
                     <th class="pl-2 pr-0 py-3 w-8 text-center align-middle admin-sticky-col admin-sticky-hdr admin-sticky-left-0" title="{{ __('admin.products.th_select_all_title') }}">
@@ -217,9 +217,9 @@
                     </th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:9rem">{{ __('admin.products.th_category') }}</th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_price') }}</th>
-                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_offer') }}</th>
-                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_featured_title') }}">{{ __('admin.products.th_featured_short') }}</th>
-                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider" title="{{ __('admin.products.th_rec_title') }}">{{ __('admin.products.th_rec_short') }}</th>
+                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">{{ __('admin.products.th_offer') }}</th>
+                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell" title="{{ __('admin.products.th_featured_title') }}">{{ __('admin.products.th_featured_short') }}</th>
+                    <th class="px-2 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell" title="{{ __('admin.products.th_rec_title') }}">{{ __('admin.products.th_rec_short') }}</th>
                     <th class="px-3 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ __('admin.products.th_hide') }}</th>
                 </tr>
             </thead>
@@ -327,7 +327,7 @@
                     </td>
 
                     {{-- Oferta: activar abre la ficha; desactivar quita la oferta en el listado --}}
-                    <td class="px-2 py-3 text-center">
+                    <td class="px-2 py-3 text-center hidden sm:table-cell">
                         <label class="inline-flex items-center cursor-pointer" title="{{ $product->offer ? __('admin.products.offer_toggle_title_on') : __('admin.products.offer_toggle_title_off') }}">
                             {{-- wire:key evita que la casilla quede “pegada” en marcada: con wire:click.prevent morphdom no siempre actualiza el estado checked del input. --}}
                             <input type="checkbox"
@@ -339,7 +339,7 @@
                     </td>
 
                     {{-- Destacado --}}
-                    <td class="px-2 py-3 text-center">
+                    <td class="px-2 py-3 text-center hidden sm:table-cell">
                         <label class="inline-flex items-center cursor-pointer" title="{{ __('admin.products.featured_toggle_title') }}">
                             <input type="checkbox"
                                    wire:key="featured-toggle-{{ $product->id }}-{{ $product->featured ? '1' : '0' }}"
@@ -350,7 +350,7 @@
                     </td>
 
                     {{-- Recomendado --}}
-                    <td class="px-2 py-3 text-center">
+                    <td class="px-2 py-3 text-center hidden sm:table-cell">
                         <label class="inline-flex items-center cursor-pointer" title="{{ __('admin.products.recommended_toggle_title') }}">
                             <input type="checkbox"
                                    wire:key="recommended-toggle-{{ $product->id }}-{{ $product->recommended ? '1' : '0' }}"

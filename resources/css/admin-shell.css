@@ -155,11 +155,22 @@ html[data-effective-theme="dark"] .admin-sticky-col {
     background: var(--surface-el);
 }
 /* Offsets (productos): checkbox + drag + imagen + nombre + categoría */
+/* checkbox: pl-2 pr-0 w-8 → ~2.5rem (40px) */
+/* drag:     px-1 w-4      → ~1.5rem (24px) */
+/* imagen:   pl-1 pr-2 w-12 → ~3.75rem (60px) */
 .admin-sticky-left-0 { left: 0; }
-.admin-sticky-left-4 { left: 4rem; }      /* after checkbox col */
-.admin-sticky-left-7 { left: 7rem; }      /* after checkbox + drag */
-.admin-sticky-left-125 { left: 12.5rem; } /* after checkbox + drag + image */
+.admin-sticky-left-4 { left: 2.5rem; }    /* after checkbox col (~40px) */
+.admin-sticky-left-7 { left: 4rem; }      /* after checkbox + drag (~64px) */
+.admin-sticky-left-125 { left: 7.75rem; } /* after checkbox + drag + image (~124px) */
 .admin-sticky-left-30 { left: 29.75rem; } /* after checkbox + drag + image + nombre (260px + px-2×2) */
+
+/* Divisores de tabla en dark mode: Tailwind border-gray-* no respeta tokens CSS */
+html[data-effective-theme="dark"] .admin-shell table tbody tr.border-b {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+html[data-effective-theme="dark"] .admin-shell table thead tr.border-b {
+    border-bottom-color: rgba(255, 255, 255, 0.10);
+}
 html[data-effective-theme="dark"] .admin-sidebar .admin-brand-title { color: var(--text) !important; }
 html[data-effective-theme="dark"] .admin-sidebar .admin-brand-sub { color: var(--text-muted) !important; }
 html[data-effective-theme="dark"] .admin-sidebar nav a {

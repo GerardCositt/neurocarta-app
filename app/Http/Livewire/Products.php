@@ -174,11 +174,12 @@ class Products extends Component
     private function buildFilteredProductQuery(): Builder
     {
         $restaurantId = $this->getRestaurantId();
-        $query = Product::query();
 
-        if ($restaurantId) {
-            $query->where('restaurant_id', $restaurantId);
+        if (! $restaurantId) {
+            return Product::query()->whereRaw('1 = 0');
         }
+
+        $query = Product::query()->where('restaurant_id', $restaurantId);
 
         if ($this->q) {
             $query->where('name', 'like', '%' . $this->q . '%');
