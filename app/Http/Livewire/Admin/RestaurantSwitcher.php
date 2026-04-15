@@ -111,8 +111,10 @@ class RestaurantSwitcher extends Component
     {
         $svc = app(PlanEntitlementService::class);
         $currentRestaurantId = session('admin_restaurant_id');
-        $currentRestaurant = $currentRestaurantId ? Restaurant::find($currentRestaurantId) : Restaurant::first();
-        $account = $currentRestaurant ? $svc->accountForRestaurant($currentRestaurant) : null;
+        $currentRestaurant = $currentRestaurantId ? Restaurant::find($currentRestaurantId) : null;
+        $account = $currentRestaurant
+            ? $svc->accountForRestaurant($currentRestaurant)
+            : auth()->user()->accounts()->first();
         if ($account) {
             try {
                 $svc->assertCanCreateRestaurant($account);
@@ -161,11 +163,15 @@ class RestaurantSwitcher extends Component
     private function userRestaurants()
     {
         $user = auth()->user();
+
+        if ($user->is_admin) {
+            return Restaurant::orderBy('name')->get();
+        }
+
         $accountIds = $user->accounts()->pluck('accounts.id');
 
         if ($accountIds->isEmpty()) {
-            // Usuario legacy sin account (ej. test@test.com) — ve todos
-            return Restaurant::orderBy('name')->get();
+            return collect();
         }
 
         return Restaurant::whereIn('account_id', $accountIds)->orderBy('name')->get();
