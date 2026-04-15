@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
         // Desactiva ofertas caducadas una vez al día a medianoche
         $schedule->command('offers:expire')->dailyAt('00:05');
+
+        // Emails de aviso de fin de trial (día 5 y día 7)
+        $schedule->command('trial:send-warnings')->dailyAt('09:00');
     }
 
     /**

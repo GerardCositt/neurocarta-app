@@ -63,9 +63,10 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'orders.enabled'     => \App\Http\Middleware\EnsureOrdersEnabled::class,
-        'detect.restaurant'  => \App\Http\Middleware\DetectRestaurant::class,
-        'admin.restaurant'   => \App\Http\Middleware\AdminRestaurant::class,
-        'turnstile'          => \App\Http\Middleware\VerifyTurnstile::class,
+        'orders.enabled'         => \App\Http\Middleware\EnsureOrdersEnabled::class,
+        'detect.restaurant'      => \App\Http\Middleware\DetectRestaurant::class,
+        'admin.restaurant'       => \App\Http\Middleware\AdminRestaurant::class,
+        'subscription.check'     => \App\Http\Middleware\CheckSubscription::class,
+        'turnstile'              => \App\Http\Middleware\VerifyTurnstile::class,
     ];
 }

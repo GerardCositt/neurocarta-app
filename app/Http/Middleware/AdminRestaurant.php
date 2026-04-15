@@ -11,10 +11,25 @@ class AdminRestaurant
 {
     public function handle(Request $request, Closure $next)
     {
+        $user = $request->user();
+
+        // Obtener la cuenta del usuario autenticado
+        $account = $user ? $user->accounts()->first() : null;
+
         $restaurantId = session('admin_restaurant_id');
 
+        // Validar que el restaurante en sesión pertenece a la cuenta del usuario
+        if ($restaurantId && $account) {
+            $belongs = $account->restaurants()->where('id', $restaurantId)->exists();
+            if (! $belongs) {
+                $restaurantId = null;
+                session()->forget('admin_restaurant_id');
+            }
+        }
+
+        // Si no hay restaurante en sesión (o era inválido), cargar el primero de la cuenta
         if (! $restaurantId) {
-            $restaurant = Restaurant::first();
+            $restaurant = $account ? $account->restaurants()->first() : null;
             if ($restaurant) {
                 session(['admin_restaurant_id' => $restaurant->id]);
                 $restaurantId = $restaurant->id;
@@ -23,20 +38,17 @@ class AdminRestaurant
 
         $restaurant = $restaurantId ? Restaurant::find($restaurantId) : null;
 
-        if (! $restaurant) {
-            $restaurant = Restaurant::first();
-            if ($restaurant) {
-                session(['admin_restaurant_id' => $restaurant->id]);
-            }
-        }
-
         if ($restaurant) {
             app()->instance('restaurant', $restaurant);
 
-            // Resolver cuenta a partir del restaurante seleccionado (multi-restaurante por cuenta).
-            $account = app(PlanEntitlementService::class)->accountForRestaurant($restaurant);
             if ($account) {
                 app()->instance('account', $account);
+            } else {
+                // Fallback: resolver cuenta a partir del restaurante
+                $resolvedAccount = app(PlanEntitlementService::class)->accountForRestaurant($restaurant);
+                if ($resolvedAccount) {
+                    app()->instance('account', $resolvedAccount);
+                }
             }
         }
 

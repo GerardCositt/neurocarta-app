@@ -53,12 +53,23 @@ class PlanEntitlementService
         $sub = $this->activeSubscription($account);
         if ($sub) {
             $plan = (string) $sub->plan_code;
+
+            // Trial activo → acceso total (equivalente a Premium)
+            if ($plan === 'trial') {
+                return self::PLAN_PREMIUM;
+            }
+
+            // 'basico' es el alias legible de 'basic'
+            if ($plan === 'basico') {
+                return self::PLAN_BASIC;
+            }
+
             if (in_array($plan, [self::PLAN_BASIC, self::PLAN_PRO, self::PLAN_PREMIUM], true)) {
                 return $plan;
             }
         }
 
-        // Sin suscripción todavía: no romper entornos no productivos.
+        // Sin suscripción activa: no romper entornos no productivos.
         return app()->environment('production') ? self::PLAN_BASIC : self::PLAN_PREMIUM;
     }
 

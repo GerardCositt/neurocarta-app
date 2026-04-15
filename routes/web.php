@@ -69,7 +69,12 @@ Route::post('/api/orders', StoreOrderController::class)
 Route::middleware(['auth:sanctum', 'verified'])->post('/user/locale', UserLocaleController::class)
     ->name('user.locale');
 
-Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant'])->group(function () {
+// ─── Trial expirado ───────────────────────────────────────────────────────────
+Route::get('/subscription/expired', function () {
+    return view('subscription.expired');
+})->middleware(['auth:sanctum', 'verified'])->name('subscription.expired');
+
+Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription.check'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
