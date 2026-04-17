@@ -27,6 +27,13 @@ use Illuminate\Support\Facades\URL;
 // Health check para Render
 Route::get('/up', fn () => response('OK', 200));
 
+// Raíz de app.neurocarta.ai → login o dashboard según autenticación
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+})->name('home');
+
 // ─── Registro: selector de plan + formulario ───────────────────────────────
 // Rutas estáticas ANTES del parámetro dinámico {plan}
 
