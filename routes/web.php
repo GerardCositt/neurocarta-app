@@ -75,7 +75,7 @@ Route::get('/checkout/pending', function () {
 })->middleware('guest')->name('checkout.pending');
 
 // ─── Crear contraseña (enlace del email) ───────────────────────────────────
-Route::get('/set-password', [SetPasswordController::class, 'show'])
+Route::get('/set-password/{user}', [SetPasswordController::class, 'show'])
     ->middleware('guest')
     ->name('set-password.show');
 
