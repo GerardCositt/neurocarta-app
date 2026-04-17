@@ -3,6 +3,7 @@
 namespace App\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 
 class RegisterResponse implements RegisterResponseContract
@@ -20,7 +21,9 @@ class RegisterResponse implements RegisterResponseContract
             return redirect()->route('checkout.pending');
         }
 
-        // Trial gratuito → pantalla "revisa tu correo"
+        // Trial gratuito → desloguear (Fortify auto-loguea) y mostrar "revisa tu correo"
+        Auth::logout();
+
         return redirect()->route('register.check-email');
     }
 }
