@@ -22,13 +22,13 @@ class ReorderController extends Controller
     public function categories(Request $request)
     {
         $data = $request->validate(['ids' => 'required|array']);
-        $restaurantId = app()->bound('restaurant') ? app('restaurant')->id : null;
+
+        abort_unless(app()->bound('restaurant'), 403);
+        $restaurantId = app('restaurant')->id;
 
         foreach ($data['ids'] as $order => $id) {
             Category::query()
-                ->when($restaurantId, function ($query) use ($restaurantId) {
-                    $query->where('restaurant_id', $restaurantId);
-                })
+                ->where('restaurant_id', $restaurantId)
                 ->where('id', $id)
                 ->update(['order' => $order]);
         }
@@ -44,13 +44,13 @@ class ReorderController extends Controller
     public function products(Request $request)
     {
         $data = $request->validate(['ids' => 'required|array']);
-        $restaurantId = app()->bound('restaurant') ? app('restaurant')->id : null;
+
+        abort_unless(app()->bound('restaurant'), 403);
+        $restaurantId = app('restaurant')->id;
 
         foreach ($data['ids'] as $order => $id) {
             Product::query()
-                ->when($restaurantId, function ($query) use ($restaurantId) {
-                    $query->where('restaurant_id', $restaurantId);
-                })
+                ->where('restaurant_id', $restaurantId)
                 ->where('id', $id)
                 ->update(['order' => $order]);
         }

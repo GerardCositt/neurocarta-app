@@ -20,7 +20,8 @@ class CheckSubscription
         $account = app()->bound('account') ? app('account') : null;
 
         if (! $account) {
-            return $next($request);
+            return redirect()->route('subscription.expired')
+                ->with('error', 'Tu cuenta no está configurada correctamente. Contacta a soporte.');
         }
 
         $subscription = $account->subscriptions()->latest()->first();

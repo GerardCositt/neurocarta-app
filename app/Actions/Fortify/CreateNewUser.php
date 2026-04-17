@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Restaurant;
 use App\Models\Subscription;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -59,42 +60,58 @@ class CreateNewUser implements CreatesNewUsers
             'phone.required'           => 'El teléfono es obligatorio.',
         ])->validate();
 
-        // 1. Crear usuario (sin contraseña real ni email verificado aún)
-        $user = User::create([
-            'name'     => $input['restaurant_name'],
-            'email'    => $input['email'],
-            'phone'    => $input['phone'],
-            'password' => Hash::make(Str::random(32)), // placeholder hasta que creen contraseña
-        ]);
-
-        // 2. Crear cuenta y vincular usuario
-        $account = Account::create(['name' => $input['restaurant_name']]);
-        $account->users()->attach($user->id);
-
-        // 3. Crear restaurante
-        $subdomain = $this->generateSubdomain($input['restaurant_name']);
-        Restaurant::create([
-            'account_id' => $account->id,
-            'name'       => $input['restaurant_name'],
-            'subdomain'  => $subdomain,
-        ]);
-
-        // 4. Crear suscripción
-        if ($plan === 'trial') {
-            Subscription::create([
-                'account_id'            => $account->id,
-                'plan_code'             => 'trial',
-                'status'                => 'trialing',
-                'current_period_end_at' => now()->addDays(7),
+        $user = DB::transaction(function () use ($input, $plan) {
+            // 1. Crear usuario (sin contraseña real ni email verificado aún)
+            $user = User::create([
+                'name'     => explode('@', $input['email'])[0],
+                'email'    => $input['email'],
+                'phone'    => $input['phone'],
+                'password' => Hash::make(Str::random(32)),
             ]);
-        } else {
-            // Planes de pago: suscripción pendiente hasta que Stripe confirme el pago
-            Subscription::create([
-                'account_id' => $account->id,
-                'plan_code'  => $plan,
-                'status'     => 'inactive',
-            ]);
-        }
+
+            // 2. Crear cuenta y vincular usuario
+            $account = Account::create(['name' => $input['restaurant_name']]);
+            $account->users()->attach($user->id);
+
+            // 3. Crear restaurante
+            $subdomain = $this->generateSubdomain($input['restaurant_name']);
+            try {
+                Restaurant::create([
+                    'account_id' => $account->id,
+                    'name'       => $input['restaurant_name'],
+                    'subdomain'  => $subdomain,
+                ]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() === '23505') {
+                    // Unique violation por race condition: añadir sufijo aleatorio
+                    Restaurant::create([
+                        'account_id' => $account->id,
+                        'name'       => $input['restaurant_name'],
+                        'subdomain'  => $subdomain . '-' . Str::random(4),
+                    ]);
+                } else {
+                    throw $e;
+                }
+            }
+
+            // 4. Crear suscripción
+            if ($plan === 'trial') {
+                Subscription::create([
+                    'account_id'            => $account->id,
+                    'plan_code'             => 'trial',
+                    'status'                => 'trialing',
+                    'current_period_end_at' => now()->addDays(7),
+                ]);
+            } else {
+                Subscription::create([
+                    'account_id' => $account->id,
+                    'plan_code'  => $plan,
+                    'status'     => 'inactive',
+                ]);
+            }
+
+            return $user;
+        });
 
         // 5. Guardar en sesión para la redirección y la pantalla de check-email
         session([

@@ -8,6 +8,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\ReorderController;
 use App\Http\Controllers\Api\StoreOrderController;
 use App\Http\Controllers\UserLocaleController;
+use App\Mail\WelcomeSetPassword;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +42,32 @@ Route::get('/register/{plan}', function (string $plan) {
         return redirect()->route('register');
     }
     return view('auth.register', ['plan' => $plan]);
-})->middleware('guest')->name('register.plan');
+})->middleware(['guest', 'throttle:register'])->name('register.plan');
+
+// POST /register/resend-activation → reenvío del email de activación (M2)
+Route::post('/register/resend-activation', function (\Illuminate\Http\Request $request) {
+    $request->validate(['email' => 'required|email']);
+
+    $user = User::where('email', $request->email)
+                ->whereNull('email_verified_at')
+                ->first();
+
+    if ($user) {
+        $setPasswordUrl = URL::temporarySignedRoute(
+            'set-password.show',
+            now()->addDays(3),
+            ['user' => $user->id]
+        );
+        try {
+            Mail::to($user->email)->send(new WelcomeSetPassword($user, $setPasswordUrl));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Resend activation mail failed: ' . $e->getMessage());
+        }
+    }
+
+    // Siempre 200 para no exponer si el email existe
+    return back()->with('status', 'Si el email existe y la cuenta no está activada, te hemos enviado el enlace.');
+})->middleware(['guest', 'throttle:3,5'])->name('register.resend');
 
 // Stub Stripe para planes de pago (próximamente)
 Route::get('/checkout/pending', function () {

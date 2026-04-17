@@ -6,13 +6,14 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Restaurant;
+use App\Models\Scopes\RestaurantScope;
 use App\Models\Subscription;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class PlanEntitlementService
 {
-    public const PLAN_BASIC = 'basic';
+    public const PLAN_BASIC = 'basico';
     public const PLAN_PRO = 'pro';
     public const PLAN_PREMIUM = 'premium';
 
@@ -46,8 +47,7 @@ class PlanEntitlementService
         }
 
         if (! $account) {
-            // Sin cuenta (estado legacy). En producción, se considera básico.
-            return app()->environment('production') ? self::PLAN_BASIC : self::PLAN_PREMIUM;
+            return self::PLAN_BASIC;
         }
 
         $sub = $this->activeSubscription($account);
@@ -59,18 +59,12 @@ class PlanEntitlementService
                 return self::PLAN_PREMIUM;
             }
 
-            // 'basico' es el alias legible de 'basic'
-            if ($plan === 'basico') {
-                return self::PLAN_BASIC;
-            }
-
             if (in_array($plan, [self::PLAN_BASIC, self::PLAN_PRO, self::PLAN_PREMIUM], true)) {
                 return $plan;
             }
         }
 
-        // Sin suscripción activa: no romper entornos no productivos.
-        return app()->environment('production') ? self::PLAN_BASIC : self::PLAN_PREMIUM;
+        return self::PLAN_BASIC;
     }
 
     public function limitsForPlan(string $plan): array
@@ -85,6 +79,7 @@ class PlanEntitlementService
     public function activeSubscription(Account $account): ?Subscription
     {
         return $account->subscriptions()
+            ->whereIn('status', ['active', 'trialing'])
             ->orderByDesc('id')
             ->get()
             ->first(static fn (Subscription $s) => $s->isActive());
@@ -143,14 +138,14 @@ class PlanEntitlementService
 
     private function countProductsForAccount(Account $account): int
     {
-        return (int) Product::query()
+        return (int) Product::withoutGlobalScope(RestaurantScope::class)
             ->whereIn('restaurant_id', $account->restaurants()->select('id'))
             ->count();
     }
 
     private function countCategoriesForAccount(Account $account): int
     {
-        return (int) Category::query()
+        return (int) Category::withoutGlobalScope(RestaurantScope::class)
             ->whereIn('restaurant_id', $account->restaurants()->select('id'))
             ->count();
     }

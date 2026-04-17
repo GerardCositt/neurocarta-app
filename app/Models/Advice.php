@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\RestaurantScope;
 use App\Traits\HasTranslations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 class Advice extends Model
 {
     use HasFactory, HasTranslations;
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new RestaurantScope());
+    }
 
     protected $table = 'advice';
 

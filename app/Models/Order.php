@@ -3,11 +3,17 @@
 namespace App\Models;
 
 use App\Models\Restaurant;
+use App\Models\Scopes\RestaurantScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new RestaurantScope());
+    }
+
     public const STATUS_PENDING = 'pending';
     public const STATUS_PREPARING = 'preparing';
     public const STATUS_READY = 'ready';

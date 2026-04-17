@@ -159,7 +159,7 @@ class DetectRestaurant
             }
         }
 
-        return Restaurant::first();
+        return null;
     }
 
     private function previewRestaurantId(Request $request): ?int
