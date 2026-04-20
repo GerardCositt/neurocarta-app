@@ -54,13 +54,13 @@
             <p class="text-sm text-gray-500 mt-1">Se mostrará junto al nombre del local en el panel.</p>
 
             <div class="mt-4 flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center">
+                <div class="admin-logo-preview-box w-12 h-12 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center shadow-sm">
                     @if($logoFile)
-                        <img src="{{ $logoFile->temporaryUrl() }}" alt="Logo" class="w-full h-full object-cover">
+                        <img src="{{ $logoFile->temporaryUrl() }}" alt="Logo" class="admin-logo-preview-img w-full h-full object-contain p-1 bg-white">
                     @elseif($currentLogoPath)
-                        <img src="{{ asset('storage/'.$currentLogoPath) }}" alt="Logo" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/'.$currentLogoPath) }}" alt="Logo" class="admin-logo-preview-img w-full h-full object-contain p-1 bg-white">
                     @else
-                        <span class="text-xs font-bold text-gray-400">BJ</span>
+                        <img src="{{ asset('img/logo.png') }}" alt="NeuroCarta.ai" class="admin-logo-preview-img w-full h-full object-contain p-1">
                     @endif
                 </div>
 

@@ -158,3 +158,569 @@ html[data-effective-theme="dark"] .admin-shell .admin-main textarea {
     --tw-ring-opacity: 1 !important;
     --tw-ring-color: color-mix(in srgb, var(--gold) 50%, transparent) !important;
 }
+
+/*
+ * ==========================================================================
+ * Filament-inspired visual system (panel cliente)
+ * - Oscuro: #0F0F0F / #111 / #161616
+ * - Claro: equivalente limpio en blancos/grises neutros
+ * - Acento: ámbar de marca
+ * ==========================================================================
+ */
+html[data-effective-theme="dark"] .admin-shell {
+    background-color: #0f0f0f !important;
+    color: #f3f4f6 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell {
+    background-color: #f6f7f9 !important;
+    color: #111827 !important;
+}
+
+/* Encabezado más legible y con más presencia visual */
+html[data-effective-theme="dark"] .admin-shell .admin-page-title-carta {
+    color: #ffc04a !important;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-page-title-carta {
+    color: #b45309 !important;
+    letter-spacing: 0.01em;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar,
+html[data-effective-theme="dark"] .admin-shell .admin-sidebar {
+    background-color: #111111 !important;
+    border-right-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar,
+html[data-effective-theme="light"] .admin-shell .admin-sidebar {
+    background-color: #ffffff !important;
+    border-right-color: #e5e7eb !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main,
+html[data-effective-theme="dark"] .admin-shell .admin-page-header,
+html[data-effective-theme="dark"] .admin-shell .admin-footer {
+    background-color: #0f0f0f !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main,
+html[data-effective-theme="light"] .admin-shell .admin-page-header,
+html[data-effective-theme="light"] .admin-shell .admin-footer {
+    background-color: #f6f7f9 !important;
+}
+
+/* Cards/paneles del contenido */
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-white,
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-gray-50 {
+    background-color: #161616 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-white,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-50 {
+    background-color: #ffffff !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Cabecera de tabla más marcada estilo panel profesional */
+html[data-effective-theme="dark"] .admin-shell .admin-main table thead tr {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main table thead tr {
+    background: linear-gradient(180deg, #fafaf9, #f8fafc) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main table thead th {
+    color: #e5e7eb !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main table thead th {
+    color: #374151 !important;
+    border-bottom: 1px solid #d1d5db !important;
+}
+
+/* Inputs/selects: look de Filament con foco ámbar */
+html[data-effective-theme="dark"] .admin-shell .admin-main input,
+html[data-effective-theme="dark"] .admin-shell .admin-main select,
+html[data-effective-theme="dark"] .admin-shell .admin-main textarea {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
+    color: #f3f4f6 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main input,
+html[data-effective-theme="light"] .admin-shell .admin-main select,
+html[data-effective-theme="light"] .admin-shell .admin-main textarea {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #111827 !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main input:focus,
+html[data-effective-theme="dark"] .admin-shell .admin-main select:focus,
+html[data-effective-theme="dark"] .admin-shell .admin-main textarea:focus,
+html[data-effective-theme="light"] .admin-shell .admin-main input:focus,
+html[data-effective-theme="light"] .admin-shell .admin-main select:focus,
+html[data-effective-theme="light"] .admin-shell .admin-main textarea:focus {
+    border-color: #f5a623 !important;
+    box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.2) !important;
+}
+
+/* Botones secundarios coherentes con el tema */
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-gray-100 {
+    background-color: #2a2a2a !important;
+    color: #f3f4f6 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-100 {
+    background-color: #f3f4f6 !important;
+    color: #1f2937 !important;
+}
+
+/* Botones del panel cliente: mayor consistencia y contraste */
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-green-500,
+html[data-effective-theme="dark"] .admin-shell .admin-main .hover\:bg-green-600:hover {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: #f8fafc !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-green-500,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-green-600:hover {
+    background: linear-gradient(135deg, #10b981, #047857) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #ffffff !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-gray-800,
+html[data-effective-theme="dark"] .admin-shell .admin-main .hover\:bg-gray-900:hover {
+    background-color: #202020 !important;
+    color: #f3f4f6 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-800,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-gray-900:hover {
+    background-color: #111827 !important;
+    color: #ffffff !important;
+}
+
+/* Correccion explicita de contraste: texto blanco sobre fondo gris claro */
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-200.text-white,
+html[data-effective-theme="light"] .admin-shell .admin-main .text-white.bg-gray-200 {
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Dropdowns de acciones: por encima de cabeceras sticky y con panel legible */
+#actions-menu-products {
+    position: relative;
+    z-index: 60;
+}
+
+#actions-menu-products[open] {
+    z-index: 80;
+}
+
+#actions-menu-products > div {
+    z-index: 90 !important;
+    box-shadow: 0 18px 36px rgba(2, 6, 23, 0.22) !important;
+}
+
+html[data-effective-theme="dark"] #actions-menu-products > div,
+html[data-effective-theme="dark"] #restaurantHeaderPicker > div {
+    background-color: #161616 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-effective-theme="light"] #actions-menu-products > div,
+html[data-effective-theme="light"] #restaurantHeaderPicker > div {
+    background-color: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+/* Opciones dropdown legibles en ambos temas */
+html[data-effective-theme="dark"] #actions-menu-products > div .text-gray-700,
+html[data-effective-theme="dark"] #restaurantHeaderPicker > div .text-gray-700 {
+    color: #e5e7eb !important;
+}
+
+html[data-effective-theme="dark"] #actions-menu-products > div .hover\:bg-gray-50:hover,
+html[data-effective-theme="dark"] #restaurantHeaderPicker > div .hover\:bg-gray-50:hover {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/*
+ * =====================================================================
+ * FILAMENT PARITY (hard override)
+ * Objetivo: igualar visualmente el panel cliente al lenguaje Filament.
+ * =====================================================================
+ */
+
+/* 1) CONTRASTE EN LIGHT: nunca texto blanco sobre superficie clara */
+html[data-effective-theme="light"] .admin-shell,
+html[data-effective-theme="light"] .admin-shell .admin-main,
+html[data-effective-theme="light"] .admin-shell .admin-page-header,
+html[data-effective-theme="light"] .admin-shell .admin-footer {
+    color: #1f2937 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .text-white,
+html[data-effective-theme="light"] .admin-shell [class*="text-white/"] {
+    color: #1f2937 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .text-gray-900 { color: #111827 !important; }
+html[data-effective-theme="light"] .admin-shell .text-gray-800 { color: #1f2937 !important; }
+html[data-effective-theme="light"] .admin-shell .text-gray-700 { color: #374151 !important; }
+html[data-effective-theme="light"] .admin-shell .text-gray-600 { color: #4b5563 !important; }
+html[data-effective-theme="light"] .admin-shell .text-gray-500 { color: #6b7280 !important; }
+html[data-effective-theme="light"] .admin-shell .text-gray-400 { color: #9ca3af !important; }
+
+/* CTA superior en light: texto oscuro (el blanco era ilegible) */
+html[data-effective-theme="light"] .admin-cta-trigger,
+html[data-effective-theme="light"] a.admin-brand-cta {
+    color: #111827 !important;
+}
+html[data-effective-theme="light"] .admin-cta-trigger .text-gray-800,
+html[data-effective-theme="light"] .admin-cta-trigger .text-gray-700,
+html[data-effective-theme="light"] .admin-cta-trigger .text-gray-400,
+html[data-effective-theme="light"] a.admin-brand-cta .admin-brand-title,
+html[data-effective-theme="light"] a.admin-brand-cta .admin-brand-sub {
+    color: #111827 !important;
+}
+html[data-effective-theme="light"] .admin-cta-trigger svg {
+    color: #374151 !important;
+}
+
+/* 2) Z-INDEX: dropdowns por encima de tablas sticky/modales locales */
+.admin-shell #restaurantHeaderPicker,
+.admin-shell #actions-menu-products,
+.admin-shell details.admin-user-menu {
+    position: relative !important;
+    z-index: 300 !important;
+}
+
+.admin-shell #restaurantHeaderPicker[open],
+.admin-shell #actions-menu-products[open],
+.admin-shell details.admin-user-menu[open] {
+    z-index: 500 !important;
+}
+
+.admin-shell #restaurantHeaderPicker > div,
+.admin-shell #actions-menu-products > div,
+.admin-shell details.admin-user-menu > div {
+    position: absolute !important;
+    z-index: 520 !important;
+}
+
+/* Jerarquía global de capas: cabecera SIEMPRE por encima del contenido */
+.admin-shell .admin-page-header {
+    position: relative !important;
+    z-index: 260 !important;
+    isolation: isolate;
+}
+
+.admin-shell .admin-main {
+    position: relative !important;
+    z-index: 20 !important;
+}
+
+/* Asegurar que tablas/sticky jamás superen la cabecera */
+.admin-shell .admin-main table,
+.admin-shell .admin-main .overflow-x-auto,
+.admin-shell .admin-main .admin-sticky-col,
+.admin-shell .admin-main .admin-sticky-hdr {
+    z-index: 22 !important;
+}
+
+/* 3) BOTONES estilo Filament: primario ámbar, no verde */
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-green-500,
+html[data-effective-theme="dark"] .admin-shell .admin-main .hover\:bg-green-600:hover,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-green-500,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-green-600:hover {
+    background: transparent !important;
+    border: 1.5px solid #f5a623 !important;
+    color: #f5a623 !important;
+    box-shadow: none !important;
+}
+
+/* En light, botón sobre fondo blanco con ámbar más oscuro para contraste */
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-green-500,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-green-600:hover {
+    border-color: #b45309 !important;
+    color: #b45309 !important;
+}
+
+/* Botones oscuros secundarios como en Filament */
+html[data-effective-theme="dark"] .admin-shell .admin-main .bg-gray-800,
+html[data-effective-theme="dark"] .admin-shell .admin-main .hover\:bg-gray-900:hover {
+    background-color: #1f2937 !important;
+    color: #f9fafb !important;
+}
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-800,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-gray-900:hover {
+    background-color: #1f2937 !important;
+    color: #f9fafb !important;
+}
+
+/* =====================================================================
+ * HOTFIX FINAL CLIENTE
+ * - Contraste light: nunca textos claros en menú de usuario.
+ * - Stacking: dropdown usuario SIEMPRE por encima del contenido.
+ * ===================================================================== */
+
+/* Contraste en light para trigger del usuario (regla más específica que admin-shell.css) */
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu > summary.admin-cta-trigger .text-gray-800,
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu > summary.admin-cta-trigger .text-gray-700,
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu > summary.admin-cta-trigger .text-gray-400 {
+    color: #111827 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu > summary.admin-cta-trigger svg {
+    color: #374151 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu > summary.admin-cta-trigger .rounded-full.bg-gray-200 {
+    background-color: rgba(17, 24, 39, 0.14) !important;
+    color: #111827 !important;
+}
+
+/* Contraste del panel desplegable del usuario en light */
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-user-dropdown {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-user-dropdown .text-gray-900 {
+    color: #111827 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-user-dropdown .text-gray-500,
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-user-dropdown .text-gray-700 {
+    color: #4b5563 !important;
+}
+
+/* Stacking definitivo: cabecera muy por encima del main */
+.admin-shell .admin-page-header {
+    position: relative !important;
+    z-index: 9000 !important;
+    isolation: isolate;
+}
+
+.admin-shell .admin-main {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Dropdown del usuario al tope absoluto del stacking */
+.admin-shell details.admin-user-menu,
+.admin-shell details.admin-user-menu[open] {
+    position: relative !important;
+    z-index: 9100 !important;
+}
+
+.admin-shell details.admin-user-menu .admin-user-dropdown {
+    position: absolute !important;
+    z-index: 9200 !important;
+}
+
+/* La tabla y sus columnas sticky quedan por debajo sí o sí */
+.admin-shell .admin-main table,
+.admin-shell .admin-main .admin-sticky-col,
+.admin-shell .admin-main .admin-sticky-hdr,
+.admin-shell .admin-main .overflow-x-auto {
+    z-index: 2 !important;
+}
+
+/* =====================================================================
+ * USER MENU ALWAYS ON TOP (TODOS LOS TEMAS)
+ * ===================================================================== */
+.admin-shell .admin-page-header {
+    position: relative !important;
+    z-index: 10000 !important;
+    isolation: isolate;
+}
+
+.admin-shell .admin-page-header > * {
+    position: relative;
+    z-index: 10001;
+}
+
+.admin-shell details.admin-user-menu,
+.admin-shell details.admin-user-menu[open] {
+    position: relative !important;
+    z-index: 11000 !important;
+}
+
+.admin-shell details.admin-user-menu > summary {
+    position: relative !important;
+    z-index: 11001 !important;
+}
+
+.admin-shell details.admin-user-menu .admin-user-dropdown {
+    position: absolute !important;
+    z-index: 12000 !important;
+    background: var(--surface, #161616) !important;
+}
+
+/* El contenido principal nunca puede superar al header/dropdowns */
+.admin-shell .admin-main {
+    position: relative !important;
+    z-index: 1 !important;
+    isolation: isolate;
+}
+
+.admin-shell .admin-main .-mx-4,
+.admin-shell .admin-main .sm\:-mx-6,
+.admin-shell .admin-main .lg\:-mx-8,
+.admin-shell .admin-main .admin-bulk-panel,
+.admin-shell .admin-main .overflow-x-auto,
+.admin-shell .admin-main table,
+.admin-shell .admin-main .admin-sticky-col,
+.admin-shell .admin-main .admin-sticky-hdr {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* =====================================================================
+ * SIDEBAR CLIENTE PARITY CON FILAMENT
+ * ===================================================================== */
+.admin-shell #adminSidebar {
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.admin-shell .admin-sidebar-header {
+    border-bottom: 1px solid rgba(245, 166, 35, 0.28) !important;
+    padding-bottom: 1rem !important;
+}
+
+.admin-shell .admin-brand-filament {
+    background: rgba(0, 0, 0, 0.16) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22) !important;
+}
+
+.admin-shell .admin-brand-ai {
+    color: #f5a623 !important;
+}
+
+/* Icono del logo siempre visible, estilo badge de marca */
+.admin-shell .admin-brand-mark-wrap {
+    background: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.06) !important;
+}
+
+/* Ítems de navegación estilo Filament */
+.admin-shell #adminSidebar nav > a,
+.admin-shell #adminSidebar nav > button,
+.admin-shell #adminSidebar nav > details > summary {
+    min-height: 2.75rem;
+    border-radius: 0.85rem !important;
+    border: 1px solid transparent;
+}
+
+/* Inactivos */
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active),
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active),
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active) {
+    color: #d1d5db !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active):hover,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active):hover,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active):hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #f9fafb !important;
+}
+
+/* Activo: píldora ámbar como Filament */
+html[data-effective-theme="dark"] .admin-shell #adminSidebar .admin-nav-active {
+    background: #f5a623 !important;
+    color: #111827 !important;
+    border-color: #d97706 !important;
+    box-shadow: 0 6px 16px rgba(245, 166, 35, 0.26) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar .admin-nav-active svg,
+html[data-effective-theme="dark"] .admin-shell #adminSidebar .admin-nav-active .admin-nav-label {
+    color: #111827 !important;
+}
+
+/* Subitems de Ajustes */
+html[data-effective-theme="dark"] .admin-shell #adminSidebar details > div a {
+    border-radius: 0.7rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar details > div a:not(.admin-nav-active) {
+    color: #cbd5e1 !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar details > div a:not(.admin-nav-active):hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #f9fafb !important;
+}
+
+/* Light equivalente */
+html[data-effective-theme="light"] .admin-shell #adminSidebar {
+    border-right-color: #e5e7eb !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-sidebar-header {
+    border-bottom-color: rgba(180, 83, 9, 0.24) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-brand-filament {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active),
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active),
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active) {
+    color: #374151 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active):hover,
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active):hover,
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active):hover {
+    background: #f9fafb !important;
+    color: #111827 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar .admin-nav-active {
+    background: #f5a623 !important;
+    color: #111827 !important;
+    border-color: #d97706 !important;
+    box-shadow: 0 6px 14px rgba(217, 119, 6, 0.18) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar .admin-nav-active svg,
+html[data-effective-theme="light"] .admin-shell #adminSidebar .admin-nav-active .admin-nav-label {
+    color: #111827 !important;
+}
+
+/* Preview de logo en Ajustes > Apariencia: fondo blanco forzado en ambos modos */
+.admin-shell .admin-logo-preview-box,
+html[data-effective-theme="dark"] .admin-shell .admin-main .admin-logo-preview-box,
+html[data-effective-theme="light"] .admin-shell .admin-main .admin-logo-preview-box {
+    background: #ffffff !important;
+    border-color: #d1d5db !important;
+}
+
+.admin-shell .admin-logo-preview-img,
+html[data-effective-theme="dark"] .admin-shell .admin-main .admin-logo-preview-img,
+html[data-effective-theme="light"] .admin-shell .admin-main .admin-logo-preview-img {
+    background: #ffffff !important;
+}

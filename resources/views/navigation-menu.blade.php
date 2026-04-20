@@ -9,17 +9,15 @@
     {{-- adminLogoPath, qrMenuUrl, qrFilename: Livewire NavigationMenu::mount --}}
 
     {{-- Logo / Marca --}}
-    <div class="admin-sidebar-header px-5 py-6 flex items-start justify-between gap-3">
-        <a href="{{ route('dashboard') }}" class="admin-brand-cta flex items-center gap-3 min-w-0 rounded-xl px-3 py-2.5" onclick="closeAdminSidebar()">
-            @if(filled($adminLogoPath ?? null))
-                <img src="{{ asset('storage/'.$adminLogoPath) }}" alt="Logo"
-                     class="w-9 h-9 rounded-lg object-cover flex-shrink-0 border border-white/25">
-            @else
-                <div class="admin-brand-cta-mark w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">BJ</div>
-            @endif
-            <div>
-                <p class="admin-brand-title text-sm font-semibold text-gray-800 leading-tight">{{ config('app.name') }}</p>
-                <p class="admin-brand-sub text-xs text-gray-400">{{ __('admin.nav.subtitle') }}</p>
+    <div class="admin-sidebar-header px-4 py-5 flex items-start justify-between gap-3">
+        <a href="{{ route('dashboard') }}" class="admin-brand-cta admin-brand-filament flex items-center gap-3 min-w-0 rounded-2xl px-3 py-3 w-full" onclick="closeAdminSidebar()">
+            <div class="admin-brand-mark-wrap w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0 border border-white/20 bg-black/20">
+                <img src="{{ asset('img/logo.png') }}" alt="NeuroCarta.ai"
+                     class="w-full h-full object-contain p-1">
+            </div>
+            <div class="min-w-0">
+                <p class="admin-brand-title text-base font-semibold leading-tight truncate">NeuroCarta.<span class="admin-brand-ai">ai</span></p>
+                <p class="admin-brand-sub text-xs text-gray-400 truncate">{{ __('admin.nav.subtitle') }}</p>
             </div>
         </a>
         <button type="button"
@@ -31,7 +29,7 @@
     </div>
 
     {{-- Botón plegar/desplegar sidebar (solo desktop) --}}
-    <div class="hidden sm:flex justify-end px-3 pb-1">
+    <div class="hidden sm:flex justify-end px-3 pb-2">
         <button type="button"
                 id="sidebarCollapseBtn"
                 onclick="toggleAdminSidebarCollapsed()"

@@ -147,10 +147,10 @@ html[data-admin-sidebar="collapsed"] .admin-ai-credits-fixed {
 /* Tablas admin: columnas sticky (para que "Nombre" siempre se vea) */
 .admin-sticky-col {
     position: sticky;
-    z-index: 20;
+    z-index: 12;
     background: var(--surface);
 }
-.admin-sticky-hdr { z-index: 30; }
+.admin-sticky-hdr { z-index: 18; }
 html[data-effective-theme="dark"] .admin-sticky-col {
     background: var(--surface-el);
 }
@@ -460,17 +460,17 @@ html[data-effective-theme="dark"] .admin-main .text-green-800 { color: #86efac !
 .admin-bulk-panel {
     margin-bottom: 1rem;
     position: relative;
-    z-index: 1;
+    z-index: 28;
 }
 /* El panel completo necesita z-index para quedar por encima de la tabla sticky */
 .admin-bulk-panel {
     position: relative;
-    z-index: 35;
+    z-index: 28;
 }
 .admin-bulk-tooltip {
     position: relative;
     display: inline-block;
-    z-index: 40;
+    z-index: 32;
 }
 .admin-bulk-tooltip__trigger {
     display: inline-flex;
