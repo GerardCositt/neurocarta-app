@@ -22,18 +22,21 @@ class NavigationMenu extends Component
         if (! $restaurantId) {
             $cookieId = (int) request()->cookie('preview_restaurant_id');
             if ($cookieId > 0) {
-                $restaurantId = $cookieId;
-                session(['admin_restaurant_id' => $restaurantId]);
+                // Validate the cookie restaurant belongs to the authenticated user before trusting it.
+                $user    = auth()->user();
+                $account = $user ? $user->accounts()->first() : null;
+                if ($account && $account->restaurants()->where('id', $cookieId)->exists()) {
+                    $restaurantId = $cookieId;
+                    session(['admin_restaurant_id' => $restaurantId]);
+                }
             }
         }
 
         $this->adminLogoPath = Setting::get('admin_logo_path', null, $restaurantId);
 
         // Solo el restaurante del selector del admin (no app('restaurant') del middleware, que puede ser otro).
+        // Si no hay restaurante resuelto y validado, $restaurant queda null (comportamiento vacío seguro).
         $restaurant = $restaurantId ? Restaurant::find($restaurantId) : null;
-        if (! $restaurant) {
-            $restaurant = Restaurant::first();
-        }
 
         $this->qrFilename = $restaurant
             ? 'qr-' . Str::slug($restaurant->name) . '.png'

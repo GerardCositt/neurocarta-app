@@ -107,7 +107,7 @@ class ProductImport extends Component
             return;
         }
 
-        $restaurant = app()->bound('restaurant') ? app('restaurant') : Restaurant::first();
+        $restaurant = app()->bound('restaurant') ? app('restaurant') : null;
         if (! $restaurant instanceof Restaurant) {
             $this->previewErrors = ['No hay restaurante activo en el panel. Crea uno o recarga sesión.'];
             $this->hasPreview = true;
