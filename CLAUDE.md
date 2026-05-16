@@ -113,14 +113,14 @@ Variables clave:
 
 ---
 
-## Planes y precios (cerrado 2026-04-12)
+## Planes y precios (actualizado 2026-05-16)
 
-| Plan | Precio | Límites |
-|---|---|---|
-| **Gratis (trial)** | 0€ / 7 días | Sin límites — acceso total |
-| **Básico** | €59/mes (fact. anual) | 100 productos, 20 cats, sin IA ni traducciones |
-| **Pro** | €129/mes (fact. anual) | 500 productos, 60 cats, IA + traducciones + CSV |
-| **Premium** | €249/mes (fact. anual) | 2.000 productos, 200 cats, IA ilimitada |
+| Plan | Precio mensual | Precio anual | Límites |
+|---|---|---|---|
+| **Gratis (trial)** | 0€ / 7 días | — | Sin límites — acceso total |
+| **Básico** | 25€/mes | 250€/año (2 meses gratis) | 100 productos, 20 cats, sin IA ni traducciones |
+| **Pro** | 35€/mes | 350€/año (2 meses gratis) | 500 productos, 60 cats, IA + traducciones + CSV |
+| **Premium** | 65€/mes | 650€/año (2 meses gratis) | 2.000 productos, 200 cats, IA ilimitada |
 
 ## Flujo de registro y trial (cerrado 2026-04-12)
 

@@ -52,15 +52,15 @@
             <div style="margin: 20px 0;">
                 <div class="plan-row">
                     <span class="plan-name">Básico</span>
-                    <span class="plan-price">59€/mes · 100 productos</span>
+                    <span class="plan-price">25€/mes · 100 productos</span>
                 </div>
                 <div class="plan-row">
                     <span class="plan-name">Pro ⭐</span>
-                    <span class="plan-price">129€/mes · 500 productos + IA</span>
+                    <span class="plan-price">35€/mes · 500 productos + IA</span>
                 </div>
                 <div class="plan-row">
                     <span class="plan-name">Premium</span>
-                    <span class="plan-price">249€/mes · 2.000 productos + IA ilimitada</span>
+                    <span class="plan-price">65€/mes · 2.000 productos + IA ilimitada</span>
                 </div>
             </div>
 

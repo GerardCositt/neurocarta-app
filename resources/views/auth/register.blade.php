@@ -8,9 +8,9 @@
         @php
             $planLabels = [
                 'trial'   => ['label' => 'Trial gratuito', 'color' => '#FFC107', 'bg' => 'rgba(255,193,7,.12)'],
-                'basico'  => ['label' => 'Plan Básico · 59€/mes', 'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
-                'pro'     => ['label' => 'Plan Pro · 129€/mes', 'color' => '#fff', 'bg' => 'rgba(197,36,57,.15)'],
-                'premium' => ['label' => 'Plan Premium · 249€/mes', 'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                'basico'  => ['label' => 'Plan Básico · 25€/mes', 'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                'pro'     => ['label' => 'Plan Pro · 35€/mes', 'color' => '#fff', 'bg' => 'rgba(197,36,57,.15)'],
+                'premium' => ['label' => 'Plan Premium · 65€/mes', 'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
             ];
             $planInfo = $planLabels[$plan] ?? $planLabels['trial'];
         @endphp

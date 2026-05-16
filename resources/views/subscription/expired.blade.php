@@ -32,8 +32,8 @@
                 <div style="margin-bottom:14px;">
                     <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Pro</span>
                 </div>
-                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">129€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
-                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Facturación anual</div>
+                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">35€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
+                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">350€/año · 2 meses gratis</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
                     <li>✓ 500 productos</li>
                     <li>✓ 60 categorías</li>
@@ -49,8 +49,8 @@
                 <div style="margin-bottom:14px;">
                     <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Básico</span>
                 </div>
-                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">59€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
-                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Facturación anual</div>
+                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">25€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
+                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">250€/año · 2 meses gratis</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
                     <li>✓ 100 productos</li>
                     <li>✓ 20 categorías</li>
@@ -66,8 +66,8 @@
                 <div style="margin-bottom:14px;">
                     <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Premium</span>
                 </div>
-                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">249€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
-                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">Facturación anual</div>
+                <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">65€<span style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);">/mes</span></div>
+                <div style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;">650€/año · 2 meses gratis</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
                     <li>✓ 2.000 productos</li>
                     <li>✓ 200 categorías</li>
