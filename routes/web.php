@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Livewire\Pairings;
 use App\Http\Livewire\Products;
 use App\Http\Controllers\Auth\SetPasswordController;
@@ -151,6 +152,12 @@ Route::middleware(['auth:sanctum', 'verified', 'throttle:10,1'])->group(function
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });
+
+// ─── Stripe Webhook ───────────────────────────────────────────────────────────
+// No auth — Stripe signs the payload; signature is verified in the controller.
+// Excluded from CSRF in VerifyCsrfToken::$except.
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
+    ->name('stripe.webhook');
 
 Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription.check'])->group(function () {
     Route::get('/dashboard', function () {
