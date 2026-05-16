@@ -24,18 +24,18 @@ class PlanEntitlementService
     private const LIMITS = [
         self::PLAN_BASIC => [
             'restaurants' => 1,
-            'products' => 40,
-            'categories' => 4,
+            'products'    => 100,
+            'categories'  => 20,
         ],
         self::PLAN_PRO => [
             'restaurants' => 2,
-            'products' => 100,
-            'categories' => 10,
+            'products'    => 500,
+            'categories'  => 60,
         ],
         self::PLAN_PREMIUM => [
             'restaurants' => 5,
-            'products' => null,
-            'categories' => null,
+            'products'    => 2000,
+            'categories'  => 200,
         ],
     ];
 
