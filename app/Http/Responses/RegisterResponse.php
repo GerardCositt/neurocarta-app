@@ -10,18 +10,14 @@ class RegisterResponse implements RegisterResponseContract
 {
     public function toResponse($request): JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        $plan = session('registered_plan', 'trial');
-
         if ($request->wantsJson()) {
             return response()->json(['two_factor' => false]);
         }
 
-        // Planes de pago → stub Stripe (próximamente)
-        if (in_array($plan, ['basico', 'pro', 'premium'], true)) {
-            return redirect()->route('checkout.pending');
-        }
-
-        // Trial gratuito → desloguear (Fortify auto-loguea) y mostrar "revisa tu correo"
+        // All web registrations: log out (Fortify auto-logins after register) and
+        // send to the check-email screen. The user verifies email, sets a password,
+        // then logs in. If their subscription is inactive/expired they reach
+        // subscription.expired and can checkout from there.
         Auth::logout();
 
         return redirect()->route('register.check-email');

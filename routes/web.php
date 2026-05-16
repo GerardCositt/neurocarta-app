@@ -73,11 +73,6 @@ Route::post('/register/resend-activation', function (\Illuminate\Http\Request $r
     return back()->with('status', 'Si el email existe y la cuenta no está activada, te hemos enviado el enlace.');
 })->middleware(['guest', 'throttle:3,5'])->name('register.resend');
 
-// Stub Stripe para planes de pago (próximamente)
-Route::get('/checkout/pending', function () {
-    return view('auth.checkout-pending');
-})->middleware('guest')->name('checkout.pending');
-
 // ─── Crear contraseña (enlace del email) ───────────────────────────────────
 Route::get('/set-password/{user}', [SetPasswordController::class, 'show'])
     ->middleware('guest')
