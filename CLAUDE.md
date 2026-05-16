@@ -28,6 +28,23 @@
 - **Clave SSH**: `~/.ssh/neurocarta_jotelulu2` (Mac mini) → clave `neurocarta-mac2` en Jotelulu
 - **Panel admin**: https://app.neurocarta.ai/admin (Filament), acceso con FILAMENT_ADMIN_EMAIL=test@test.com
 
+#### Backups producción — configurado 2026-05-16
+- **Script**: `/opt/neurocarta/scripts/backup.sh`
+- **Cron**: `/etc/cron.d/neurocarta`
+  - Scheduler Laravel cada minuto: `docker exec neurocarta-app-1 php artisan schedule:run`
+  - Backup diario 03:00: `/opt/neurocarta/scripts/backup.sh`
+- **Destino backups**: `/opt/neurocarta/backups/`
+  - DB diaria: `/opt/neurocarta/backups/db/daily/`
+  - DB semanal: `/opt/neurocarta/backups/db/weekly/`
+  - Storage diario: `/opt/neurocarta/backups/storage/daily/`
+  - Storage semanal: `/opt/neurocarta/backups/storage/weekly/`
+- **Retención**: 7 diarios + 4 semanales (28 días).
+- **Log script**: `/opt/neurocarta/backups/backup.log`
+- **Log cron**: `/var/log/neurocarta-backup.log`
+- **Primer backup verificado**: `neurocarta_20260516_194028.sql.gz` (DB) y `neurocarta_storage_20260516_194028.tar.gz` (storage).
+- **Restauración probada**: dump restaurado en DB temporal `neurocarta_restore`; recuentos verificados (`users=7`, `restaurants=6`, `subscriptions=6`); DB temporal eliminada después.
+- **Pendiente recomendado**: copia externa/off-server (S3, rsync externo o backup gestionado) antes de escalar clientes.
+
 ### Staging — Render (legacy, mantener por ahora)
 - **App**: https://neurocarta-staging.onrender.com
 - **Plataforma**: Render (Docker, PHP 8.2 + Apache)
