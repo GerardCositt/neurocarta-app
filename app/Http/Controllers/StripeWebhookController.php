@@ -36,8 +36,12 @@ class StripeWebhookController extends Controller
         }
 
         return match ($event->type) {
-            'checkout.session.completed' => $this->handleCheckoutCompleted($event->data->object),
-            default                      => response('OK', 200),
+            'checkout.session.completed'    => $this->handleCheckoutCompleted($event->data->object),
+            'invoice.payment_succeeded'     => $this->handlePaymentSucceeded($event->data->object),
+            'invoice.payment_failed'        => $this->handlePaymentFailed($event->data->object),
+            'customer.subscription.deleted' => $this->handleSubscriptionDeleted($event->data->object),
+            'customer.subscription.updated' => $this->handleSubscriptionUpdated($event->data->object),
+            default                         => response('OK', 200),
         };
     }
 
@@ -151,6 +155,195 @@ class StripeWebhookController extends Controller
         ]);
 
         // TODO: send PaymentSucceeded confirmation email (Commit 7 — emails).
+
+        return response('OK', 200);
+    }
+
+    private function handlePaymentSucceeded(object $invoice): Response
+    {
+        // Only care about subscription invoices.
+        $stripeSubscriptionId = $invoice->subscription ?? null;
+        if (! $stripeSubscriptionId) {
+            return response('OK', 200);
+        }
+
+        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+        if (! $subscription) {
+            Log::warning('StripeWebhook: invoice.payment_succeeded — no subscription found.', [
+                'stripe_subscription_id' => $stripeSubscriptionId,
+            ]);
+            return response('OK', 200);
+        }
+
+        $periodStart = isset($invoice->period_start) ? Carbon::createFromTimestamp($invoice->period_start) : null;
+        $periodEnd   = isset($invoice->period_end)   ? Carbon::createFromTimestamp($invoice->period_end)   : null;
+
+        // Idempotency: skip if period hasn't changed.
+        if (
+            $periodEnd !== null
+            && $subscription->current_period_end_at !== null
+            && $subscription->current_period_end_at->eq($periodEnd)
+            && $subscription->status === 'active'
+            && $subscription->grace_period_ends_at === null
+        ) {
+            return response('OK', 200);
+        }
+
+        $subscription->update([
+            'status'                  => 'active',
+            'current_period_start_at' => $periodStart,
+            'current_period_end_at'   => $periodEnd,
+            'grace_period_ends_at'    => null,
+        ]);
+
+        Log::info('StripeWebhook: invoice.payment_succeeded — subscription renewed.', [
+            'subscription_id'        => $subscription->id,
+            'stripe_subscription_id' => $stripeSubscriptionId,
+            'period_end'             => $periodEnd?->toDateTimeString(),
+        ]);
+
+        // TODO: send PaymentSucceeded renewal email (Commit 7 — emails).
+
+        return response('OK', 200);
+    }
+
+    private function handlePaymentFailed(object $invoice): Response
+    {
+        $stripeSubscriptionId = $invoice->subscription ?? null;
+        if (! $stripeSubscriptionId) {
+            return response('OK', 200);
+        }
+
+        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+        if (! $subscription) {
+            Log::warning('StripeWebhook: invoice.payment_failed — no subscription found.', [
+                'stripe_subscription_id' => $stripeSubscriptionId,
+            ]);
+            return response('OK', 200);
+        }
+
+        // Only extend grace period if not already in a future grace window.
+        $gracePeriodEndsAt = $subscription->grace_period_ends_at;
+        if ($gracePeriodEndsAt === null || $gracePeriodEndsAt->isPast()) {
+            $gracePeriodEndsAt = now()->addDays(4);
+        }
+
+        $subscription->update([
+            'status'               => 'past_due',
+            'grace_period_ends_at' => $gracePeriodEndsAt,
+        ]);
+
+        Log::warning('StripeWebhook: invoice.payment_failed — subscription set to past_due.', [
+            'subscription_id'        => $subscription->id,
+            'stripe_subscription_id' => $stripeSubscriptionId,
+            'grace_period_ends_at'   => $gracePeriodEndsAt->toDateTimeString(),
+        ]);
+
+        // TODO: send PaymentFailed email (Commit 7 — emails).
+
+        return response('OK', 200);
+    }
+
+    private function handleSubscriptionDeleted(object $stripeSub): Response
+    {
+        $stripeSubscriptionId = $stripeSub->id ?? null;
+        if (! $stripeSubscriptionId) {
+            return response('OK', 200);
+        }
+
+        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+        if (! $subscription) {
+            Log::warning('StripeWebhook: customer.subscription.deleted — no subscription found.', [
+                'stripe_subscription_id' => $stripeSubscriptionId,
+            ]);
+            return response('OK', 200);
+        }
+
+        // Idempotency: already canceled.
+        if ($subscription->status === 'canceled') {
+            return response('OK', 200);
+        }
+
+        $canceledAt = isset($stripeSub->canceled_at)
+            ? Carbon::createFromTimestamp($stripeSub->canceled_at)
+            : now();
+
+        $periodEnd = isset($stripeSub->current_period_end)
+            ? Carbon::createFromTimestamp($stripeSub->current_period_end)
+            : null;
+
+        $payload = [
+            'status'               => 'canceled',
+            'canceled_at'          => $canceledAt,
+            'grace_period_ends_at' => null,
+        ];
+        if ($periodEnd !== null) {
+            $payload['current_period_end_at'] = $periodEnd;
+        }
+
+        $subscription->update($payload);
+
+        Log::info('StripeWebhook: customer.subscription.deleted — subscription canceled.', [
+            'subscription_id'        => $subscription->id,
+            'stripe_subscription_id' => $stripeSubscriptionId,
+            'canceled_at'            => $canceledAt->toDateTimeString(),
+        ]);
+
+        // TODO: send SubscriptionCanceled email (Commit 7 — emails).
+
+        return response('OK', 200);
+    }
+
+    private function handleSubscriptionUpdated(object $stripeSub): Response
+    {
+        $stripeSubscriptionId = $stripeSub->id ?? null;
+        if (! $stripeSubscriptionId) {
+            return response('OK', 200);
+        }
+
+        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+        if (! $subscription) {
+            // Not our subscription (e.g. created outside the app). Ignore silently.
+            return response('OK', 200);
+        }
+
+        $updates = [];
+
+        // Sync period dates if present.
+        if (isset($stripeSub->current_period_start)) {
+            $updates['current_period_start_at'] = Carbon::createFromTimestamp($stripeSub->current_period_start);
+        }
+        if (isset($stripeSub->current_period_end)) {
+            $updates['current_period_end_at'] = Carbon::createFromTimestamp($stripeSub->current_period_end);
+        }
+
+        // Sync price ID if changed (plan upgrade/downgrade handled by Stripe).
+        $newPriceId = $stripeSub->items->data[0]->price->id ?? null;
+        if ($newPriceId && $newPriceId !== $subscription->stripe_price_id) {
+            $updates['stripe_price_id'] = $newPriceId;
+        }
+
+        // Trial or past_due resolved — Stripe confirmed active payment.
+        if (($stripeSub->status ?? null) === 'active' && in_array($subscription->status, ['trialing', 'past_due'], true)) {
+            $updates['status']               = 'active';
+            $updates['grace_period_ends_at'] = null;
+        }
+
+        // Scheduled cancellation: keep access until period end; record intent now.
+        // customer.subscription.deleted fires at the actual end and sets status=canceled.
+        if (($stripeSub->cancel_at_period_end ?? false) && $subscription->canceled_at === null) {
+            $updates['canceled_at'] = now();
+        }
+
+        if (! empty($updates)) {
+            $subscription->update($updates);
+
+            Log::info('StripeWebhook: customer.subscription.updated — subscription synced.', [
+                'subscription_id'        => $subscription->id,
+                'stripe_subscription_id' => $stripeSubscriptionId,
+                'updates'                => array_keys($updates),
+            ]);
+        }
 
         return response('OK', 200);
     }
