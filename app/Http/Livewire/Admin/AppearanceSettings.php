@@ -79,7 +79,11 @@ class AppearanceSettings extends Component
     public function updatedLogoFile(): void
     {
         $this->validate([
-            'logoFile' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:1024',
+            'logoFile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+        ], [
+            'logoFile.image' => __('admin.appearance.logo_file_image'),
+            'logoFile.mimes' => __('admin.appearance.logo_file_mimes'),
+            'logoFile.max'   => __('admin.appearance.logo_file_max'),
         ]);
     }
 
@@ -87,10 +91,13 @@ class AppearanceSettings extends Component
     {
         $this->validate(
             [
-                'logoFile' => 'required|image|mimes:jpg,jpeg,png,webp,svg|max:1024',
+                'logoFile' => 'required|image|mimes:jpg,jpeg,png,webp|max:1024',
             ],
             [
                 'logoFile.required' => __('admin.appearance.logo_file_required'),
+                'logoFile.image'    => __('admin.appearance.logo_file_image'),
+                'logoFile.mimes'    => __('admin.appearance.logo_file_mimes'),
+                'logoFile.max'      => __('admin.appearance.logo_file_max'),
             ]
         );
 
@@ -176,14 +183,11 @@ class AppearanceSettings extends Component
         $accentPresetsFromLogo = false;
         $accentPresets = $this->accentPresetHexes();
         if ($this->currentLogoPath) {
-            $_lp = strtolower($this->currentLogoPath);
-            if (substr($_lp, -4) !== '.svg') {
-                $fromLogo = app(MenuBrandPaletteService::class)
-                    ->extractDistinctSwatchesFromStoragePublicPath($this->currentLogoPath);
-                if ($fromLogo !== []) {
-                    $accentPresets = $fromLogo;
-                    $accentPresetsFromLogo = true;
-                }
+            $fromLogo = app(MenuBrandPaletteService::class)
+                ->extractDistinctSwatchesFromStoragePublicPath($this->currentLogoPath);
+            if ($fromLogo !== []) {
+                $accentPresets = $fromLogo;
+                $accentPresetsFromLogo = true;
             }
         }
 

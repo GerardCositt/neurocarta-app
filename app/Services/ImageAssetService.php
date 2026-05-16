@@ -9,6 +9,11 @@ use RuntimeException;
 class ImageAssetService
 {
     private const DEFAULT_QUALITY = 82;
+    private const SAFE_RASTER_MIME_TYPES = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+    ];
 
     public function storeUploadedImage($file, string $directory = 'img', int $maxSide = 1600): string
     {
@@ -18,11 +23,7 @@ class ImageAssetService
         }
 
         $originalName = (string) ($file->getClientOriginalName() ?? 'image');
-        $extension = strtolower((string) pathinfo($originalName, PATHINFO_EXTENSION));
-
-        if ($extension === 'svg') {
-            return $file->store($directory, 'public');
-        }
+        $this->assertSafeRasterUpload($sourcePath);
 
         $binary = file_get_contents($sourcePath);
         if ($binary === false) {
@@ -167,6 +168,16 @@ class ImageAssetService
         imagedestroy($image);
 
         return [$output, $extension];
+    }
+
+    private function assertSafeRasterUpload(string $sourcePath): void
+    {
+        $info = @getimagesize($sourcePath);
+        $mime = is_array($info) ? ($info['mime'] ?? null) : null;
+
+        if (! is_string($mime) || ! in_array($mime, self::SAFE_RASTER_MIME_TYPES, true)) {
+            throw new RuntimeException('Formato de imagen no compatible. Usa JPG, PNG o WebP.');
+        }
     }
 
     private function gdImageHasAlpha(\GdImage $image): bool

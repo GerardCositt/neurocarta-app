@@ -158,10 +158,6 @@ class ProductController extends Controller
             return null;
         }
 
-        if (strtolower((string) pathinfo($logo, PATHINFO_EXTENSION)) === 'svg') {
-            return null;
-        }
-
         $extracted = app(MenuBrandPaletteService::class)->extractFromStoragePublicPath($logo);
         if ($extracted) {
             Setting::put(MenuBrandPaletteService::settingKey(), json_encode($extracted), $restaurantId);

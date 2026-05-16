@@ -66,7 +66,7 @@
 
                 <div class="flex-1 min-w-0">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                        <input type="file" wire:model="logoFile" accept="image/*"
+                        <input type="file" wire:model="logoFile" accept="image/jpeg,image/png,image/webp"
                                class="block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-800 hover:file:bg-amber-100">
 
                         <div class="flex items-center gap-2">
@@ -94,8 +94,6 @@
     </div>
 
     @php
-        $_logoLower = $currentLogoPath ? strtolower($currentLogoPath) : '';
-        $isSvgLogo = $currentLogoPath && substr($_logoLower, -4) === '.svg';
         $paletteOrder = [
             '--gold' => __('admin.appearance.palette_var_gold'),
             '--gold-light' => __('admin.appearance.palette_var_gold_light'),
@@ -159,8 +157,6 @@
             </div>
 
             <p class="text-xs text-gray-400 mt-6 border-t border-gray-100 pt-4">{{ __('admin.appearance.palette_footer') }}</p>
-        @elseif($isSvgLogo)
-            <p class="text-sm text-amber-800 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mt-4">{{ __('admin.appearance.palette_svg_notice') }}</p>
         @elseif($currentLogoPath)
             <p class="text-sm text-gray-600 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 mt-4">{{ __('admin.appearance.palette_extract_failed') }}</p>
         @else

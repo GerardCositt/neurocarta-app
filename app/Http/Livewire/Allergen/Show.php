@@ -221,12 +221,15 @@ class Show extends Component
         $this->validate(
             [
                 'name'  => 'required|string|min:2|max:191',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:1024',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
             ],
             [
                 'name.required' => __('validation.allergen.name_required'),
                 'name.min' => __('validation.allergen.name_min', ['min' => 2]),
                 'name.max' => __('validation.allergen.name_max', ['max' => 191]),
+                'image.image' => 'La imagen debe ser un archivo de imagen.',
+                'image.mimes' => 'La imagen debe ser JPG, PNG o WebP. No se admiten SVG ni GIF.',
+                'image.max' => 'La imagen no puede superar 1 MB.',
             ]
         );
 

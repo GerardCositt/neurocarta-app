@@ -549,10 +549,14 @@ class Products extends Component
             'description'         => 'nullable|string|max:20000',
             'pairing_id'          => '',
             'photo'               => '',
-            'filename'            => 'nullable|image|mimes:jpg,jpeg,png,webp,svg,gif|max:8192',
+            'filename'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:8192',
             'aller'               => 'nullable|string|max:5000',
             'selectedAllergens'   => 'nullable|array',
             'selectedAllergens.*' => 'integer|exists:allergens,id',
+        ], [
+            'filename.image' => 'La foto debe ser una imagen.',
+            'filename.mimes' => 'La foto debe ser JPG, PNG o WebP. No se admiten SVG ni GIF.',
+            'filename.max'   => 'La foto no puede superar 8 MB.',
         ]);
 
         if ($data['filename'] != null) {

@@ -118,6 +118,7 @@ Variables clave:
 - **BarJaenIIISeeder eliminado del entrypoint**: Se quitó de `docker/entrypoint.sh` porque pisaba datos reales de usuarios al desplegarse. Solo se lanza manualmente para demo.
 - **Turnstile desactivado en login**: El widget estaba fuera del `<form>` (token nunca se enviaba) y bloqueaba el login. Eliminado del blade y del pipeline de Fortify. Pendiente reactivar correctamente con claves reales de Cloudflare.
 - **DNS en Cloudflare**: `app.neurocarta.ai` → `149.71.98.240`, proxy desactivado (nube gris).
+- **Seguridad de uploads públicos (2026-05-16)**: Las subidas de cliente para logos, fotos de productos y alérgenos no aceptan SVG ni GIF. Solo se permiten imágenes raster conservadoras (`jpg/jpeg`, `png`, `webp`) con límites explícitos de tamaño. `ImageAssetService` revalida el MIME real (`image/jpeg`, `image/png`, `image/webp`) y re-encodea las imágenes antes de guardarlas, de modo que no se almacenen SVG subidos por usuarios aunque un formulario omitiera la validación.
 
 ---
 
@@ -264,8 +265,8 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Revisar permisos de admin.
 - [ ] Proteger rutas internas.
 - [ ] Rate limit en login, registro e IA.
-- [ ] Validación fuerte de subida de archivos.
-- [ ] Evitar SVG peligroso o sanitizarlo.
+- [x] Validación fuerte de subida de archivos públicos: logos, productos y alérgenos limitados a `jpg/jpeg`, `png`, `webp`; CSV/importaciones limitadas por tipo.
+- [x] Evitar SVG peligroso en uploads públicos: SVG/GIF eliminados de validaciones y `accept`; `ImageAssetService` rechaza MIME no raster y re-encodea antes de guardar.
 - [ ] CSRF funcionando.
 - [ ] Cookies seguras en producción.
 - [ ] Contraseñas y tokens nunca en repo.

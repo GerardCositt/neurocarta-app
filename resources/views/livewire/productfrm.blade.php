@@ -169,7 +169,7 @@
                                         <img src="{{ $filename->temporaryUrl() }}" alt=""
                                              class="w-14 h-14 rounded-xl object-cover border border-gray-200 shadow-sm flex-shrink-0">
                                     @endif
-                                    <input type="file" wire:model="filename"
+                                    <input type="file" wire:model="filename" accept="image/jpeg,image/png,image/webp"
                                            class="flex-1 text-sm text-gray-500 border border-gray-200 rounded-xl py-2 px-3 bg-white file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer">
                                 </div>
                                 <div class="mt-3 flex flex-wrap items-center gap-2">

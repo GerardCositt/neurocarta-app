@@ -158,11 +158,6 @@ class MenuBrandPaletteService
             return null;
         }
 
-        $ext = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
-        if ($ext === 'svg') {
-            return null;
-        }
-
         if (! function_exists('imagecreatefromstring')) {
             return null;
         }

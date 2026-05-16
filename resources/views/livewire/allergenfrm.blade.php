@@ -34,7 +34,7 @@
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('admin.allergen_page.image_optional') }}</label>
                             <div class="flex flex-wrap items-center gap-3">
                                 <input type="file" wire:model="image"
-                                       accept="image/jpeg,image/png,image/gif"
+                                       accept="image/jpeg,image/png,image/webp"
                                        class="text-sm text-gray-600 border border-gray-200 rounded-xl py-1.5 px-3 bg-white max-w-full">
                                 @if($image)
                                     <img src="{{ $image->temporaryUrl() }}" alt="" class="w-12 h-12 object-cover rounded-lg border border-gray-200 flex-shrink-0">
