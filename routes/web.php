@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Livewire\Pairings;
 use App\Http\Livewire\Products;
 use App\Http\Controllers\Auth\SetPasswordController;
@@ -142,6 +143,14 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/user/locale', UserLocale
 Route::get('/subscription/expired', function () {
     return view('subscription.expired');
 })->middleware(['auth:sanctum', 'verified'])->name('subscription.expired');
+
+// ─── Stripe Checkout ──────────────────────────────────────────────────────────
+// No subscription.check — expired/inactive users must be able to reach checkout.
+Route::middleware(['auth:sanctum', 'verified', 'throttle:10,1'])->group(function () {
+    Route::post('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+});
 
 Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription.check'])->group(function () {
     Route::get('/dashboard', function () {
