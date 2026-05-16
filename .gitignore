@@ -30,3 +30,18 @@ yarn-error.log
 
 # Scripts ad hoc en la raíz (no versionar)
 /tmp_*.php
+
+# Laravel runtime — archivos generados, nunca commitear
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/framework/cache/data/
+/storage/logs/
+/storage/app/public/
+
+# Logs genéricos
+*.log
+
+# Volcados y backups de base de datos
+*.sql
+*.dump
+*.backup
