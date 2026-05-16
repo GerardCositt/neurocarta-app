@@ -154,13 +154,135 @@ Variables clave:
 - Verificación por WhatsApp/SMS → **pendiente para más adelante**
 - IP de registro como capa secundaria (registrar, no bloquear)
 
-## Pendiente / próximos pasos
+## Hoja de ruta definitiva para lanzamiento
 
-- [ ] Implementar flujo de registro con trial (ver sección arriba)
-- [ ] Reactivar Turnstile correctamente en login con claves reales de Cloudflare
-- [ ] Crear planes en Stripe y conectar webhooks
-- [ ] Pantalla de bloqueo día 8 (panel + carta pública + QR)
-- [ ] Emails de aviso día 5 y día 7
-- [ ] Validación de teléfono por WhatsApp/SMS (anti-abuso trial)
-- [ ] Migrar base de datos de Render a Jotelulu o descartar staging
-- [ ] Evaluar si subir landing a deploy automático o mantener SCP manual
+Claude/Cursor actuará como director técnico del cierre de producto: priorizar, ordenar, auditar riesgos, proponer siguientes pasos y evitar lanzar/cobrar si faltan bloqueantes críticos.
+
+### Regla de lanzamiento
+- No cobrar a clientes hasta tener Stripe live probado, backups restaurables, legal publicado, aislamiento multi-tenant verificado y 2-3 restaurantes piloto probados de principio a fin.
+
+### Fase 0 — Congelar base y ordenar trabajo
+- [ ] Limpiar estado de Git: separar cambios reales de archivos generados (`storage`, cachés, sesiones, logs).
+- [ ] Crear/usar rama de trabajo de lanzamiento si procede.
+- [ ] Convertir este checklist en tareas cerradas por área: Producto, Stripe, Tenants, UX, Legal, Producción, Seguridad, Calidad y Comercial.
+- [ ] Definir MVP de lanzamiento frente a mejoras post-lanzamiento.
+- [ ] Alinear precios y límites comerciales con los límites reales del código antes de cerrar Stripe.
+
+### Fase 1 — Producto crítico
+- [ ] Registro completo de restaurante sin intervención manual.
+- [ ] Login, recuperación de contraseña y cierre de sesión sin errores 419 en pruebas reales.
+- [ ] Trial gratis con fechas correctas y avisos coherentes.
+- [ ] Pantalla de trial terminado clara y con CTA real para contratar.
+- [ ] Bloqueo correcto de panel, QR y carta pública cuando trial/suscripción caduca.
+- [ ] Planes Básico / Pro / Premium conectados a límites reales: productos, categorías, IA, traducciones, CSV, etc.
+- [ ] Panel de gestión usable en móvil y escritorio.
+- [ ] Crear, editar, ocultar y ordenar categorías.
+- [ ] Crear, editar, ocultar y ordenar productos.
+- [ ] Subida de imágenes de platos estable.
+- [ ] Imagen placeholder correcta cuando no hay foto.
+- [ ] Alérgenos visibles y editables.
+- [ ] Vista pública de carta limpia, rápida y probada con 100-300 productos.
+- [ ] Selector de idioma revisado.
+- [ ] Importación CSV probada con plantilla real.
+- [ ] IA de importación, descripción e imágenes con control de créditos.
+
+### Fase 2 — Pagos y suscripciones
+- [ ] Stripe conectado en producción.
+- [ ] Checkout real para cada plan.
+- [ ] Webhooks de Stripe configurados.
+- [ ] Activación automática de suscripción tras pago.
+- [ ] Cancelación, impago y renovación gestionados.
+- [ ] Facturación anual/mensual clara.
+- [ ] Emails de trial, alta, pago fallido y renovación.
+- [ ] Límite por plan aplicado de forma centralizada y auditada.
+
+### Fase 3 — Multi-restaurante / tenants
+- [ ] Cada restaurante aislado correctamente.
+- [ ] Subdominio o URL pública por restaurante funcionando.
+- [ ] Usuario asignado a su cuenta/restaurante.
+- [ ] Evitar que un usuario vea datos de otro restaurante.
+- [ ] Selector de restaurante probado si una cuenta tiene varios.
+- [ ] Seeds/demo separados de datos reales.
+- [ ] Eliminar o justificar cualquier consulta tipo `Restaurant::first()` fuera de seeds/demo.
+
+### Fase 4 — Diseño y UX
+- [ ] Revisar panel de productos con muchos platos.
+- [ ] Revisar tabla de productos en pantallas pequeñas.
+- [ ] Revisar carta pública en móvil real.
+- [ ] Revisar estados vacíos: sin productos, sin categorías, sin imagen, sin suscripción.
+- [ ] Revisar textos de ayuda, botones y errores.
+- [ ] Revisar tema claro/oscuro si ambos existen.
+- [ ] Branding consistente: logo, favicon, colores y emails.
+- [ ] Página de precios pública lista.
+- [ ] Landing pública con propuesta clara.
+
+### Fase 5 — Legal
+- [ ] Términos y condiciones.
+- [ ] Política de privacidad.
+- [ ] Política de cookies.
+- [ ] Aviso legal.
+- [ ] Consentimiento para emails.
+- [ ] RGPD: exportar/eliminar datos de cliente si aplica.
+- [ ] Información de empresa, CIF/NIF y dirección legal.
+- [ ] Condiciones de uso de IA si se generan textos/imágenes.
+
+### Fase 6 — Producción técnica
+- [ ] `.env` de producción revisado.
+- [ ] `APP_ENV=production`.
+- [ ] `APP_DEBUG=false`.
+- [ ] `APP_URL` correcto.
+- [ ] Base de datos de producción limpia y migrada.
+- [ ] Backups automáticos de base de datos.
+- [ ] Backups de imágenes/subidas.
+- [ ] Storage público configurado.
+- [ ] Cola/queue configurada si hay emails, IA o importaciones pesadas.
+- [ ] Scheduler/cron activo para trials, ofertas y avisos.
+- [ ] Logs accesibles.
+- [ ] Monitorización de errores.
+- [ ] HTTPS obligatorio.
+- [ ] Dominio principal y subdominios configurados.
+- [ ] Emails SMTP transaccionales configurados.
+
+### Fase 7 — Seguridad
+- [ ] Revisar permisos de admin.
+- [ ] Proteger rutas internas.
+- [ ] Rate limit en login, registro e IA.
+- [ ] Validación fuerte de subida de archivos.
+- [ ] Evitar SVG peligroso o sanitizarlo.
+- [ ] CSRF funcionando.
+- [ ] Cookies seguras en producción.
+- [ ] Contraseñas y tokens nunca en repo.
+- [ ] Revisar `.gitignore` para `storage`, `.env`, backups y dumps.
+- [ ] Auditoría básica de dependencias.
+
+### Fase 8 — Calidad
+- [ ] Prueba manual completa: registro -> trial -> crear carta -> verla pública.
+- [ ] Prueba manual: importar CSV.
+- [ ] Prueba manual: subir imágenes.
+- [ ] Prueba manual: cambiar plan/caducar trial.
+- [ ] Prueba manual: usuario sin suscripción.
+- [ ] Tests mínimos de login, registro, aislamiento por restaurante y suscripción.
+- [ ] Revisar responsive en Chrome, Safari y móvil.
+- [ ] Revisar rendimiento de carta con 100-300 productos.
+
+### Fase 9 — Comercial
+- [ ] Definir precios finales.
+- [ ] Definir qué incluye cada plan.
+- [ ] Crear demo preparada.
+- [ ] Crear restaurante demo público.
+- [ ] Preparar onboarding para primeros clientes.
+- [ ] Preparar soporte: email, WhatsApp o formulario.
+- [ ] Preparar FAQ.
+- [ ] Preparar proceso para migrar cartas actuales de clientes.
+- [ ] Preparar material de venta: capturas, vídeo corto y pitch.
+
+### Fase 10 — Antes de cobrar a clientes
+- [ ] Stripe en modo live probado con pago pequeño.
+- [ ] Emails reales llegan bien.
+- [ ] Backups restaurables.
+- [ ] Dominio final probado.
+- [ ] Política legal publicada.
+- [ ] Panel sin datos demo mezclados.
+- [ ] Usuario cliente no puede acceder a `/admin` salvo que corresponda.
+- [ ] Flujo de alta tarda menos de 5 minutos.
+- [ ] Al menos 2-3 restaurantes piloto probados de principio a fin.
