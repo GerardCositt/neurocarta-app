@@ -5,6 +5,7 @@ use App\Http\Livewire\Pairings;
 use App\Http\Livewire\Products;
 use App\Http\Controllers\Auth\SetPasswordController;
 use App\Http\Controllers\ProductController;
+use App\Http\Middleware\CheckPublicMenuSubscription;
 use App\Http\Middleware\DetectRestaurant;
 use App\Http\Controllers\Api\ReorderController;
 use App\Http\Controllers\Api\StoreOrderController;
@@ -124,12 +125,14 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     }
 
     return app(DetectRestaurant::class)->handle($request, function ($req) {
-        return app(ProductController::class)->index($req);
+        return app(CheckPublicMenuSubscription::class)->handle($req, function ($req2) {
+            return app(ProductController::class)->index($req2);
+        });
     });
 })->name('menu');
 
 Route::post('/api/orders', StoreOrderController::class)
-    ->middleware(['throttle:30,1', 'orders.enabled', 'detect.restaurant'])
+    ->middleware(['throttle:30,1', 'orders.enabled', 'detect.restaurant', 'subscription.public'])
     ->name('api.orders.store');
 
 Route::middleware(['auth:sanctum', 'verified'])->post('/user/locale', UserLocaleController::class)
