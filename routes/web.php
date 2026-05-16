@@ -84,13 +84,9 @@ Route::post('/set-password', [SetPasswordController::class, 'store'])
     ->middleware('guest')
     ->name('set-password.store');
 
-// Raíz: panel (login/dashboard) en IP/localhost sin contexto de carta; carta pública en subdominio o ?restaurant=
+// Raíz: panel admin en hosts centrales; carta pública en subdominio de restaurante o preview local.
 Route::get('/', function (\Illuminate\Http\Request $request) {
     $host = $request->getHost();
-
-    $hasPreviewContext = ($request->query('restaurant') !== null && $request->query('restaurant') !== '')
-        || session('admin_restaurant_id')
-        || $request->cookie('preview_restaurant_id');
 
     $isDirectLocalAccess = filter_var($host, FILTER_VALIDATE_IP) !== false
         || $host === 'localhost';
@@ -102,16 +98,29 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
         $isRestaurantSubdomain = $subdomain && ! in_array($subdomain, ['app', 'www'], true);
     }
 
-    if ($isDirectLocalAccess && ! $hasPreviewContext) {
+    // Hosts centrales (app.neurocarta.ai / www.neurocarta.ai): siempre panel admin.
+    // DetectRestaurant no puede resolver la carta desde estos hosts; cualquier preview
+    // context aquí causaría un 404 al buscar subdomain 'app' en la BD.
+    if (! $isDirectLocalAccess && ! $isRestaurantSubdomain) {
         return auth()->check()
             ? redirect()->route('dashboard')
             : redirect()->route('login');
     }
 
-    if (! $isDirectLocalAccess && ! $hasPreviewContext && ! $isRestaurantSubdomain) {
-        return auth()->check()
-            ? redirect()->route('dashboard')
-            : redirect()->route('login');
+    // IP / localhost: solo ir a la carta si hay un contexto de preview que DetectRestaurant
+    // puede resolver (session, cookie, o ?restaurant= numérico en entornos no-producción).
+    if ($isDirectLocalAccess) {
+        $resolvablePreview = session('admin_restaurant_id')
+            || $request->cookie('preview_restaurant_id')
+            || (! app()->isProduction()
+                && is_numeric($request->query('restaurant'))
+                && (int) $request->query('restaurant') > 0);
+
+        if (! $resolvablePreview) {
+            return auth()->check()
+                ? redirect()->route('dashboard')
+                : redirect()->route('login');
+        }
     }
 
     return app(DetectRestaurant::class)->handle($request, function ($req) {
