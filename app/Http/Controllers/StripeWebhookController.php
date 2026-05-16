@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentFailed;
+use App\Mail\PaymentSucceeded;
+use App\Mail\SubscriptionActivated;
+use App\Mail\SubscriptionCanceled;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Exception\SignatureVerificationException;
 use Stripe\StripeClient;
 use Stripe\Webhook;
@@ -154,7 +159,7 @@ class StripeWebhookController extends Controller
             'period_end'             => $periodEnd->toDateTimeString(),
         ]);
 
-        // TODO: send PaymentSucceeded confirmation email (Commit 7 — emails).
+        $this->mailAccountUsers($subscription, fn ($user) => new SubscriptionActivated($user, $subscription));
 
         return response('OK', 200);
     }
@@ -202,7 +207,10 @@ class StripeWebhookController extends Controller
             'period_end'             => $periodEnd?->toDateTimeString(),
         ]);
 
-        // TODO: send PaymentSucceeded renewal email (Commit 7 — emails).
+        // Skip renewal email for the first invoice — activation email already sent via checkout.session.completed.
+        if (($invoice->billing_reason ?? null) !== 'subscription_create') {
+            $this->mailAccountUsers($subscription, fn ($user) => new PaymentSucceeded($user, $subscription));
+        }
 
         return response('OK', 200);
     }
@@ -239,7 +247,7 @@ class StripeWebhookController extends Controller
             'grace_period_ends_at'   => $gracePeriodEndsAt->toDateTimeString(),
         ]);
 
-        // TODO: send PaymentFailed email (Commit 7 — emails).
+        $this->mailAccountUsers($subscription, fn ($user) => new PaymentFailed($user, $subscription));
 
         return response('OK', 200);
     }
@@ -289,7 +297,7 @@ class StripeWebhookController extends Controller
             'canceled_at'            => $canceledAt->toDateTimeString(),
         ]);
 
-        // TODO: send SubscriptionCanceled email (Commit 7 — emails).
+        $this->mailAccountUsers($subscription, fn ($user) => new SubscriptionCanceled($user, $subscription));
 
         return response('OK', 200);
     }
@@ -346,5 +354,22 @@ class StripeWebhookController extends Controller
         }
 
         return response('OK', 200);
+    }
+
+    private function mailAccountUsers(Subscription $subscription, \Closure $makeMailFn): void
+    {
+        try {
+            $users = $subscription->account?->users ?? collect();
+            if ($users->isEmpty()) {
+                return;
+            }
+            foreach ($users as $user) {
+                Mail::to($user->email)->send($makeMailFn($user));
+            }
+        } catch (\Throwable $e) {
+            Log::error('StripeWebhook: email send failed — ' . $e->getMessage(), [
+                'subscription_id' => $subscription->id,
+            ]);
+        }
     }
 }
