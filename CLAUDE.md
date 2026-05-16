@@ -104,6 +104,15 @@ Variables clave:
 
 ---
 
+## Estado Git revisado (2026-05-16)
+
+- La rama local `main` estaba sincronizada con `origin/main`: 0 commits por bajar y 0 commits por subir.
+- Había cambios locales sin commitear posteriores al último commit remoto, incluyendo documentación de Odoo, comandos de consola, soporte de importación SQL, `design-system.md`, script de bootstrap local y archivos generados en `storage/`.
+- Último commit remoto revisado: `11dbe5b` de Juan Guerrero (`desarrollo@cositt.com`), `feat(ui): igualar sidebar cliente al estilo Filament con branding actualizado`.
+- Ese commit ajustó principalmente el diseño del panel cliente: sidebar estilo Filament, branding `NeuroCarta.ai`, logo en `public/img/logo.png`, mejoras de contraste en modo claro/oscuro, z-index de cabecera/dropdowns/tablas sticky y previsualización de logo en Ajustes > Apariencia.
+
+---
+
 ## Planes y precios (cerrado 2026-04-12)
 
 | Plan | Precio | Límites |
