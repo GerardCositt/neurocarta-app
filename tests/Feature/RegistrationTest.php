@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -20,15 +19,20 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        Mail::fake();
+
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'email'           => 'test@example.com',
+            'restaurant_name' => 'Mi Restaurante Test',
+            'phone'           => '+34 600 000 000',
+            'plan'            => 'trial',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+        $this->assertGuest();
+        $response->assertRedirect(route('register.check-email'));
+        $this->assertDatabaseHas('users', [
+            'email'             => 'test@example.com',
+            'email_verified_at' => null,
+        ]);
     }
 }

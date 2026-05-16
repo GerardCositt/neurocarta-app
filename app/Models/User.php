@@ -11,7 +11,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -32,6 +32,9 @@ class User extends Authenticatable implements FilamentUser
         'locale',
         'is_admin',
     ];
+
+    // Verification is handled by the WelcomeSetPassword email + SetPasswordController
+    public function sendEmailVerificationNotification(): void {}
 
     // Accede al panel Filament si es admin por BD o por variable de entorno
     public function canAccessFilament(): bool
