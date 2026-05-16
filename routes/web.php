@@ -5,6 +5,7 @@ use App\Http\Livewire\Pairings;
 use App\Http\Livewire\Products;
 use App\Http\Controllers\Auth\SetPasswordController;
 use App\Http\Controllers\ProductController;
+use App\Http\Middleware\DetectRestaurant;
 use App\Http\Controllers\Api\ReorderController;
 use App\Http\Controllers\Api\StoreOrderController;
 use App\Http\Controllers\UserLocaleController;
@@ -26,13 +27,6 @@ use Illuminate\Support\Facades\URL;
 
 // Health check para Render
 Route::get('/up', fn () => response('OK', 200));
-
-// Raíz de app.neurocarta.ai → login o dashboard según autenticación
-Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-})->name('home');
 
 // ─── Registro: selector de plan + formulario ───────────────────────────────
 // Rutas estáticas ANTES del parámetro dinámico {plan}
@@ -90,13 +84,40 @@ Route::post('/set-password', [SetPasswordController::class, 'store'])
     ->middleware('guest')
     ->name('set-password.store');
 
-//Route::get('/', function () {
-//    return view('menu');
-//});
+// Raíz: panel (login/dashboard) en IP/localhost sin contexto de carta; carta pública en subdominio o ?restaurant=
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    $host = $request->getHost();
 
-Route::get('/', [ProductController::class, 'index'])
-    ->middleware(['detect.restaurant'])
-    ->name('menu');
+    $hasPreviewContext = ($request->query('restaurant') !== null && $request->query('restaurant') !== '')
+        || session('admin_restaurant_id')
+        || $request->cookie('preview_restaurant_id');
+
+    $isDirectLocalAccess = filter_var($host, FILTER_VALIDATE_IP) !== false
+        || $host === 'localhost';
+
+    $isRestaurantSubdomain = false;
+    if (! $isDirectLocalAccess) {
+        $parts = explode('.', $host);
+        $subdomain = count($parts) >= 3 ? $parts[0] : null;
+        $isRestaurantSubdomain = $subdomain && ! in_array($subdomain, ['app', 'www'], true);
+    }
+
+    if ($isDirectLocalAccess && ! $hasPreviewContext) {
+        return auth()->check()
+            ? redirect()->route('dashboard')
+            : redirect()->route('login');
+    }
+
+    if (! $isDirectLocalAccess && ! $hasPreviewContext && ! $isRestaurantSubdomain) {
+        return auth()->check()
+            ? redirect()->route('dashboard')
+            : redirect()->route('login');
+    }
+
+    return app(DetectRestaurant::class)->handle($request, function ($req) {
+        return app(ProductController::class)->index($req);
+    });
+})->name('menu');
 
 Route::post('/api/orders', StoreOrderController::class)
     ->middleware(['throttle:30,1', 'orders.enabled', 'detect.restaurant'])
