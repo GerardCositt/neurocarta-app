@@ -212,7 +212,7 @@
                     </th>
                     <th class="px-1 py-3 w-5 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
                     <th class="pl-1 pr-2 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
-                    <th class="pl-1 pr-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:200px">
+                    <th class="pl-4 pr-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-125" style="min-width:200px">
                         {{ __('admin.products.th_name') }}
                     </th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:9rem">{{ __('admin.products.th_category') }}</th>
@@ -256,7 +256,7 @@
                     </td>
 
                     {{-- Nombre + alérgenos en línea debajo (compacto) --}}
-                    <td class="pl-1 pr-2 py-3 align-top" style="min-width:200px">
+                    <td class="pl-4 pr-2 py-3 align-top admin-sticky-col admin-sticky-left-125" style="min-width:200px">
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                                 <button type="button"
