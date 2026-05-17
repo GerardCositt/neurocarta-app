@@ -1152,6 +1152,10 @@
                 @php
                     $bjFlagMap = $bjFlagMap ?? [
                         'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪','it'=>'🇮🇹','pt'=>'🇵🇹',
+                        'fi'=>'🇫🇮','lt'=>'🇱🇹','lv'=>'🇱🇻','nl'=>'🇳🇱','pl'=>'🇵🇱','ru'=>'🇷🇺',
+                        'sv'=>'🇸🇪','da'=>'🇩🇰','nb'=>'🇳🇴','cs'=>'🇨🇿','ro'=>'🇷🇴','hu'=>'🇭🇺',
+                        'ar'=>'🇸🇦','zh'=>'🇨🇳','ja'=>'🇯🇵','ko'=>'🇰🇷','tr'=>'🇹🇷','uk'=>'🇺🇦',
+                        'pt_BR'=>'🇧🇷',
                     ];
                     $bjLocaleNav  = $locale ?? 'es';
                     $bjFlagNav    = $bjFlagMap[$bjLocaleNav] ?? '🌐';
