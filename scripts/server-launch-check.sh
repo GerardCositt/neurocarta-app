@@ -38,11 +38,18 @@ docker exec "$CONTAINER" bash /opt/neurocarta/scripts/launch-test.sh
 echo ""
 
 echo "▶ 3/5 launch:check (env + scheduler + demo)"
-docker exec "$CONTAINER" php artisan launch:check
+docker exec "$CONTAINER" php artisan launch:check --skip-tests 2>/dev/null \
+  || docker exec "$CONTAINER" php artisan launch:check
 echo ""
 
-echo "▶ 4/5 Restaurante demo"
+echo "▶ 4/5 Restaurante demo + carta pública desbloqueada"
 bash "$ROOT/scripts/ensure-demo-docker.sh"
+docker exec "$CONTAINER" php artisan demo:unlock-public --force 2>/dev/null || true
+echo ""
+
+echo "▶ 4b/5 Config efectiva (debug / cookies)"
+docker exec "$CONTAINER" php artisan tinker --execute="echo 'debug='.(config('app.debug')?'ON':'off').' session_secure='.(config('session.secure')?'true':'false').PHP_EOL;" 2>/dev/null || true
+echo ""
 echo ""
 
 echo "▶ 5/5 Cron del servidor"
@@ -55,6 +62,7 @@ fi
 echo ""
 
 echo "══════════════════════════════════════════════════════════"
-echo " Siguiente paso: QA manual → docs/LAUNCH-QA.md (bloques 1-11)"
-echo " Guion completo: docs/SERVIDOR-LANZAMIENTO.md"
+echo " Siguiente: docs/LANZAMIENTO-TODOS-LOS-PASOS.md (Fases 2-7)"
+echo " QA manual: docs/LAUNCH-QA.md (bloques 1-11)"
+echo " Servidor: docs/SERVIDOR-LANZAMIENTO.md"
 echo "══════════════════════════════════════════════════════════"

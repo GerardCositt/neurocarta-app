@@ -71,7 +71,7 @@ class LaunchCheckCommand extends Command
         );
         $this->newLine();
 
-        $this->line('▶ Variables de entorno (revisar en producción)');
+        $this->line('▶ Variables de entorno (valores efectivos en runtime)');
         $checks = [
             'APP_ENV'               => ['production', 'Entorno producción'],
             'APP_DEBUG'             => ['false', 'Debug desactivado'],
@@ -83,7 +83,7 @@ class LaunchCheckCommand extends Command
         ];
 
         foreach ($checks as $key => [$expected, $hint]) {
-            $value = env($key);
+            $value = $this->resolveLaunchConfigValue($key);
             $display = $value === null || $value === '' ? '(vacío)' : (string) $value;
             $ok = $expected === null
                 ? ($value !== null && $value !== '')
@@ -124,6 +124,33 @@ class LaunchCheckCommand extends Command
         $this->line('  QA manual completo: docs/LAUNCH-QA.md');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Valores efectivos en runtime (config cacheada). env() devuelve null tras config:cache.
+     */
+    private function resolveLaunchConfigValue(string $key): ?string
+    {
+        switch ($key) {
+            case 'APP_ENV':
+                return config('app.env');
+            case 'APP_DEBUG':
+                return config('app.debug') ? 'true' : 'false';
+            case 'APP_URL':
+                return config('app.url');
+            case 'SESSION_DRIVER':
+                return config('session.driver');
+            case 'SESSION_SECURE_COOKIE':
+                $secure = config('session.secure');
+
+                return $secure === null ? null : ($secure ? 'true' : 'false');
+            case 'QUEUE_CONNECTION':
+                return config('queue.default');
+            case 'MAIL_HOST':
+                return config('mail.mailers.smtp.host');
+            default:
+                return env($key);
+        }
     }
 
     private function subdomainPublicUrl(Restaurant $restaurant): ?string

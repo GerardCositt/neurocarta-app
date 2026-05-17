@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Category;
 use App\Models\Restaurant;
+use App\Services\DemoPublicMenuService;
 use Illuminate\Console\Command;
 
 class EnsureDemoCommand extends Command
@@ -32,6 +33,9 @@ class EnsureDemoCommand extends Command
         );
 
         $this->info("Restaurante demo: «{$restaurant->name}» (id {$restaurant->id}, subdomain demo)");
+
+        app(DemoPublicMenuService::class)->ensureUnlocked($restaurant->fresh());
+        $this->info('Carta pública demo: cuenta y suscripción activa listas.');
 
         if ($this->option('menu') || ! Category::where('restaurant_id', $restaurant->id)->exists()) {
             $this->call('db:seed', ['--class' => 'Database\\Seeders\\DemoMenuSeeder', '--force' => true]);

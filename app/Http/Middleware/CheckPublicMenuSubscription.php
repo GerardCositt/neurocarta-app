@@ -15,6 +15,11 @@ class CheckPublicMenuSubscription
             return $next($request);
         }
 
+        // Carta de ventas / ferias: el restaurante demo no debe depender de Stripe.
+        if ($restaurant->ai_demo_unlimited) {
+            return $next($request);
+        }
+
         $account      = $restaurant->account;
         $subscription = $account
             ? $account->subscriptions()

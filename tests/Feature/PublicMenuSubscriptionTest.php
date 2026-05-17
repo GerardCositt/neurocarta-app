@@ -72,4 +72,15 @@ class PublicMenuSubscriptionTest extends TestCase
         $response->assertStatus(402);
         $response->assertSee('Esta carta digital no está disponible', false);
     }
+
+    public function test_demo_unlimited_bypasses_subscription_check(): void
+    {
+        $restaurant = $this->makeRestaurantWithSubscription(null);
+        $restaurant->forceFill(['ai_demo_unlimited' => true])->save();
+
+        $response = $this->get('/?restaurant='.$restaurant->id);
+
+        $response->assertSuccessful();
+        $response->assertDontSee('Esta carta digital no está disponible', false);
+    }
 }

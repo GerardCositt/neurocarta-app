@@ -18,6 +18,8 @@ fi
 
 echo "=== NeuroCarta: crear restaurante demo en $CONTAINER ==="
 docker exec "$CONTAINER" php artisan demo:ensure --menu --force
+docker exec "$CONTAINER" php artisan demo:unlock-public --force 2>/dev/null \
+  || echo "(demo:unlock-public tras deploy del comando en main)"
 echo ""
 docker exec "$CONTAINER" php artisan tinker --execute="echo App\Models\Restaurant::where('subdomain','demo')->exists() ? 'OK demo id='.App\Models\Restaurant::where('subdomain','demo')->value('id') : 'FAIL';" 2>/dev/null || true
 echo "=== Hecho ==="

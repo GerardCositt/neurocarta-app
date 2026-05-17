@@ -172,12 +172,43 @@ URLs:
 - Con subdominio (si DNS existe): https://demo.neurocarta.ai/
 - Sin DNS: `https://app.neurocarta.ai/?restaurant=ID` (el script o `launch:check` muestran el id)
 
-DNS en Cloudflare (opcional):
+DNS y SSL para `demo.neurocarta.ai` (y cartas por subdominio):
 
-| Registro | Tipo | Destino |
-|----------|------|---------|
-| `demo` | A | `149.71.98.35` |
-| Proxy | — | Desactivado (nube gris), igual que `app` |
+| Registro | Tipo | Destino | Proxy Cloudflare |
+|----------|------|---------|------------------|
+| `app` | A | `149.71.98.35` | **Desactivado** (nube gris), igual que ahora |
+| `demo` | A | `149.71.98.35` | **Desactivado** (nube gris) — si está naranja y el cert no incluye `demo`, error **521** |
+
+El certificado Let's Encrypt del servidor solo cubre los nombres que incluyas al emitirlo. Tras desplegar `docker/nginx.conf` (incluye `demo` y `*.neurocarta.ai`):
+
+```bash
+# El webroot ACME está en el volumen Docker certbot_www (no en /var/www/certbot del host).
+docker run --rm \
+  -v neurocarta_certbot_www:/var/www/certbot \
+  -v /etc/letsencrypt:/etc/letsencrypt \
+  certbot/certbot certonly --webroot -w /var/www/certbot \
+  --cert-name app.neurocarta.ai \
+  --expand \
+  -d app.neurocarta.ai \
+  -d demo.neurocarta.ai \
+  --non-interactive --agree-tos -m tu-email@neurocarta.ai
+
+# Si el volumen tiene otro nombre: docker volume ls | grep certbot
+
+cd /opt/neurocarta
+docker compose -f docker-compose.prod.yml restart nginx
+```
+
+Comprobar certificado:
+
+```bash
+echo | openssl s_client -connect 149.71.98.35:443 -servername demo.neurocarta.ai 2>/dev/null \
+  | openssl x509 -noout -ext subjectAltName
+```
+
+Debe listar `DNS:demo.neurocarta.ai`. Luego `https://demo.neurocarta.ai/` debe responder (no 521).
+
+Para **muchos** subdominios de clientes (`cliente.neurocarta.ai`), conviene más adelante un certificado wildcard `*.neurocarta.ai` (desafío DNS en Cloudflare).
 
 ---
 
