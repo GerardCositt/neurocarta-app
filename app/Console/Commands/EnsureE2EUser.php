@@ -42,13 +42,25 @@ class EnsureE2EUser extends Command
         $email = (string) $this->option('email');
         $password = (string) $this->option('password');
 
+        $adminEmail = config('services.filament.admin_email');
+        $isDemoAdmin = $adminEmail && $email === $adminEmail;
+
         $user = User::query()->firstOrCreate(
             ['email' => $email],
-            ['name' => 'E2E Test', 'password' => Hash::make($password)]
+            [
+                'name'              => $isDemoAdmin ? 'Admin' : 'E2E Test',
+                'password'          => Hash::make($password),
+                'email_verified_at' => now(),
+                'is_admin'          => $isDemoAdmin,
+            ]
         );
 
-        // Si ya existía, refresca password para que los tests sean reproducibles.
+        // Si ya existía, refresca password y asegura verificación para demo/admin.
         $user->password = Hash::make($password);
+        if ($isDemoAdmin) {
+            $user->is_admin = true;
+            $user->email_verified_at = $user->email_verified_at ?? now();
+        }
         $user->save();
 
         $this->info("Usuario E2E listo: {$email}");

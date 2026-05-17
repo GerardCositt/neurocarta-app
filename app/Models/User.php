@@ -43,6 +43,23 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             || $this->email === config('services.filament.admin_email');
     }
 
+    /**
+     * Cuenta demo/admin (test@test.com): acceso al panel sin pantalla de verificación de email.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        if ((bool) $this->is_admin) {
+            return true;
+        }
+
+        $adminEmail = config('services.filament.admin_email');
+        if ($adminEmail && $this->email === $adminEmail) {
+            return true;
+        }
+
+        return parent::hasVerifiedEmail();
+    }
+
     public function accounts()
     {
         return $this->belongsToMany(Account::class, 'account_user')->withTimestamps();
