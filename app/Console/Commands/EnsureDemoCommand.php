@@ -43,6 +43,8 @@ class EnsureDemoCommand extends Command
             $this->line('Menú demo ya existía; usa --menu para forzar recarga (vacía categorías antes).');
         }
 
+        $this->call('db:seed', ['--class' => 'Database\\Seeders\\DemoMenuTranslationsSeeder', '--force' => true]);
+
         $base = rtrim((string) config('app.url'), '/') ?: 'http://127.0.0.1:8000';
         $this->newLine();
         $this->line('Carta pública: '.$base.'/?restaurant='.$restaurant->id);

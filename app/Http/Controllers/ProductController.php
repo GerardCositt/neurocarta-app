@@ -282,7 +282,15 @@ class ProductController extends Controller
             ->pluck('locale')
             ->all();
 
-        return array_values(array_unique(array_merge(['es'], $locales)));
+        $merged = array_values(array_unique(array_merge(['es'], $locales)));
+
+        // Carta de ventas: mostrar idiomas aunque falte alguna traducción suelta.
+        $restaurant = app()->bound('restaurant') ? app('restaurant') : null;
+        if ($restaurant && $restaurant->ai_demo_unlimited) {
+            $merged = array_values(array_unique(array_merge($merged, ['en', 'fr'])));
+        }
+
+        return $merged;
     }
 
     /**
