@@ -1957,7 +1957,7 @@
                 $bjLf  = $bjFlagMap[$bjLoc] ?? '🌐';
                 $bjAct = ($bjLoc === $bjLocale);
             ?>
-            <a href="<?= e(request()->fullUrlWithQuery(['lang' => $bjLoc])) ?>"
+            <a href="<?= e(\App\Support\PublicMenuUrl::withLang(request(), $bjLoc)) ?>"
                style="display:flex;align-items:center;gap:10px;padding:10px 14px;
                       font-size:13px;font-weight:<?= $bjAct ? '700' : '500' ?>;
                       color:<?= $bjAct ? 'var(--gold)' : 'var(--text)' ?>;

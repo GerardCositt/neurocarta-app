@@ -34,12 +34,18 @@ fi
 echo ""
 
 echo "▶ 2/5 Tests Launch (PHPUnit)"
-docker exec "$CONTAINER" bash /opt/neurocarta/scripts/launch-test.sh
+if [[ -f "$ROOT/vendor/bin/phpunit" ]]; then
+  bash "$ROOT/scripts/launch-test.sh"
+elif docker exec "$CONTAINER" test -f /var/www/html/vendor/bin/phpunit 2>/dev/null; then
+  docker exec "$CONTAINER" bash -c 'cd /var/www/html && vendor/bin/phpunit --testsuite=Launch --testdox --colors=always'
+else
+  echo "   ⊘ Omitido en producción (imagen sin dev-deps / PHPUnit)."
+  echo "   ⊘ Ejecutar en local o CI: ./scripts/launch-test.sh"
+fi
 echo ""
 
 echo "▶ 3/5 launch:check (env + scheduler + demo)"
-docker exec "$CONTAINER" php artisan launch:check --skip-tests 2>/dev/null \
-  || docker exec "$CONTAINER" php artisan launch:check
+docker exec "$CONTAINER" php artisan launch:check --skip-tests
 echo ""
 
 echo "▶ 4/5 Restaurante demo + carta pública desbloqueada"

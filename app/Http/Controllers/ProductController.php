@@ -11,6 +11,7 @@ use App\Models\Setting;
 use App\Models\Translation;
 use App\Services\DeepLService;
 use App\Services\MenuBrandPaletteService;
+use App\Support\PublicMenuUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
@@ -350,9 +351,7 @@ class ProductController extends Controller
         $picked = $this->pickLocaleFromSupported($locale, $available);
         $locale = $picked ?? 'es';
         session(['locale' => $locale]);
-        $restaurant = app('restaurant');
-
-        return redirect()->route('menu', ['restaurant' => $restaurant->id])
+        return redirect()->to(PublicMenuUrl::withLang($request, $locale))
             ->withCookie(cookie()->forever('locale', $locale));
     }
 

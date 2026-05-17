@@ -67,11 +67,9 @@ bash scripts/server-launch-check.sh
 O paso a paso:
 
 ```bash
-# A) Tests automáticos críticos (16 tests)
-docker exec neurocarta-app-1 bash /opt/neurocarta/scripts/launch-test.sh
-
+# A) Tests automáticos: en local/CI → ./scripts/launch-test.sh (en prod no hay PHPUnit en la imagen)
 # B) Env, scheduler, demo
-docker exec neurocarta-app-1 php artisan launch:check
+docker exec neurocarta-app-1 php artisan launch:check --skip-tests
 
 # C) Restaurante demo + menú de ventas
 bash scripts/ensure-demo-docker.sh

@@ -21,7 +21,6 @@ class DetectRestaurant
                 $forced = Restaurant::find((int) $forcedId);
                 if ($forced) {
                     app()->instance('restaurant', $forced);
-                    $request->merge(['restaurant' => $forced]);
 
                     return $next($request);
                 }
@@ -36,7 +35,6 @@ class DetectRestaurant
                 abort(404, 'Restaurante no encontrado. Ejecuta en el Codespace: php artisan db:seed --class=RestaurantSeeder');
             }
             app()->instance('restaurant', $restaurant);
-            $request->merge(['restaurant' => $restaurant]);
 
             return $next($request);
         }
@@ -57,7 +55,6 @@ class DetectRestaurant
                 abort(404, 'Restaurante no encontrado.');
             }
             app()->instance('restaurant', $restaurant);
-            $request->merge(['restaurant' => $restaurant]);
 
             return $next($request);
         }
@@ -77,7 +74,7 @@ class DetectRestaurant
                 abort(404, 'Restaurante no encontrado.');
             }
             app()->instance('restaurant', $restaurant);
-            $request->merge(['restaurant' => $restaurant]);
+
             return $next($request);
         }
 
@@ -100,7 +97,7 @@ class DetectRestaurant
                     abort(404, 'Restaurante no encontrado.');
                 }
                 app()->instance('restaurant', $restaurant);
-                $request->merge(['restaurant' => $restaurant]);
+
                 return $next($request);
             }
 
@@ -122,7 +119,6 @@ class DetectRestaurant
         }
 
         app()->instance('restaurant', $restaurant);
-        $request->merge(['restaurant' => $restaurant]);
 
         return $next($request);
     }

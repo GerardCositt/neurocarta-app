@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Tests de lanzamiento: solo la suite Launch (aislamiento, suscripción, planes, login, registro).
 # Uso: ./scripts/launch-test.sh
-# Producción: docker exec neurocarta-app-1 bash /opt/neurocarta/scripts/launch-test.sh
+# En servidor (solo si hay vendor con dev): cd /opt/neurocarta && ./scripts/launch-test.sh
+# En Docker prod normalmente no hay PHPUnit; usar: php artisan launch:check --skip-tests
 
 set -euo pipefail
 
