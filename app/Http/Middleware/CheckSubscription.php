@@ -12,7 +12,7 @@ class CheckSubscription
         $user = $request->user();
 
         // Los admins siempre tienen acceso
-        if ($user && $user->is_admin) {
+        if ($user && $user->hasPanelAdminAccess()) {
             return $next($request);
         }
 

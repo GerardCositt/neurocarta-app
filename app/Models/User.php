@@ -36,24 +36,34 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     // Verification is handled by the WelcomeSetPassword email + SetPasswordController
     public function sendEmailVerificationNotification(): void {}
 
-    // Accede al panel Filament si es admin por BD o por variable de entorno
-    public function canAccessFilament(): bool
-    {
-        return (bool) $this->is_admin
-            || $this->email === config('services.filament.admin_email');
-    }
-
     /**
-     * Cuenta demo/admin (test@test.com): acceso al panel sin pantalla de verificación de email.
+     * Admin de panel: flag en BD o email en FILAMENT_ADMIN_EMAIL / NEUROCARTA_DEMO_ADMIN_EMAILS.
      */
-    public function hasVerifiedEmail(): bool
+    public function hasPanelAdminAccess(): bool
     {
         if ((bool) $this->is_admin) {
             return true;
         }
 
-        $adminEmail = config('services.filament.admin_email');
-        if ($adminEmail && $this->email === $adminEmail) {
+        $emails = array_filter(array_unique(array_merge(
+            array_filter([config('services.filament.admin_email')]),
+            config('neurocarta.demo_admin_emails', [])
+        )));
+
+        return $this->email && in_array($this->email, $emails, true);
+    }
+
+    public function canAccessFilament(): bool
+    {
+        return $this->hasPanelAdminAccess();
+    }
+
+    /**
+     * Cuenta demo/admin: acceso al panel sin pantalla de verificación de email.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        if ($this->hasPanelAdminAccess()) {
             return true;
         }
 
@@ -84,6 +94,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin'          => 'boolean',
     ];
 
     /**

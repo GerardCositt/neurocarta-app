@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Category;
 use App\Models\Restaurant;
+use App\Models\User;
 use App\Services\DemoPublicMenuService;
 use Illuminate\Console\Command;
 
@@ -36,6 +37,14 @@ class EnsureDemoCommand extends Command
 
         app(DemoPublicMenuService::class)->ensureUnlocked($restaurant->fresh());
         $this->info('Carta pública demo: cuenta y suscripción activa listas.');
+
+        foreach (config('neurocarta.demo_admin_emails', []) as $adminEmail) {
+            $admin = User::query()->where('email', $adminEmail)->first();
+            if ($admin && ! $admin->is_admin) {
+                $admin->forceFill(['is_admin' => true, 'email_verified_at' => $admin->email_verified_at ?? now()])->save();
+                $this->info("Usuario admin panel: {$adminEmail} (is_admin=true)");
+            }
+        }
 
         if ($this->option('menu') || ! Category::where('restaurant_id', $restaurant->id)->exists()) {
             $this->call('db:seed', ['--class' => 'Database\\Seeders\\DemoMenuSeeder', '--force' => true]);

@@ -13,7 +13,7 @@ class EnsurePlanFeature
 
     public function handle(Request $request, Closure $next, string $feature)
     {
-        if ($request->user()?->is_admin) {
+        if ($request->user()?->hasPanelAdminAccess()) {
             return $next($request);
         }
 

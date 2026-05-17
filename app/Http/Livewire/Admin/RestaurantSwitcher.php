@@ -164,7 +164,7 @@ class RestaurantSwitcher extends Component
     {
         $user = auth()->user();
 
-        if ($user->is_admin) {
+        if ($user->hasPanelAdminAccess()) {
             return Restaurant::orderBy('name')->get();
         }
 

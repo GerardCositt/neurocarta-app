@@ -10,7 +10,7 @@ class PlanFeatureGate
 {
     public static function allows(string $feature): bool
     {
-        if (auth()->user()?->is_admin) {
+        if (auth()->user()?->hasPanelAdminAccess()) {
             return true;
         }
 
@@ -36,7 +36,7 @@ class PlanFeatureGate
     /** Throttle OpenAI/Livewire AI actions: 30 per minute per user. */
     public static function attemptAiAction(): bool
     {
-        if (auth()->user()?->is_admin) {
+        if (auth()->user()?->hasPanelAdminAccess()) {
             return true;
         }
 

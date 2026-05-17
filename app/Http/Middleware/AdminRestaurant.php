@@ -18,7 +18,7 @@ class AdminRestaurant
 
         $restaurantId = session('admin_restaurant_id');
 
-        $isAdmin = $user && $user->is_admin;
+        $isAdmin = $user && $user->hasPanelAdminAccess();
 
         // Validar que el restaurante en sesión pertenece a la cuenta del usuario (no aplica a admin)
         if ($restaurantId && $account && ! $isAdmin) {
