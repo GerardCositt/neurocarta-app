@@ -65,7 +65,7 @@ docker exec neurocarta-app-1 php artisan launch:check
 | 3.1 | Ir a la URL pública del restaurante (subdominio o preview) | La carta carga con las categorías y productos creados |
 | 3.2 | Navegar entre categorías | El scroll y el ancla de categorías funcionan |
 | 3.3 | Revisar la carta en **móvil** (320 px y 390 px) | Legible, sin overflow horizontal, botones pulsables |
-| 3.4 | Revisar la carta con **100 productos** | Carga en < 3 s, sin lag al hacer scroll |
+| 3.4 | Revisar la carta con **100 productos** | Carga en < 3 s, sin lag al hacer scroll. Automático: `php artisan test --filter=PublicMenuPerformanceTest` (presupuesto SQL < 22 consultas con 120 platos). |
 | 3.5 | Cambiar el idioma con el selector de idioma | Los textos del producto cambian si hay traducciones; si no, se mantiene el original |
 | 3.6 | El producto sin foto muestra el placeholder correctamente | Sin imagen rota (404) |
 

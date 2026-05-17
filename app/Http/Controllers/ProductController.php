@@ -52,22 +52,42 @@ class ProductController extends Controller
             ->get();
         $showAlerts = $advices->count() > 0 ? 1 : 0;
 
+        $productWith = $this->menuProductEagerRelations();
+
         $categories = Category::visible()
             ->where('restaurant_id', $restaurant->id)
-            ->with(['translations', 'products' => function ($query) use ($restaurant) {
+            ->with(['translations', 'products' => function ($query) use ($restaurant, $productWith) {
                 $query->visible()
                     ->where('restaurant_id', $restaurant->id)
                     ->orderForMenu()
-                    ->with(['visibleAllergens.translations', 'pairing.translations', 'translations']);
+                    ->with($productWith);
             }])
             ->get();
 
-        $offers = Product::visible()
+        $menuProductIds = $categories->flatMap(static fn ($cat) => $cat->products)->pluck('id')->unique();
+
+        $offers = $categories->flatMap(static fn ($cat) => $cat->products)
+            ->filter(static fn (Product $p) => $p->isOfferActive())
+            ->unique('id');
+
+        $extraOfferIds = Product::visible()
             ->where('restaurant_id', $restaurant->id)
             ->withActiveOffer()
-            ->with(['visibleAllergens.translations', 'pairing.translations', 'translations'])
-            ->orderForMenu()
-            ->get();
+            ->whereNotIn('id', $menuProductIds)
+            ->pluck('id');
+
+        if ($extraOfferIds->isNotEmpty()) {
+            $offers = $offers->merge(
+                Product::visible()
+                    ->where('restaurant_id', $restaurant->id)
+                    ->whereIn('id', $extraOfferIds)
+                    ->with($productWith)
+                    ->orderForMenu()
+                    ->get()
+            )->unique('id');
+        }
+
+        $offers = $this->sortProductsForMenu($offers->values());
 
         $productsData = $categories->flatMap(function ($cat) { return $cat->products; })
             ->merge($offers)
@@ -244,31 +264,56 @@ class ProductController extends Controller
      */
     private function getAvailableLocales(): array
     {
-        $restaurant = app('restaurant');
-        $rid = $restaurant->id;
+        $rid = (int) app('restaurant')->id;
 
-        $locales = [];
-
-        $mergeLocales = function ($class, $ids) use (&$locales) {
-            if ($ids->isEmpty()) {
-                return;
-            }
-            $l = Translation::query()
-                ->where('translatable_type', $class)
-                ->whereIn('translatable_id', $ids)
-                ->distinct()
-                ->pluck('locale')
-                ->all();
-            $locales = array_merge($locales, $l);
-        };
-
-        $mergeLocales(Product::class, Product::where('restaurant_id', $rid)->pluck('id'));
-        $mergeLocales(Category::class, Category::where('restaurant_id', $rid)->pluck('id'));
-        $mergeLocales(Advice::class, Advice::where('restaurant_id', $rid)->pluck('id'));
-        $mergeLocales(Pairing::class, Pairing::where('restaurant_id', $rid)->pluck('id'));
-        $mergeLocales(Allergen::class, Allergen::query()->pluck('id'));
+        $locales = Translation::query()
+            ->select('locale')
+            ->distinct()
+            ->where(function ($q) use ($rid) {
+                $q->whereHasMorph(
+                    'translatable',
+                    [Product::class, Category::class, Advice::class, Pairing::class],
+                    static function ($q) use ($rid) {
+                        $q->where('restaurant_id', $rid);
+                    }
+                )->orWhere('translatable_type', Allergen::class);
+            })
+            ->pluck('locale')
+            ->all();
 
         return array_values(array_unique(array_merge(['es'], $locales)));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function menuProductEagerRelations(): array
+    {
+        return ['visibleAllergens.translations', 'pairing.translations', 'translations'];
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, Product>  $products
+     * @return \Illuminate\Support\Collection<int, Product>
+     */
+    private function sortProductsForMenu($products)
+    {
+        return $products->sort(function (Product $a, Product $b) {
+            foreach ([
+                static fn (Product $p) => (int) $p->featured,
+                static fn (Product $p) => (int) $p->recommended,
+                static fn (Product $p) => (int) $p->isOfferActive(),
+                static fn (Product $p) => (int) $p->order,
+            ] as $key) {
+                $va = $key($a);
+                $vb = $key($b);
+                if ($va !== $vb) {
+                    return $vb <=> $va;
+                }
+            }
+
+            return $a->id <=> $b->id;
+        })->values();
     }
 
     /**

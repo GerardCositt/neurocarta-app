@@ -202,7 +202,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Subida de imágenes de platos estable.
 - [ ] Imagen placeholder correcta cuando no hay foto.
 - [ ] Alérgenos visibles y editables.
-- [ ] Vista pública de carta limpia, rápida y probada con 100-300 productos.
+- [x] Vista pública de carta optimizada en consultas (locales en 1 query, ofertas sin duplicar eager load; test `PublicMenuPerformanceTest` 120 platos). Pendiente: validación manual < 3 s en prod (bloque 3.4).
 - [ ] Selector de idioma revisado.
 - [ ] Importación CSV probada con plantilla real.
 - [ ] IA de importación, descripción e imágenes con control de créditos.
