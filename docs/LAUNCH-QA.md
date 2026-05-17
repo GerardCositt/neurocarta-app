@@ -7,7 +7,7 @@
 **Antes de empezar (automático):**
 
 ```bash
-# Opción A — solo tests críticos (13 tests, salida clara):
+# Opción A — solo tests críticos (16 tests, salida clara):
 ./scripts/launch-test.sh
 
 # Opción B — tests + scheduler + avisos .env + demo:

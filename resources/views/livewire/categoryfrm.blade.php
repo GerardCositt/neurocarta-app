@@ -7,7 +7,7 @@
              wire:click.stop
              role="dialog" aria-modal="true">
 
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
                 <h2 class="text-base font-semibold text-gray-800">
                     {{ $category_id ? __('admin.category_page.edit_title') : __('admin.category_page.new_title') }}
                 </h2>
@@ -20,7 +20,7 @@
             </div>
 
             <form onsubmit="return false">
-                <div class="px-6 py-5 space-y-4">
+                <div class="px-4 sm:px-6 py-5 space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('admin.category_page.field_name') }}</label>
                         <input type="text" wire:model="name" placeholder="{{ __('admin.category_page.name_placeholder') }}"
@@ -36,7 +36,7 @@
                 </div>
 
                 {{-- Pie: mismo patrón que maridaje / producto --}}
-                <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+                <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
                     <div class="flex justify-center sm:justify-start">
                         @if($category_id)
                             <button type="button"

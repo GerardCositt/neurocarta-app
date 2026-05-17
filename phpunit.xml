@@ -17,6 +17,7 @@
             <file>./tests/Feature/PlanFeatureGateTest.php</file>
             <file>./tests/Feature/AuthenticationTest.php</file>
             <file>./tests/Feature/RegistrationTest.php</file>
+            <file>./tests/Feature/PublicMenuSubscriptionTest.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

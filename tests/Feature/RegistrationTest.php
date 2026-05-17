@@ -34,5 +34,14 @@ class RegistrationTest extends TestCase
             'email'             => 'test@example.com',
             'email_verified_at' => null,
         ]);
+
+        $this->assertDatabaseHas('restaurants', [
+            'name' => 'Mi Restaurante Test',
+        ]);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'plan_code' => 'trial',
+            'status'    => 'trialing',
+        ]);
     }
 }

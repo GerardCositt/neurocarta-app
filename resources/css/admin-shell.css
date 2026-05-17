@@ -724,3 +724,15 @@ html[data-effective-theme="dark"] .admin-products-card {
     background: var(--surface-el);
     border-color: rgba(255, 255, 255, 0.08);
 }
+
+/* ─── Tarjetas de categoría (móvil < md) ───────────────────────── */
+.admin-categories-card {
+    transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.admin-categories-card:active {
+    box-shadow: 0 0 0 2px #fcd34d;
+}
+html[data-effective-theme="dark"] .admin-categories-card {
+    background: var(--surface-el);
+    border-color: rgba(255, 255, 255, 0.08);
+}

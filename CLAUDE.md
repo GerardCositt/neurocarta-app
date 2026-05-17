@@ -196,7 +196,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Pantalla de trial terminado clara y con CTA real para contratar.
 - [ ] Bloqueo correcto de panel, QR y carta pública cuando trial/suscripción caduca.
 - [x] Planes Básico / Pro / Premium conectados a límites reales: cuotas + features IA/CSV/traducciones en código (`d38cc17`). Pendiente: validación manual en `docs/LAUNCH-QA.md` bloques 4-6 y 8.
-- [ ] Panel de gestión usable en móvil y escritorio.
+- [x] Panel de gestión usable en móvil y escritorio (productos + categorías: tarjetas < md, tabla ≥ md; commit UX móvil).
 - [ ] Crear, editar, ocultar y ordenar categorías.
 - [ ] Crear, editar, ocultar y ordenar productos.
 - [ ] Subida de imágenes de platos estable.
@@ -282,7 +282,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Prueba manual: subir imágenes → bloque 2.
 - [ ] Prueba manual: cambiar plan/caducar trial → bloques 4 y 7.
 - [ ] Prueba manual: usuario sin suscripción → bloque 7.
-- [x] Tests mínimos de aislamiento por restaurante y suscripción (`TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`). Login/registro: tests existentes; 419 en prod sin verificar.
+- [x] Tests mínimos de aislamiento por restaurante y suscripción (`TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`, `PublicMenuSubscriptionTest`). Registro crea restaurante + trial en BD. Login/registro: tests existentes; 419 en prod sin verificar.
 - [ ] Revisar responsive en Chrome, Safari y móvil.
 - [ ] Revisar rendimiento de carta con 100-300 productos.
 

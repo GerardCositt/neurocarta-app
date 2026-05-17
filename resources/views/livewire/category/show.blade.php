@@ -14,17 +14,16 @@
     @endif
 
     {{-- Barra de acciones --}}
-    <div class="flex justify-between items-center mb-5">
-        <div>
+    <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-5">
+        <div class="w-full sm:flex-1 sm:max-w-md">
             <input wire:model.debounce.400ms="q"
                    type="search"
-                   size="25"
                    placeholder="{{ __('admin.category_page.search_placeholder') }}"
-                   class="border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
+                   class="w-full border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
         </div>
 
         <button wire:click="openForm()"
-                class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2">
+                class="w-full sm:w-auto justify-center bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
             </svg>
@@ -49,11 +48,81 @@
         </div>
     @endif
 
-    {{-- Lista categorías --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-lw-no-close-list wire:click.stop>
+    {{-- Tarjetas móvil (< md) --}}
+    <ul class="md:hidden space-y-2 mb-0" id="categories-cards" data-lw-no-close-list wire:click.stop>
+        @forelse($categories as $category)
+            <li wire:key="cat-card-{{ $category->id }}"
+                class="admin-categories-card bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="flex items-center gap-3 p-3 min-w-0">
+                    <div class="flex-1 min-w-0">
+                        <button type="button"
+                                wire:click="edit({{ $category->id }})"
+                                title="{{ __('admin.category_page.name_open_sheet') }}"
+                                class="text-sm font-semibold text-left w-full truncate {{ $category->active ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm bg-transparent border-0 p-0">
+                            {{ $category->name }}
+                        </button>
+                        <button type="button"
+                                wire:click.stop="toggleProductList({{ $category->id }})"
+                                class="mt-1.5 text-xs px-2 py-0.5 rounded-full border transition-colors
+                                       {{ $expandedCategoryId === $category->id
+                                          ? 'bg-amber-100 border-amber-300 text-amber-700 font-semibold'
+                                          : 'border-gray-200 text-gray-500 hover:border-amber-300 hover:text-amber-600' }}">
+                            {{ trans_choice('admin.category_page.product_count', $category->products_count) }}
+                        </button>
+                    </div>
+                    <label class="inline-flex items-center cursor-pointer shrink-0"
+                           title="{{ __('admin.category_page.hide') }}">
+                        <input type="checkbox"
+                               wire:click.stop="toggleState({{ $category->id }})"
+                               {{ $category->active ? 'checked' : '' }}
+                               class="form-checkbox w-4 h-4 rounded text-gray-400 border-gray-300 focus:ring-gray-300 cursor-pointer">
+                    </label>
+                </div>
+                @if($expandedCategoryId === $category->id)
+                    <div wire:key="cat-card-products-{{ $category->id }}" class="border-t border-gray-100 admin-inset admin-inset--info px-4 py-3">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                            {{ __('admin.category_page.products_in', ['name' => $category->name]) }}
+                        </p>
+                        @if($expandedProducts->isEmpty())
+                            <p class="text-sm text-gray-400">{{ __('admin.category_page.no_products_in_cat') }}</p>
+                        @else
+                            <ul class="space-y-1 max-h-48 overflow-y-auto pr-1">
+                                @foreach($expandedProducts as $product)
+                                    <li class="flex items-center gap-2 py-1.5 border-b border-amber-100 last:border-0 min-w-0">
+                                        <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                                             alt=""
+                                             class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
+                                        <span class="text-sm flex-1 min-w-0 truncate {{ $product->active ? 'line-through text-gray-400' : 'text-gray-800' }}">
+                                            {{ $product->name }}
+                                        </span>
+                                        @if($product->offer)
+                                            <span class="text-xs bg-red-100 text-red-600 font-semibold px-1.5 py-0.5 rounded-full shrink-0">{{ __('admin.category_page.badge_offer') }}</span>
+                                        @endif
+                                        <span class="text-xs font-semibold text-gray-500 shrink-0">{{ $product->price }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        <button type="button" wire:click="$set('expandedCategoryId', null)"
+                                class="mt-2 text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer">
+                            {{ __('admin.category_page.close_list') }}
+                        </button>
+                    </div>
+                @endif
+            </li>
+        @empty
+            <li class="bg-white rounded-2xl border border-gray-100 shadow-sm text-center py-12 px-4 text-sm text-gray-400">
+                @if($q) {{ __('admin.category_page.empty_search', ['q' => $q]) }}
+                @else {{ __('admin.category_page.empty_none') }}
+                @endif
+            </li>
+        @endforelse
+    </ul>
+
+    {{-- Lista escritorio (≥ md): drag-and-drop --}}
+    <div class="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-lw-no-close-list wire:click.stop>
         <div class="overflow-x-auto overscroll-x-contain">
         @if($categories->isNotEmpty())
-            {{-- 3 columnas: arrastre | categoría (flex) | ocultar (ancho fijo, alineado con checkboxes) --}}
             <div class="border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 pr-10 sm:pr-12" role="row">
                 <div class="flex items-center gap-3 min-w-0">
                     <span class="w-5 shrink-0" aria-hidden="true"></span>
@@ -68,7 +137,6 @@
         @endif
         <div id="categories-sortable" class="divide-y divide-gray-50">
             @forelse($categories as $category)
-                {{-- Fila categoría --}}
                 <div wire:key="category-{{ $category->id }}"
                      data-id="{{ $category->id }}"
                      class="flex items-center gap-3 px-4 py-3 pr-10 sm:pr-12 hover:bg-gray-50 transition-colors min-w-0">
@@ -105,7 +173,6 @@
                     </div>
                 </div>
 
-                {{-- Panel productos expandido: justo debajo de la fila de esta categoría --}}
                 @if($expandedCategoryId === $category->id)
                     <div wire:key="cat-products-panel-{{ $category->id }}" class="border-t border-gray-200 admin-inset admin-inset--info px-5 py-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
