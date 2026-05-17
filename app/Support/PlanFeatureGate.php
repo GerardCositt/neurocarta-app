@@ -14,12 +14,20 @@ class PlanFeatureGate
             return true;
         }
 
+        $restaurant = app()->bound('restaurant') ? app('restaurant') : null;
+        if (! $restaurant) {
+            $rid = session('admin_restaurant_id');
+            $restaurant = $rid ? Restaurant::find($rid) : null;
+        }
+        if ($restaurant?->ai_demo_unlimited) {
+            return true;
+        }
+
         $svc     = app(PlanEntitlementService::class);
         $account = app()->bound('account') ? app('account') : null;
 
         if (! $account) {
-            $rid     = session('admin_restaurant_id');
-            $account = $rid ? Restaurant::find($rid)?->account : null;
+            $account = $restaurant?->account;
         }
 
         return $svc->planHasFeature($svc->effectivePlanForAccount($account), $feature);

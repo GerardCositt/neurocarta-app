@@ -105,6 +105,21 @@
         .nav-tab--offer.active {
             color: #fff; background: var(--red); border-color: var(--red);
         }
+        .nav-lang-menu {
+            position: absolute; top: calc(100% + 8px); right: 0; z-index: 10050;
+            min-width: 150px; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--prod-border);
+            border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,.35);
+        }
+        .nav-lang-menu[hidden] { display: none !important; }
+        .nav-lang-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; font-size: 13px; font-weight: 500;
+            color: var(--text); text-decoration: none;
+        }
+        .nav-lang-item:hover { background: var(--surface-el); }
+        .nav-lang-item.is-active { color: var(--gold); font-weight: 700; background: var(--surface-el); }
+        .nav-lang-item span:last-child { margin-left: auto; font-size: 11px; }
 
         /* Filtros carta (oferta / destacado / recomendado / lista) */
         .menu-filter-bar {
@@ -1117,6 +1132,41 @@
                 @endif
             @endforeach
 
+            @if(count($availableLocales ?? ['es']) > 1)
+            @php
+                $bjFlagMap = $bjFlagMap ?? [
+                    'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪','it'=>'🇮🇹','pt'=>'🇵🇹',
+                ];
+                $bjLocaleNav  = $locale ?? 'es';
+                $bjFlagNav    = $bjFlagMap[$bjLocaleNav] ?? '🌐';
+                $bjLocalesNav = $availableLocales ?? ['es'];
+            @endphp
+            <div class="nav-lang-wrap" style="position:relative;flex-shrink:0;">
+                <button type="button" class="nav-tab nav-tab--lang" id="langBtnNav"
+                        aria-label="{{ __('public_menu.lang_change_aria') }}" aria-haspopup="true" aria-expanded="false">
+                    <span class="nav-tab-settings-inner">
+                        <span style="font-size:16px;line-height:1;">{{ $bjFlagNav }}</span>
+                        <span>{{ strtoupper($bjLocaleNav) }}</span>
+                        <span style="opacity:.6;font-size:9px;">▼</span>
+                    </span>
+                </button>
+                <div id="langMenuNav" class="nav-lang-menu" hidden>
+                    @foreach($bjLocalesNav as $bjLocNav)
+                        @php
+                            $bjLfNav = $bjFlagMap[$bjLocNav] ?? '🌐';
+                            $bjActNav = ($bjLocNav === $bjLocaleNav);
+                        @endphp
+                        <a href="{{ \App\Support\PublicMenuUrl::withLang(request(), $bjLocNav) }}"
+                           class="nav-lang-item{{ $bjActNav ? ' is-active' : '' }}">
+                            <span>{{ $bjLfNav }}</span>
+                            <span>{{ strtoupper($bjLocNav) }}</span>
+                            @if($bjActNav)<span>✓</span>@endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             <button type="button" class="nav-tab nav-tab--settings js-open-theme-settings"
                     aria-label="{{ __('public_menu.settings_theme_aria') }}" aria-haspopup="dialog" aria-controls="themeSettingsOverlay">
                 <span class="nav-tab-settings-inner">
@@ -1936,7 +1986,7 @@
         $bjLocales  = $availableLocales ?? ['es'];
     ?>
 
-    <div id="langWidget" style="position:fixed;top:14px;right:16px;z-index:9999;">
+    <div id="langWidget" style="display:none !important;">
         <button id="langBtn" type="button"
                 style="display:flex;align-items:center;gap:6px;padding:6px 12px;
                        background:var(--surface);border:1px solid var(--prod-border);
@@ -1973,15 +2023,23 @@
     </div>
     <script>
     (function() {
-        var btn  = document.getElementById('langBtn');
-        var menu = document.getElementById('langMenu');
+        var btn  = document.getElementById('langBtnNav');
+        var menu = document.getElementById('langMenuNav');
         if (!btn || !menu) return;
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            var open = menu.hasAttribute('hidden');
+            if (open) {
+                menu.removeAttribute('hidden');
+                btn.setAttribute('aria-expanded', 'true');
+            } else {
+                menu.setAttribute('hidden', '');
+                btn.setAttribute('aria-expanded', 'false');
+            }
         });
         document.addEventListener('click', function() {
-            menu.style.display = 'none';
+            menu.setAttribute('hidden', '');
+            btn.setAttribute('aria-expanded', 'false');
         });
     })();
     </script>
