@@ -1,32 +1,41 @@
 @php
     $isSky = $aiCredits['uses_client_key'] || $aiCredits['is_demo_unlimited'];
     $isZero = ! empty($aiCredits['needs_credit_topup']);
+    $colorTitle = $isZero ? 'text-rose-900' : ($isSky ? 'text-sky-900' : 'text-amber-900');
+    $colorBtn   = $isZero ? 'text-rose-700' : ($isSky ? 'text-sky-700' : 'text-amber-700');
+    $borderBg   = $isZero
+        ? 'admin-ai-credits-zero-panel border-rose-200 bg-rose-50'
+        : ($isSky ? 'border-sky-200 bg-sky-50' : 'border-amber-200 bg-amber-50');
 @endphp
-@if(!$dismissed)
 <div class="admin-ai-credits-fixed pointer-events-auto px-3 pt-3">
-    <div class="relative rounded-none border px-3 py-3 shadow-sm
-        @if($isZero)
-            admin-ai-credits-zero-panel border-rose-200 bg-rose-50
-        @elseif($isSky)
-            border-sky-200 bg-sky-50
-        @else
-            border-amber-200 bg-amber-50
-        @endif
-    ">
-        <button wire:click="dismiss"
-                class="absolute top-2 right-2 p-0.5 rounded opacity-50 hover:opacity-100 transition-opacity
-                       @if($isZero) text-rose-700 @elseif($isSky) text-sky-700 @else text-amber-700 @endif"
-                aria-label="Cerrar">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-            </svg>
-        </button>
-        <div class="flex flex-col gap-2">
-            <div>
-                <p class="admin-ai-credits-title @if($isZero) text-rose-900 @elseif($isSky) text-sky-900 @else text-amber-900 @endif">
-                    {{ __('admin.ai_credits_banner.balance_label') }} {{ $aiCredits['label'] }}
-                </p>
+    <div class="relative rounded-none border px-3 py-3 shadow-sm {{ $borderBg }}">
 
+        {{-- Título + botón siempre visibles --}}
+        <div class="flex items-center justify-between gap-2">
+            <p class="admin-ai-credits-title {{ $colorTitle }}">
+                {{ __('admin.ai_credits_banner.balance_label') }} {{ $aiCredits['label'] }}
+            </p>
+            <button wire:click="toggle"
+                    class="flex-shrink-0 p-0.5 rounded opacity-50 hover:opacity-100 transition-opacity {{ $colorBtn }}"
+                    aria-label="{{ $minimized ? 'Expandir' : 'Minimizar' }}">
+                @if($minimized)
+                    {{-- Chevron abajo (expandir) --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                @else
+                    {{-- X (minimizar) --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                @endif
+            </button>
+        </div>
+
+        {{-- Cuerpo: solo visible cuando no está minimizado --}}
+        @if(!$minimized)
+        <div class="flex flex-col gap-2 mt-2">
+            <div>
                 @if($isZero)
                     <p class="admin-ai-credits-body mt-1.5 text-rose-800">
                         {{ __('admin.ai_credits_banner.no_credits') }}
@@ -57,6 +66,7 @@
                 </p>
             @endif
         </div>
+        @endif
+
     </div>
 </div>
-@endif
