@@ -173,7 +173,7 @@
                                            class="flex-1 text-sm text-gray-500 border border-gray-200 rounded-xl py-2 px-3 bg-white file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer">
                                 </div>
                                 <div class="mt-3 flex flex-wrap items-center gap-2">
-                                    @if($product_id && !$photo)
+                                    @if(($canUseAi ?? false) && $product_id && !$photo)
                                         <button type="button" wire:click="confirmGenerateCurrentProductPhotoWithAi" wire:loading.attr="disabled" wire:target="confirmGenerateCurrentProductPhotoWithAi,generateCurrentProductPhotoWithAi,confirmAiAction"
                                                 class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-green-50 border-2 border-green-600 hover:border-green-700 hover:bg-green-100 text-gray-800 transition-colors cursor-pointer">
                                             <span wire:loading.remove wire:target="generateCurrentProductPhotoWithAi">{{ __('admin.product_form.gen_image_ai') }} · {{ $aiGenerateCost }}</span>
@@ -188,7 +188,7 @@
                                             <span class="text-xs font-medium text-amber-900 whitespace-nowrap">{{ __('admin.products.generating') }}</span>
                                         </div>
                                     @endif
-                                    @if($product_id && $photo)
+                                    @if(($canUseAi ?? false) && $product_id && $photo)
                                         <button type="button" wire:click="confirmImproveCurrentProductPhotoWithAi" wire:loading.attr="disabled" wire:target="confirmImproveCurrentProductPhotoWithAi,improveCurrentProductPhotoWithAi,confirmAiAction"
                                                 class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-green-50 border-2 border-green-600 hover:border-green-700 hover:bg-green-100 text-gray-800 transition-colors cursor-pointer">
                                             <span wire:loading.remove wire:target="improveCurrentProductPhotoWithAi">{{ __('admin.product_form.fix_image_ai') }} · {{ $aiImproveCost }}</span>
@@ -203,11 +203,11 @@
                                             <span class="text-xs font-medium text-amber-900 whitespace-nowrap">{{ __('admin.product_form.fixing') }}</span>
                                         </div>
                                     @endif
-                                    @if(!$product_id)
+                                    @if(($canUseAi ?? false) && !$product_id)
                                         <p class="text-xs text-gray-400">{{ __('admin.product_form.save_first_for_ai') }}</p>
                                     @endif
                                 </div>
-                                @if($product_id)
+                                @if(($canUseAi ?? false) && $product_id)
                                     <div class="mt-2 rounded-xl border {{ $aiCredits['uses_client_key'] || $aiCredits['is_demo_unlimited'] ? 'border-sky-200 bg-sky-50 text-sky-800' : 'border-gray-200 bg-gray-50 text-gray-700' }} px-3 py-2 text-xs">
                                         <span class="font-semibold">Saldo IA:</span> {{ $aiCredits['label'] }}
                                         @if($aiCredits['uses_client_key'])
@@ -231,11 +231,13 @@
                             <div>
                                 <div class="mb-1.5 flex items-center justify-between gap-3">
                                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('admin.product_form.label_description') }}</label>
+                                    @if ($canUseAi ?? false)
                                     <button type="button" wire:click="confirmGenerateDescriptionWithAi" wire:loading.attr="disabled" wire:target="confirmGenerateDescriptionWithAi,generateDescriptionWithAi,confirmAiAction"
                                             class="inline-flex items-center gap-2 rounded-lg border-2 border-green-600 bg-green-50 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-green-700 hover:bg-green-100">
                                         <span wire:loading.remove wire:target="generateDescriptionWithAi">{{ __('admin.product_form.generate_description_ai') }} · {{ $aiDescriptionCost }}</span>
                                         <span wire:loading wire:target="generateDescriptionWithAi">{{ __('admin.product_form.generating_description_ai') }}</span>
                                     </button>
+                                    @endif
                                 </div>
                                 <p class="mb-1.5 text-xs {{ $aiWritingGuideConnected ? 'text-sky-600' : 'text-gray-400' }}">
                                     @if($aiWritingGuideConnected)
@@ -273,11 +275,13 @@
                             <div>
                                 <div class="mb-1.5 flex items-center justify-between gap-3">
                                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('admin.product_form.label_aller_text') }}</label>
+                                    @if ($canUseAi ?? false)
                                     <button type="button" wire:click="confirmGenerateAllergenTextWithAi" wire:loading.attr="disabled" wire:target="confirmGenerateAllergenTextWithAi,generateAllergenTextWithAi,confirmAiAction"
                                             class="inline-flex items-center gap-2 rounded-lg border-2 border-green-600 bg-green-50 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-green-700 hover:bg-green-100">
                                         <span wire:loading.remove wire:target="generateAllergenTextWithAi">{{ __('admin.product_form.generate_allergen_text_ai') }} · {{ $aiAllergenTextCost }}</span>
                                         <span wire:loading wire:target="generateAllergenTextWithAi">{{ __('admin.product_form.generating_allergen_text_ai') }}</span>
                                     </button>
+                                    @endif
                                 </div>
                                 <p class="text-xs text-gray-400 mb-1.5">{{ __('admin.product_form.aller_hint') }}</p>
                                 <textarea wire:model="aller" rows="4"

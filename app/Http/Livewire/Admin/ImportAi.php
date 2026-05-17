@@ -6,8 +6,10 @@ use App\Exceptions\InsufficientAiCreditsException;
 use App\Models\Allergen;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Restaurant;
 use App\Services\AiCreditService;
 use App\Services\OpenAiService;
+use App\Services\PlanEntitlementService;
 use App\Services\ProductImageAiService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -83,6 +85,11 @@ class ImportAi extends Component
 
     public function process(): void
     {
+        if (! $this->planAllows('ai')) {
+            $this->flash(__('admin.plan.feature_not_available'), 'error');
+            return;
+        }
+
         // Petición larga + imagen en base64: sin esto el proceso puede agotar memoria y cerrar el servidor local (ERR_CONNECTION_REFUSED).
         @ini_set('memory_limit', '512M');
         @set_time_limit(180);
@@ -159,6 +166,12 @@ class ImportAi extends Component
 
     public function save(): void
     {
+        if (! $this->planAllows('ai')) {
+            $this->flash(__('admin.plan.feature_not_available'), 'error');
+            $this->step = 'upload';
+            return;
+        }
+
         @ini_set('memory_limit', '384M');
         @set_time_limit(120);
 
@@ -542,6 +555,17 @@ class ImportAi extends Component
             }
         }
         return $map;
+    }
+
+    private function planAllows(string $feature): bool
+    {
+        $svc     = app(PlanEntitlementService::class);
+        $account = app()->bound('account') ? app('account') : null;
+        if (! $account) {
+            $rid     = session('admin_restaurant_id');
+            $account = $rid ? Restaurant::find($rid)?->account : null;
+        }
+        return $svc->planHasFeature($svc->effectivePlanForAccount($account), $feature);
     }
 
     private function flash(string $msg, string $type = 'success'): void

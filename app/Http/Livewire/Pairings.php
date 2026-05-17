@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Setting;
 use App\Services\AiCreditService;
 use App\Services\OpenAiService;
+use App\Support\PlanFeatureGate;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -78,6 +79,7 @@ class Pairings extends Component
             'aiCredits' => $this->aiCredits()->summary(),
             'aiPairingDescriptionCost' => $this->aiCredits()->cost(AiCreditService::ACTION_GENERATE_PAIRING_DESCRIPTION),
             'aiWritingGuideConnected' => $this->hasAiWritingGuide(),
+            'canUseAi'                => PlanFeatureGate::allows('ai'),
         ]);
     }
 
@@ -95,6 +97,17 @@ class Pairings extends Component
     public function closeLinkedProductsList(): void
     {
         $this->expandedLinkedProductsPairingId = null;
+    }
+
+    private function guardAiPlan(): bool
+    {
+        if (PlanFeatureGate::allows('ai')) {
+            return true;
+        }
+
+        session()->flash('message', __('admin.plan.feature_not_available'));
+
+        return false;
     }
 
     private function hasAiWritingGuide(): bool
@@ -149,6 +162,10 @@ class Pairings extends Component
 
     public function confirmGeneratePairingDescriptionWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         $this->confirmingPairingAiDescription = true;
     }
 
@@ -159,12 +176,22 @@ class Pairings extends Component
 
     public function confirmPairingAiDescription(): void
     {
+        if (! $this->guardAiPlan()) {
+            $this->confirmingPairingAiDescription = false;
+
+            return;
+        }
+
         $this->confirmingPairingAiDescription = false;
         $this->generatePairingDescriptionWithAi();
     }
 
     public function generatePairingDescriptionWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         try {
             if (! $this->openAi()->isConfigured()) {
                 session()->flash('message', __('admin.pairing_page.flash_ai_no_openai'));

@@ -11,6 +11,7 @@ use App\Services\AiCreditService;
 use App\Services\ImageAssetService;
 use App\Services\OpenAiService;
 use App\Services\PlanEntitlementService;
+use App\Support\PlanFeatureGate;
 use App\Services\ProductImageAiService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -396,6 +397,8 @@ class Products extends Component
                 ->orderBy('sort_order')
                 ->orderBy('name')
                 ->get(),
+            'canUseAi'              => PlanFeatureGate::allows('ai'),
+            'canUseCsvImport'       => PlanFeatureGate::allows('csv_import'),
         ]);
     }
 
@@ -736,30 +739,50 @@ class Products extends Component
 
     public function confirmGenerateCurrentProductPhotoWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         $this->pendingAiAction = 'generate_current_product_photo';
         $this->confirmingAiAction = true;
     }
 
     public function confirmImproveCurrentProductPhotoWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         $this->pendingAiAction = 'improve_current_product_photo';
         $this->confirmingAiAction = true;
     }
 
     public function confirmGenerateMissingProductPhotos(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         $this->pendingAiAction = 'generate_missing_product_photos';
         $this->confirmingAiAction = true;
     }
 
     public function confirmGenerateDescriptionWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         $this->pendingAiAction = 'generate_description';
         $this->confirmingAiAction = true;
     }
 
     public function confirmGenerateAllergenTextWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         $this->pendingAiAction = 'generate_allergen_text';
         $this->confirmingAiAction = true;
     }
@@ -772,6 +795,13 @@ class Products extends Component
 
     public function confirmAiAction(): void
     {
+        if (! $this->guardAiPlan()) {
+            $this->confirmingAiAction = false;
+            $this->pendingAiAction = null;
+
+            return;
+        }
+
         $action = $this->pendingAiAction;
         $this->confirmingAiAction = false;
         $this->pendingAiAction = null;
@@ -803,6 +833,10 @@ class Products extends Component
 
     public function generateDescriptionWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         try {
             if (! $this->openAi()->isConfigured()) {
                 session()->flash('message', 'Configura la API key de OpenAI para generar descripciones.');
@@ -850,6 +884,10 @@ class Products extends Component
 
     public function generateAllergenTextWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         try {
             if (! $this->openAi()->isConfigured()) {
                 session()->flash('message', 'Configura la API key de OpenAI para generar el texto de alergenos.');
@@ -897,6 +935,10 @@ class Products extends Component
 
     public function improveCurrentProductPhotoWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         try {
             @ini_set('max_execution_time', '180');
             @set_time_limit(180);
@@ -953,6 +995,10 @@ class Products extends Component
 
     public function generateCurrentProductPhotoWithAi(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         try {
             @ini_set('max_execution_time', '180');
             @set_time_limit(180);
@@ -1011,6 +1057,10 @@ class Products extends Component
 
     public function generateMissingProductPhotos(): void
     {
+        if (! $this->guardAiPlan()) {
+            return;
+        }
+
         try {
             if (! $this->productImageAi()->isConfigured()) {
                 session()->flash('message', __('admin.products.flash_bulk_gen_no_key'));
@@ -1077,6 +1127,17 @@ class Products extends Component
     public function aiCost(string $action, int $units = 1): int
     {
         return $this->aiCredits()->cost($action, $units);
+    }
+
+    private function guardAiPlan(): bool
+    {
+        if (PlanFeatureGate::allows('ai')) {
+            return true;
+        }
+
+        session()->flash('message', __('admin.plan.feature_not_available'));
+
+        return false;
     }
 
     private function selectedAllergenNames(): array

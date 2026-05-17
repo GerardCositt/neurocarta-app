@@ -41,6 +41,7 @@
                         <div>
                             <div class="mb-1.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                                 <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide shrink-0">{{ __('admin.pairing_page.th_description') }}</label>
+                                @if ($canUseAi ?? false)
                                 <button type="button"
                                         wire:click="confirmGeneratePairingDescriptionWithAi"
                                         wire:loading.attr="disabled"
@@ -49,6 +50,7 @@
                                     <span wire:loading.remove wire:target="generatePairingDescriptionWithAi">{{ __('admin.pairing_page.generate_description_ai') }} · {{ $aiPairingDescriptionCost }}</span>
                                     <span wire:loading wire:target="generatePairingDescriptionWithAi">{{ __('admin.pairing_page.generating_description_ai') }}</span>
                                 </button>
+                                @endif
                             </div>
                             <p class="mb-1.5 text-xs {{ $aiWritingGuideConnected ? 'text-sky-600' : 'text-gray-400' }}">
                                 {{ __('admin.pairing_page.writing_guide_hint') }}
@@ -58,6 +60,7 @@
                                       rows="6"
                                       class="w-full border border-gray-200 rounded-xl py-2.5 px-3 text-sm text-gray-800 leading-relaxed focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm resize-y min-h-[8rem] max-h-[min(38vh,300px)]"></textarea>
                             @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            @if ($canUseAi ?? false)
                             <div class="mt-2 rounded-xl border {{ $aiCredits['uses_client_key'] || $aiCredits['is_demo_unlimited'] ? 'border-sky-200 bg-sky-50 text-sky-800' : 'border-gray-200 bg-gray-50 text-gray-700' }} px-3 py-2 text-xs">
                                 <span class="font-semibold">Saldo IA:</span> {{ $aiCredits['label'] }}
                                 @if($aiCredits['uses_client_key'])
@@ -66,6 +69,7 @@
                                     <span class="ml-1">Esta demo no descuenta créditos.</span>
                                 @endif
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>

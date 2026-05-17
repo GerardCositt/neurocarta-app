@@ -7,9 +7,11 @@ use App\Models\Allergen;
 use App\Models\Category;
 use App\Models\Pairing;
 use App\Models\Product;
+use App\Models\Restaurant;
 use App\Models\Setting;
 use App\Models\Translation;
 use App\Services\DeepLService;
+use App\Services\PlanEntitlementService;
 use Livewire\Component;
 
 class TranslationManager extends Component
@@ -67,6 +69,11 @@ class TranslationManager extends Component
 
     public function translateAll(): void
     {
+        if (! $this->planAllows('translations')) {
+            $this->flash(__('admin.plan.feature_not_available'), 'error');
+            return;
+        }
+
         if (!$this->deepL()->isConfigured()) {
             $this->flash(__('admin.translation_ui.flash_deepl_required'), 'error');
             return;
@@ -129,6 +136,11 @@ class TranslationManager extends Component
 
     public function retranslateAll(): void
     {
+        if (! $this->planAllows('translations')) {
+            $this->flash(__('admin.plan.feature_not_available'), 'error');
+            return;
+        }
+
         if (!$this->deepL()->isConfigured()) {
             $this->flash(__('admin.translation_ui.flash_deepl_required'), 'error');
             return;
@@ -233,6 +245,11 @@ class TranslationManager extends Component
 
     public function translateOne(string $modelType, int $id): void
     {
+        if (! $this->planAllows('translations')) {
+            $this->flash(__('admin.plan.feature_not_available'), 'error');
+            return;
+        }
+
         if (!$this->deepL()->isConfigured()) {
             $this->flash(__('admin.translation_ui.flash_deepl_required'), 'error');
             return;
@@ -272,6 +289,17 @@ class TranslationManager extends Component
             'pairing'  => Pairing::with('translations')->where('restaurant_id', $rid)->find($id),
             default    => null,
         };
+    }
+
+    private function planAllows(string $feature): bool
+    {
+        $svc     = app(PlanEntitlementService::class);
+        $account = app()->bound('account') ? app('account') : null;
+        if (! $account) {
+            $rid     = $this->restaurantId();
+            $account = $rid ? Restaurant::find($rid)?->account : null;
+        }
+        return $svc->planHasFeature($svc->effectivePlanForAccount($account), $feature);
     }
 
     private function flash(string $message, string $type = 'success'): void

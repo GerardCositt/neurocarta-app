@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'admin.restaurant'       => \App\Http\Middleware\AdminRestaurant::class,
         'subscription.check'     => \App\Http\Middleware\CheckSubscription::class,
         'subscription.public'    => \App\Http\Middleware\CheckPublicMenuSubscription::class,
+        'plan.feature'           => \App\Http\Middleware\EnsurePlanFeature::class,
         'turnstile'              => \App\Http\Middleware\VerifyTurnstile::class,
     ];
 }

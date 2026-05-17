@@ -181,68 +181,71 @@ Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription
         return view('settings.ai-billing');
     })->name('settings.ai-billing');
 
-    Route::get('/settings/import-products', function () {
-        return view('settings.import-products');
-    })->name('settings.import-products');
+    Route::middleware('plan.feature:csv_import')->group(function () {
+        Route::get('/settings/import-products', function () {
+            return view('settings.import-products');
+        })->name('settings.import-products');
+
+        Route::get('/settings/import-products/template', function () {
+            $headers = [
+                'id',
+                'nombre',
+                'categoria',
+                'descripcion',
+                'precio',
+                'oferta',
+                'precio_oferta',
+                'etiqueta_oferta',
+                'inicio_oferta',
+                'fin_oferta',
+                'oculto',
+                'destacado',
+                'recomendado',
+                'orden',
+                'alergenos',
+            ];
+
+            $example = [
+                '',
+                'Ensalada Mixta',
+                'Entrantes',
+                'Lechuga, tomate, atún…',
+                '9,50€',
+                '0',
+                '',
+                'Oferta',
+                '',
+                '',
+                '0',
+                '0',
+                '0',
+                '',
+                'Gluten|Pescado',
+            ];
+
+            $out = fopen('php://temp', 'r+');
+            fputcsv($out, $headers, ';');
+            fputcsv($out, $example, ';');
+            rewind($out);
+            $csv = stream_get_contents($out);
+            fclose($out);
+
+            return response($csv, 200, [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="plantilla-productos.csv"',
+            ]);
+        })->name('settings.import-products.template');
+    });
 
     Route::get('/settings/import-ai', function () {
         return view('settings.import-ai');
-    })->name('settings.import-ai');
-
-    Route::get('/settings/import-products/template', function () {
-        $headers = [
-            'id',
-            'nombre',
-            'categoria',
-            'descripcion',
-            'precio',
-            'oferta',
-            'precio_oferta',
-            'etiqueta_oferta',
-            'inicio_oferta',
-            'fin_oferta',
-            'oculto',
-            'destacado',
-            'recomendado',
-            'orden',
-            'alergenos',
-        ];
-
-        $example = [
-            '',
-            'Ensalada Mixta',
-            'Entrantes',
-            'Lechuga, tomate, atún…',
-            '9,50€',
-            '0',
-            '',
-            'Oferta',
-            '',
-            '',
-            '0',
-            '0',
-            '0',
-            '',
-            'Gluten|Pescado',
-        ];
-
-        $out = fopen('php://temp', 'r+');
-        fputcsv($out, $headers, ';');
-        fputcsv($out, $example, ';');
-        rewind($out);
-        $csv = stream_get_contents($out);
-        fclose($out);
-
-        return response($csv, 200, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="plantilla-productos.csv"',
-        ]);
-    })->name('settings.import-products.template');
+    })->middleware('plan.feature:ai')->name('settings.import-ai');
 
     Route::get('/pairing', Pairings::class)->name('pairing');
     Route::get('/product', Products::class)->name('product');
 
     Route::get('/translations', App\Http\Livewire\Admin\TranslationManager::class)
+        ->middleware('plan.feature:translations')
         ->name('translations');
 
     Route::post('/api/reorder/categories', [ReorderController::class, 'categories']);

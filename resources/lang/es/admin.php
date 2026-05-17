@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'plan' => [
+        'feature_not_available' => 'Esta función no está disponible en tu plan actual. Actualiza a Pro o Premium para acceder.',
+    ],
     'nav' => [
         'subtitle' => 'Panel admin',
         'products' => 'Productos',

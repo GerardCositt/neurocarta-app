@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Restaurant;
 use App\Models\Setting;
+use App\Support\PlanFeatureGate;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -107,6 +108,9 @@ class NavigationMenu extends Component
             'adminLogoPath' => $this->adminLogoPath,
             'qrMenuUrl' => $this->qrMenuUrl,
             'qrFilename' => $this->qrFilename,
+            'canUseCsvImport' => PlanFeatureGate::allows('csv_import'),
+            'canUseAi' => PlanFeatureGate::allows('ai'),
+            'canUseTranslations' => PlanFeatureGate::allows('translations'),
         ]);
     }
 }

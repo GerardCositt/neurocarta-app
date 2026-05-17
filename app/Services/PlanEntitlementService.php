@@ -39,6 +39,34 @@ class PlanEntitlementService
         ],
     ];
 
+    /** Features booleanas por plan. Basic no tiene IA, CSV ni traducciones. */
+    private const FEATURES = [
+        self::PLAN_BASIC => [
+            'ai'           => false,
+            'csv_import'   => false,
+            'translations' => false,
+        ],
+        self::PLAN_PRO => [
+            'ai'           => true,
+            'csv_import'   => true,
+            'translations' => true,
+        ],
+        self::PLAN_PREMIUM => [
+            'ai'           => true,
+            'csv_import'   => true,
+            'translations' => true,
+        ],
+    ];
+
+    public function planHasFeature(string $plan, string $feature): bool
+    {
+        $plan = in_array($plan, [self::PLAN_BASIC, self::PLAN_PRO, self::PLAN_PREMIUM], true)
+            ? $plan
+            : self::PLAN_BASIC;
+
+        return (bool) (self::FEATURES[$plan][$feature] ?? false);
+    }
+
     public function effectivePlanForAccount(?Account $account): string
     {
         // Demo: siempre Pro

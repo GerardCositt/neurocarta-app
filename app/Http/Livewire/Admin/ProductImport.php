@@ -6,6 +6,7 @@ use App\Models\Allergen;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Restaurant;
+use App\Services\PlanEntitlementService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -94,6 +95,12 @@ class ProductImport extends Component
 
     public function import(): void
     {
+        if (! $this->planAllows('csv_import')) {
+            $this->previewErrors = [__('admin.plan.feature_not_available')];
+            $this->hasPreview = true;
+            return;
+        }
+
         $this->validate([
             'file' => 'required|file|max:5120|mimes:csv,txt',
         ]);
@@ -355,6 +362,17 @@ class ProductImport extends Component
         fclose($fh);
 
         return [$rows, $errors, array_values(array_unique($warnings))];
+    }
+
+    private function planAllows(string $feature): bool
+    {
+        $svc     = app(PlanEntitlementService::class);
+        $account = app()->bound('account') ? app('account') : null;
+        if (! $account) {
+            $rid     = session('admin_restaurant_id');
+            $account = $rid ? Restaurant::find($rid)?->account : null;
+        }
+        return $svc->planHasFeature($svc->effectivePlanForAccount($account), $feature);
     }
 
     private function toBool($v): bool

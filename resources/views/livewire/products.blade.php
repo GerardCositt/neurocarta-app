@@ -55,6 +55,7 @@
                 </svg>
             </summary>
             <div class="absolute right-0 mt-2 w-64 rounded-2xl border border-gray-100 bg-white shadow-xl z-50 overflow-hidden py-1">
+                @if ($canUseCsvImport ?? false)
                 <a href="{{ route('settings.import-products') }}"
                    class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -62,6 +63,8 @@
                     </svg>
                     {{ __('admin.products.import_csv') }}
                 </a>
+                @endif
+                @if ($canUseAi ?? false)
                 <a href="{{ route('settings.import-ai') }}"
                    class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -69,6 +72,7 @@
                     </svg>
                     {{ __('admin.products.add_with_ai') }}
                 </a>
+                @endif
                 <div class="border-t border-gray-100 my-1"></div>
                 <button type="button" wire:click="create()" onclick="document.getElementById('actions-menu-products').removeAttribute('open')"
                         class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left">
@@ -77,6 +81,7 @@
                     </svg>
                     {{ __('admin.products.add_product') }}
                 </button>
+                @if ($canUseAi ?? false)
                 <button type="button" wire:click="confirmGenerateMissingProductPhotos" wire:loading.attr="disabled" wire:target="generateMissingProductPhotos,confirmAiAction"
                         onclick="document.getElementById('actions-menu-products').removeAttribute('open')"
                         class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left">
@@ -86,6 +91,7 @@
                     <span wire:loading.remove wire:target="generateMissingProductPhotos">{{ __('admin.products.generate_missing_photos') }} · {{ $aiBulkGenerateCost }}</span>
                     <span wire:loading wire:target="generateMissingProductPhotos">{{ __('admin.products.generating') }}</span>
                 </button>
+                @endif
             </div>
         </details>
     </div>
@@ -381,23 +387,29 @@
                             <p class="mb-2">{{ __('admin.products.empty_none') }}</p>
                         @endif
                         <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                            @if ($canUseCsvImport ?? false)
                             <a href="{{ route('settings.import-products') }}"
                                class="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-amber-300 hover:bg-amber-100 text-gray-800 text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
                                 {{ __('admin.products.import_csv') }}
                             </a>
+                            @endif
+                            @if ($canUseAi ?? false)
                             <a href="{{ route('settings.import-ai') }}"
                                class="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
                                 {{ __('admin.products.add_with_ai') }}
                             </a>
+                            @endif
                             <button type="button" wire:click="create()"
                                     class="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
                                 {{ __('admin.products.add_one_by_one') }}
                             </button>
+                            @if ($canUseAi ?? false)
                             <button type="button" wire:click="generateMissingProductPhotos" wire:loading.attr="disabled" wire:target="generateMissingProductPhotos"
                                     class="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-amber-300 hover:bg-amber-50 text-gray-800 text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
                                 <span wire:loading.remove wire:target="generateMissingProductPhotos">{{ __('admin.products.generate_photos_ai') }}</span>
                                 <span wire:loading wire:target="generateMissingProductPhotos">{{ __('admin.products.generating') }}</span>
                             </button>
+                            @endif
                         </div>
                     </td>
                 </tr>

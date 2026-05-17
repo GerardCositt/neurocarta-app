@@ -59,6 +59,13 @@
     <body class="antialiased admin-shell">
         <x-jet-banner />
 
+        @if (session('plan_error'))
+            <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                 role="alert">
+                {{ session('plan_error') }}
+            </div>
+        @endif
+
         <div class="flex min-h-screen w-full">
 
             @livewire('navigation-menu')
