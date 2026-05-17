@@ -101,6 +101,90 @@ class LaunchCheckCommand extends Command
         }
         $this->newLine();
 
+        // --- HTTPS ---
+        $this->line('▶ HTTPS');
+        $appUrl = (string) config('app.url');
+        if (str_starts_with($appUrl, 'https://')) {
+            $this->line('  ✓ APP_URL usa HTTPS');
+        } else {
+            $this->error('  ✗ APP_URL no usa HTTPS → '.$appUrl);
+        }
+        $this->newLine();
+
+        // --- Stripe ---
+        $this->line('▶ Stripe');
+        $stripeKey    = config('cashier.key') ?: env('STRIPE_KEY', '');
+        $stripeSecret = config('cashier.secret') ?: env('STRIPE_SECRET', '');
+        $stripeWebhook = env('STRIPE_WEBHOOK_SECRET', '');
+
+        foreach ([
+            ['STRIPE_KEY',            $stripeKey,     'pk_live_'],
+            ['STRIPE_SECRET',         $stripeSecret,  'sk_live_'],
+            ['STRIPE_WEBHOOK_SECRET', $stripeWebhook, 'whsec_'],
+        ] as [$label, $val, $livePrefix]) {
+            if (! $val) {
+                $this->error("  ✗ {$label} vacío — configúralo en .env");
+            } elseif (! str_starts_with((string) $val, $livePrefix)) {
+                $this->warn("  ⚠ {$label} parece clave TEST (no live) — prefijo esperado: {$livePrefix}");
+            } else {
+                $this->line("  ✓ {$label} = ".substr((string) $val, 0, 12).'…');
+            }
+        }
+        $this->newLine();
+
+        // --- Base de datos ---
+        $this->line('▶ Base de datos');
+        try {
+            \DB::connection()->getPdo();
+            $count = \DB::table('users')->count();
+            $this->line("  ✓ Conexión OK — {$count} usuarios en BD");
+        } catch (\Throwable $e) {
+            $this->error('  ✗ No se puede conectar: '.$e->getMessage());
+        }
+        $this->newLine();
+
+        // --- Storage ---
+        $this->line('▶ Storage');
+        $testFile = storage_path('app/launch_check_test.tmp');
+        try {
+            file_put_contents($testFile, 'ok');
+            unlink($testFile);
+            $this->line('  ✓ Storage escribible');
+        } catch (\Throwable $e) {
+            $this->error('  ✗ Storage no escribible: '.$e->getMessage());
+        }
+        $diskPublic = public_path('storage');
+        if (is_link($diskPublic) || is_dir($diskPublic)) {
+            $this->line('  ✓ public/storage enlazado');
+        } else {
+            $this->warn('  ⚠ public/storage no existe — ejecuta: php artisan storage:link');
+        }
+        $this->newLine();
+
+        // --- Email (test de conexión SMTP, sin enviar) ---
+        $this->line('▶ Email SMTP');
+        $mailHost = config('mail.mailers.smtp.host');
+        $mailPort = config('mail.mailers.smtp.port');
+        $mailFrom = config('mail.from.address');
+        if (! $mailHost) {
+            $this->error('  ✗ MAIL_HOST vacío');
+        } else {
+            $this->line("  ✓ Host: {$mailHost}:{$mailPort}");
+            $this->line("  ✓ From: {$mailFrom}");
+            $this->line('  → Para probar envío real: php artisan tinker → Mail::raw("test", fn($m) => $m->to("tu@email.com")->subject("Test"))');
+        }
+        $this->newLine();
+
+        // --- Admin ---
+        $this->line('▶ Admin');
+        $adminEmail = config('services.filament.admin_email');
+        if ($adminEmail) {
+            $this->line("  ✓ FILAMENT_ADMIN_EMAIL = {$adminEmail}");
+        } else {
+            $this->warn('  ⚠ FILAMENT_ADMIN_EMAIL vacío — solo accede admin si is_admin=true en BD');
+        }
+        $this->newLine();
+
         $this->line('▶ Restaurante demo público');
         $demo = Restaurant::where('subdomain', 'demo')->first();
         if (! $demo) {
