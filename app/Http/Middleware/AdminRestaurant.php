@@ -18,8 +18,10 @@ class AdminRestaurant
 
         $restaurantId = session('admin_restaurant_id');
 
-        // Validar que el restaurante en sesión pertenece a la cuenta del usuario
-        if ($restaurantId && $account) {
+        $isAdmin = $user && $user->is_admin;
+
+        // Validar que el restaurante en sesión pertenece a la cuenta del usuario (no aplica a admin)
+        if ($restaurantId && $account && ! $isAdmin) {
             $belongs = $account->restaurants()->where('id', $restaurantId)->exists();
             if (! $belongs) {
                 $restaurantId = null;
@@ -41,10 +43,15 @@ class AdminRestaurant
         if ($restaurant) {
             app()->instance('restaurant', $restaurant);
 
-            if ($account) {
+            // Admin puede gestionar cualquier restaurante (p. ej. NeuroCarta Demo): cuenta = la del local
+            if ($isAdmin) {
+                $resolvedAccount = app(PlanEntitlementService::class)->accountForRestaurant($restaurant);
+                if ($resolvedAccount) {
+                    app()->instance('account', $resolvedAccount);
+                }
+            } elseif ($account) {
                 app()->instance('account', $account);
             } else {
-                // Fallback: resolver cuenta a partir del restaurante
                 $resolvedAccount = app(PlanEntitlementService::class)->accountForRestaurant($restaurant);
                 if ($resolvedAccount) {
                     app()->instance('account', $resolvedAccount);

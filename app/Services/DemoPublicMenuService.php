@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Account;
 use App\Models\Restaurant;
-use App\Models\Subscription;
 
 class DemoPublicMenuService
 {
@@ -17,20 +16,19 @@ class DemoPublicMenuService
 
         $account = $this->resolveDedicatedAccount($restaurant);
 
-        $hasActive = $account->subscriptions()
-            ->orderByDesc('id')
-            ->get()
-            ->contains(static fn (Subscription $s) => $s->isActive());
+        $subscription = $account->subscriptions()->orderByDesc('id')->first();
 
-        if ($hasActive) {
-            return;
-        }
-
-        $account->subscriptions()->create([
-            'plan_code'             => 'trial',
+        $premium = [
+            'plan_code'             => PlanEntitlementService::PLAN_PREMIUM,
             'status'                => 'active',
             'current_period_end_at' => now()->addYears(10),
-        ]);
+        ];
+
+        if ($subscription) {
+            $subscription->update($premium);
+        } else {
+            $account->subscriptions()->create($premium);
+        }
     }
 
     private function resolveDedicatedAccount(Restaurant $restaurant): Account

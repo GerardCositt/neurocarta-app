@@ -74,6 +74,15 @@ class PlanEntitlementService
             return self::PLAN_PRO;
         }
 
+        $boundRestaurant = app()->bound('restaurant') ? app('restaurant') : null;
+        if ($boundRestaurant && $boundRestaurant->ai_demo_unlimited) {
+            return self::PLAN_PREMIUM;
+        }
+
+        if ($account && $account->restaurants()->where('ai_demo_unlimited', true)->exists()) {
+            return self::PLAN_PREMIUM;
+        }
+
         if (! $account) {
             return self::PLAN_BASIC;
         }
