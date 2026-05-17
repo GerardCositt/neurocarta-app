@@ -71,11 +71,18 @@
             background: var(--nav-bg); backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--nav-border);
         }
+        .nav-outer {
+            display: flex; align-items: center;
+        }
         .nav-inner {
-            display: flex; overflow-x: auto; scrollbar-width: none;
-            padding: 10px 12px; gap: 8px; align-items: center;
+            display: flex; overflow-x: auto; overflow-y: unset; scrollbar-width: none;
+            padding: 10px 12px; gap: 8px; align-items: center; flex: 1; min-width: 0;
         }
         .nav-inner::-webkit-scrollbar { display: none; }
+        .nav-actions {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 12px 10px 0; flex-shrink: 0; position: relative;
+        }
         .nav-tab {
             flex-shrink: 0; padding: 6px 16px; font-size: 11px; font-weight: 600;
             letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted);
@@ -1128,63 +1135,67 @@
 
     {{-- NAV STICKY --}}
     <nav class="nav">
-        <div class="nav-inner">
-            @if($offers->count() > 0)
-                <a href="#ofertas" class="nav-tab nav-tab--offer">{{ __('public_menu.nav_offers') }}</a>
-            @endif
-            @foreach($categories as $cat)
-                @if($cat->products->count() > 0)
-                    <a href="#cat-{{ $cat->id }}" class="nav-tab">{{ $cat->translate($locale ?? 'es', 'name') }}</a>
+        <div class="nav-outer">
+            <div class="nav-inner">
+                @if($offers->count() > 0)
+                    <a href="#ofertas" class="nav-tab nav-tab--offer">{{ __('public_menu.nav_offers') }}</a>
                 @endif
-            @endforeach
+                @foreach($categories as $cat)
+                    @if($cat->products->count() > 0)
+                        <a href="#cat-{{ $cat->id }}" class="nav-tab">{{ $cat->translate($locale ?? 'es', 'name') }}</a>
+                    @endif
+                @endforeach
+            </div>
 
-            @if($restaurant?->isPublicSalesDemo() || (count($availableLocales ?? ['es']) > 1))
-            @php
-                $bjFlagMap = $bjFlagMap ?? [
-                    'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪','it'=>'🇮🇹','pt'=>'🇵🇹',
-                ];
-                $bjLocaleNav  = $locale ?? 'es';
-                $bjFlagNav    = $bjFlagMap[$bjLocaleNav] ?? '🌐';
-                $bjLocalesNav = $availableLocales ?? ['es'];
-            @endphp
-            <div class="nav-lang-wrap" style="position:relative;flex-shrink:0;">
-                <button type="button" class="nav-tab nav-tab--lang" id="langBtnNav"
-                        aria-label="{{ __('public_menu.lang_change_aria') }}" aria-haspopup="true" aria-expanded="false">
+            <div class="nav-actions">
+                @if($restaurant?->isPublicSalesDemo() || (count($availableLocales ?? ['es']) > 1))
+                @php
+                    $bjFlagMap = $bjFlagMap ?? [
+                        'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪','it'=>'🇮🇹','pt'=>'🇵🇹',
+                    ];
+                    $bjLocaleNav  = $locale ?? 'es';
+                    $bjFlagNav    = $bjFlagMap[$bjLocaleNav] ?? '🌐';
+                    $bjLocalesNav = $availableLocales ?? ['es'];
+                @endphp
+                <div class="nav-lang-wrap" style="position:relative;">
+                    <button type="button" class="nav-tab nav-tab--lang" id="langBtnNav"
+                            aria-label="{{ __('public_menu.lang_change_aria') }}" aria-haspopup="true" aria-expanded="false">
+                        <span class="nav-tab-settings-inner">
+                            <span style="font-size:16px;line-height:1;">{{ $bjFlagNav }}</span>
+                            <span>{{ strtoupper($bjLocaleNav) }}</span>
+                            <span style="opacity:.6;font-size:9px;">▼</span>
+                        </span>
+                    </button>
+                    <div id="langMenuNav" class="nav-lang-menu" hidden>
+                        @foreach($bjLocalesNav as $bjLocNav)
+                            @php
+                                $bjLfNav = $bjFlagMap[$bjLocNav] ?? '🌐';
+                                $bjActNav = ($bjLocNav === $bjLocaleNav);
+                            @endphp
+                            <a href="{{ \App\Support\PublicMenuUrl::withLang(request(), $bjLocNav) }}"
+                               class="nav-lang-item{{ $bjActNav ? ' is-active' : '' }}">
+                                <span>{{ $bjLfNav }}</span>
+                                <span>{{ strtoupper($bjLocNav) }}</span>
+                                @if($bjActNav)
+                                    <span>✓</span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <button type="button" class="nav-tab nav-tab--settings js-open-theme-settings"
+                        aria-label="{{ __('public_menu.settings_theme_aria') }}" aria-haspopup="dialog" aria-controls="themeSettingsOverlay">
                     <span class="nav-tab-settings-inner">
-                        <span style="font-size:16px;line-height:1;">{{ $bjFlagNav }}</span>
-                        <span>{{ strtoupper($bjLocaleNav) }}</span>
-                        <span style="opacity:.6;font-size:9px;">▼</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        <span>{{ __('public_menu.settings') }}</span>
                     </span>
                 </button>
-                <div id="langMenuNav" class="nav-lang-menu" hidden>
-                    @foreach($bjLocalesNav as $bjLocNav)
-                        @php
-                            $bjLfNav = $bjFlagMap[$bjLocNav] ?? '🌐';
-                            $bjActNav = ($bjLocNav === $bjLocaleNav);
-                        @endphp
-                        <a href="{{ \App\Support\PublicMenuUrl::withLang(request(), $bjLocNav) }}"
-                           class="nav-lang-item{{ $bjActNav ? ' is-active' : '' }}">
-                            <span>{{ $bjLfNav }}</span>
-                            <span>{{ strtoupper($bjLocNav) }}</span>
-                            @if($bjActNav)
-                                <span>✓</span>
-                            @endif
-                        </a>
-                    @endforeach
-                </div>
             </div>
-            @endif
-
-            <button type="button" class="nav-tab nav-tab--settings js-open-theme-settings"
-                    aria-label="{{ __('public_menu.settings_theme_aria') }}" aria-haspopup="dialog" aria-controls="themeSettingsOverlay">
-                <span class="nav-tab-settings-inner">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                    </svg>
-                    <span>{{ __('public_menu.settings') }}</span>
-                </span>
-            </button>
         </div>
     </nav>
 
