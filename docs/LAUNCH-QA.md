@@ -4,6 +4,13 @@
 > Entorno objetivo: producción (`https://app.neurocarta.ai`) o staging con datos limpios.  
 > Usuario de prueba base: crea una cuenta nueva en cada bloque para que el estado sea predecible.
 
+**Antes de empezar (automático):**
+
+```bash
+php artisan launch:check
+php artisan demo:prepare --subdomain=demo   # carta de ventas (subdominio demo)
+```
+
 ---
 
 ## Bloque 1 — Registro y trial

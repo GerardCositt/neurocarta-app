@@ -8,7 +8,8 @@ use Illuminate\Console\Command;
 class PrepareDemoCommand extends Command
 {
     protected $signature = 'demo:prepare
-                            {--restaurant= : ID del restaurante (por defecto el primero por id)}
+                            {--restaurant= : ID del restaurante}
+                            {--subdomain=demo : Subdominio si no se pasa --restaurant (por defecto «demo»)}
                             {--unlimited-ai : Activa IA ilimitada (demo) en ese restaurante}
                             {--force : En production, permite --unlimited-ai sin confirmación interactiva}';
 
@@ -17,9 +18,12 @@ class PrepareDemoCommand extends Command
     public function handle(): int
     {
         $rid = $this->option('restaurant');
+        $subdomain = (string) $this->option('subdomain');
+
         $restaurant = $rid
             ? Restaurant::query()->find($rid)
-            : Restaurant::query()->orderBy('id')->first();
+            : Restaurant::query()->where('subdomain', $subdomain !== '' ? $subdomain : 'demo')->first()
+                ?? Restaurant::query()->orderBy('id')->first();
 
         if (! $restaurant) {
             $this->error('No hay restaurantes en la base de datos. Ejecuta: php artisan db:seed --class=RestaurantSeeder');

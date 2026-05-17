@@ -16,10 +16,12 @@ class DemoMenuSeeder extends Seeder
 {
     public function run()
     {
-        $restaurant = Restaurant::first();
+        $restaurant = Restaurant::where('subdomain', 'demo')->first()
+            ?? Restaurant::query()->orderBy('id')->first();
         if (! $restaurant) {
             $this->call(RestaurantSeeder::class);
-            $restaurant = Restaurant::first();
+            $restaurant = Restaurant::where('subdomain', 'demo')->first()
+                ?? Restaurant::query()->orderBy('id')->first();
         }
         if (! $restaurant) {
             $this->command->error('No se pudo crear un restaurante de demo.');

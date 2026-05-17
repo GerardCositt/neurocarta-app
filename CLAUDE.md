@@ -129,7 +129,8 @@ Variables clave:
 - Commit local pendiente de push: `d38cc17` — gates por plan + tests.
 - **QA manual**: script en `docs/LAUNCH-QA.md` (11 bloques, español, pre-lanzamiento).
 - **Stripe en producción**: código listo; claves live y prueba de pago → pendiente.
-- **Siguiente prioridad**: ejecutar `docs/LAUNCH-QA.md` en prod/staging; legal; luego Stripe live.
+- **Siguiente prioridad**: `php artisan launch:check` + `docs/LAUNCH-QA.md` manual. Legal y Stripe cerrados por el equipo (abogado + integración lista).
+- **Demo ventas**: restaurante `subdomain=demo` (`NeuroCarta Demo`) — `php artisan demo:prepare --subdomain=demo`; URL pública `https://demo.<base_domain>/` si DNS configurado.
 
 ---
 
@@ -223,7 +224,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Evitar que un usuario vea datos de otro restaurante (scopes + test `TenantIsolationTest`; validar manual bloque 9 de `docs/LAUNCH-QA.md`).
 - [ ] Selector de restaurante probado si una cuenta tiene varios.
 - [ ] Seeds/demo separados de datos reales.
-- [ ] Eliminar o justificar cualquier consulta tipo `Restaurant::first()` fuera de seeds/demo.
+- [x] Eliminar o justificar `Restaurant::first()` fuera de seeds: solo en `DemoMenuSeeder` (fallback); `DetectRestaurant` usa subdominio/sesión/cookie.
 
 ### Fase 4 — Diseño y UX
 - [ ] Revisar panel de productos con muchos platos.
@@ -289,7 +290,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Definir precios finales.
 - [ ] Definir qué incluye cada plan.
 - [ ] Crear demo preparada.
-- [ ] Crear restaurante demo público.
+- [x] Crear restaurante demo público (`subdomain=demo`, `RestaurantSeeder` + `demo:prepare --subdomain=demo`).
 - [ ] Preparar onboarding para primeros clientes.
 - [ ] Preparar soporte: email, WhatsApp o formulario.
 - [ ] Preparar FAQ.

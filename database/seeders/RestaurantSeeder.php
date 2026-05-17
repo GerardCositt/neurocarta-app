@@ -20,6 +20,16 @@ class RestaurantSeeder extends Seeder
             ]
         );
 
+        // Carta pública de ventas: https://demo.<base_domain>/ (DNS subdominio en producción)
+        Restaurant::updateOrCreate(
+            ['subdomain' => 'demo'],
+            [
+                'name'              => 'NeuroCarta Demo',
+                'ai_demo_unlimited' => true,
+                'ai_credits'        => 999_999,
+            ]
+        );
+
         Restaurant::firstOrCreate(
             ['subdomain' => 'elpuerto'],
             ['name' => 'El Puerto']
