@@ -55,10 +55,9 @@
 
 ### Landing (neurocarta.ai)
 - **Plataforma**: Plesk (servidor COSITT, IP 217.154.188.235)
-- **Usuario SSH**: `neurocarta.ai_d8ugncl8ukj`
-- **Ruta httpdocs**: `/var/www/vhosts/neurocarta.ai/httpdocs/`
-- Los archivos del `dist` se suben por SCP directamente a `httpdocs/`
-- La landing NO usa deploy automático — hay que subir el `dist` manualmente por SCP tras cada build
+- **Repo**: `GerardCositt/neurocarta-ai-landings` → carpeta `neurocarta-conversion/`
+- **Deploy**: push a `main` → GitHub Action `deploy-neurocarta-ai.yml` (build Vite + rsync a `httpdocs/`)
+- **SCP manual**: solo emergencia si falla Actions
 
 ---
 
@@ -77,12 +76,9 @@
 1. `git push` a `main` → Render detecta el push y despliega automáticamente
 
 ### Landing (neurocarta.ai)
-1. Editar `src/App.jsx` (u otros archivos fuente)
-2. `npm run build` en `neurocarta-ai-landings/neurocarta-conversion`
-3. Subir por SCP:
-   ```bash
-   scp -r "/ruta/local/neurocarta-conversion/dist/." neurocarta.ai_d8ugncl8ukj@217.154.188.235:/var/www/vhosts/neurocarta.ai/httpdocs/
-   ```
+1. Editar en `neurocarta-ai-landings/neurocarta-conversion/`
+2. `git push origin main` → deploy automático a Plesk (~30 s)
+3. Verificar: https://github.com/GerardCositt/neurocarta-ai-landings/actions
 
 ---
 
@@ -125,12 +121,11 @@ Variables clave:
 
 ## Estado Git (2026-05-17)
 
-- Local sincronizado con `origin/main` (48 commits incorporados desde staging antiguo).
-- Commit local pendiente de push: `d38cc17` — gates por plan + tests.
-- **QA manual**: script en `docs/LAUNCH-QA.md` (11 bloques, español, pre-lanzamiento).
-- **Stripe en producción**: código listo; claves live y prueba de pago → pendiente.
-- **Siguiente prioridad**: `php artisan launch:check` + `docs/LAUNCH-QA.md` manual. Legal y Stripe cerrados por el equipo (abogado + integración lista).
-- **Demo ventas**: restaurante `subdomain=demo` (`NeuroCarta Demo`) — `php artisan demo:prepare --subdomain=demo`; URL pública `https://demo.<base_domain>/` si DNS configurado.
+- `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
+- **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
+- **QA manual**: `docs/LAUNCH-QA.md` (bloques 1–11) — pendiente en oficina.
+- **Stripe / Legal**: cerrados por el equipo (código + documentos); verificar live en Fase 10.
+- **Tests Launch**: 16 tests (`./scripts/launch-test.sh`) + `PublicMenuPerformanceTest`.
 
 ---
 
@@ -208,7 +203,8 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] IA de importación, descripción e imágenes con control de créditos.
 
 ### Fase 2 — Pagos y suscripciones
-- [ ] Stripe conectado en producción.
+- [x] Stripe en código (Checkout + webhooks). Pendiente: **live** probado (Fase 10).
+- [ ] Stripe conectado en producción (claves `.env`).
 - [ ] Checkout real para cada plan.
 - [ ] Webhooks de Stripe configurados.
 - [ ] Activación automática de suscripción tras pago.
@@ -227,9 +223,9 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Eliminar o justificar `Restaurant::first()` fuera de seeds: solo en `DemoMenuSeeder` (fallback); `DetectRestaurant` usa subdominio/sesión/cookie.
 
 ### Fase 4 — Diseño y UX
-- [ ] Revisar panel de productos con muchos platos.
-- [ ] Revisar tabla de productos en pantallas pequeñas.
-- [ ] Revisar carta pública en móvil real.
+- [ ] Revisar panel de productos con muchos platos (manual).
+- [x] Tabla de productos en pantallas pequeñas: tarjetas móvil en `/product` y `/category` (< md).
+- [ ] Revisar carta pública en móvil real (bloque 3 / 11.4 de `LAUNCH-QA.md`).
 - [ ] Revisar estados vacíos: sin productos, sin categorías, sin imagen, sin suscripción.
 - [ ] Revisar textos de ayuda, botones y errores.
 - [ ] Revisar tema claro/oscuro si ambos existen.
@@ -238,36 +234,30 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Landing pública con propuesta clara.
 
 ### Fase 5 — Legal
-- [ ] Términos y condiciones.
-- [ ] Política de privacidad.
-- [ ] Política de cookies.
-- [ ] Aviso legal.
+- [x] Términos, privacidad, cookies, aviso legal — **cerrado por abogado** (publicado en `neurocarta.ai`; validar enlaces en registro).
 - [ ] Consentimiento para emails.
 - [ ] RGPD: exportar/eliminar datos de cliente si aplica.
 - [ ] Información de empresa, CIF/NIF y dirección legal.
 - [ ] Condiciones de uso de IA si se generan textos/imágenes.
 
 ### Fase 6 — Producción técnica
-- [ ] `.env` de producción revisado.
-- [ ] `APP_ENV=production`.
-- [ ] `APP_DEBUG=false`.
-- [ ] `APP_URL` correcto.
-- [ ] Base de datos de producción limpia y migrada.
-- [ ] Backups automáticos de base de datos.
-- [ ] Backups de imágenes/subidas.
-- [ ] Storage público configurado.
-- [ ] Cola/queue configurada si hay emails, IA o importaciones pesadas.
-- [ ] Scheduler/cron activo para trials, ofertas y avisos.
-- [ ] Logs accesibles.
-- [ ] Monitorización de errores.
-- [ ] HTTPS obligatorio.
-- [ ] Dominio principal y subdominios configurados.
-- [ ] Emails SMTP transaccionales configurados.
+- [ ] `.env` de producción revisado → **verificar en servidor** (`docs/SERVIDOR-LANZAMIENTO.md` §5).
+- [ ] `APP_ENV=production` / `APP_DEBUG=false` / `APP_URL` → `launch:check` en prod.
+- [x] Base de datos PostgreSQL en Docker; migraciones en `deploy.sh`.
+- [x] Backups automáticos DB + storage (`scripts/backup.sh`, cron 03:00) — restauración probada 2026-05-16.
+- [ ] Copia off-server de backups (recomendado antes de escalar).
+- [x] Storage público en volumen Docker.
+- [x] `QUEUE_CONNECTION=sync` aceptable al inicio (sin worker).
+- [ ] Scheduler/cron activo → **verificar** `/etc/cron.d/neurocarta` (`SERVIDOR-LANZAMIENTO.md` §4).
+- [ ] Logs / monitorización (Sentry, etc.) — opcional pre-lanzamiento.
+- [x] HTTPS Let's Encrypt en nginx.
+- [ ] Dominio `demo.neurocarta.ai` (opcional ventas).
+- [ ] Emails SMTP en prod → prueba registro real (QA bloque 10).
 
 ### Fase 7 — Seguridad
-- [ ] Revisar permisos de admin.
+- [ ] Revisar permisos de admin (`FILAMENT_ADMIN_EMAIL`).
 - [ ] Proteger rutas internas.
-- [ ] Rate limit en login, registro e IA.
+- [x] Rate limit IA (30/min); login/registro con throttle Fortify.
 - [x] Validación fuerte de subida de archivos públicos: logos, productos y alérgenos limitados a `jpg/jpeg`, `png`, `webp`; CSV/importaciones limitadas por tipo.
 - [x] Evitar SVG peligroso en uploads públicos: SVG/GIF eliminados de validaciones y `accept`; `ImageAssetService` rechaza MIME no raster y re-encodea antes de guardar.
 - [ ] CSRF funcionando.
@@ -289,8 +279,8 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 ### Fase 9 — Comercial
 - [ ] Definir precios finales.
 - [ ] Definir qué incluye cada plan.
-- [ ] Crear demo preparada.
-- [x] Crear restaurante demo público (`subdomain=demo`, `RestaurantSeeder` + `demo:prepare --subdomain=demo`).
+- [ ] Demo preparada en **producción** → `bash scripts/ensure-demo-docker.sh` (`SERVIDOR-LANZAMIENTO.md` §7).
+- [x] Restaurante demo en código (`demo:ensure`, `subdomain=demo`, `DemoMenuSeeder`).
 - [ ] Preparar onboarding para primeros clientes.
 - [ ] Preparar soporte: email, WhatsApp o formulario.
 - [ ] Preparar FAQ.

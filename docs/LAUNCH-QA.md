@@ -16,11 +16,16 @@ php artisan launch:check
 php artisan demo:prepare --subdomain=demo   # carta de ventas (subdominio demo)
 ```
 
-**En producción (Jotelulu):**
+**En producción (Jotelulu):** guion completo en [`docs/SERVIDOR-LANZAMIENTO.md`](SERVIDOR-LANZAMIENTO.md).
 
 ```bash
+# En el servidor (/opt/neurocarta):
+bash scripts/server-launch-check.sh
+
+# O paso a paso:
 docker exec neurocarta-app-1 bash /opt/neurocarta/scripts/launch-test.sh
 docker exec neurocarta-app-1 php artisan launch:check
+bash scripts/ensure-demo-docker.sh
 ```
 
 ---
