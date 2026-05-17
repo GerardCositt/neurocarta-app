@@ -110,6 +110,21 @@ class Pairings extends Component
         return false;
     }
 
+    private function guardAiExecution(): bool
+    {
+        if (! $this->guardAiPlan()) {
+            return false;
+        }
+
+        if (! PlanFeatureGate::attemptAiAction()) {
+            session()->flash('message', __('admin.plan.ai_rate_limited'));
+
+            return false;
+        }
+
+        return true;
+    }
+
     private function hasAiWritingGuide(): bool
     {
         $restaurantId = $this->getRestaurantId();
@@ -176,7 +191,7 @@ class Pairings extends Component
 
     public function confirmPairingAiDescription(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             $this->confirmingPairingAiDescription = false;
 
             return;
@@ -188,7 +203,7 @@ class Pairings extends Component
 
     public function generatePairingDescriptionWithAi(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             return;
         }
 

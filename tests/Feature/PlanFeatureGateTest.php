@@ -56,4 +56,15 @@ class PlanFeatureGateTest extends TestCase
 
         $response->assertSuccessful();
     }
+
+    public function test_basico_user_cannot_access_ai_billing(): void
+    {
+        [$user, $restaurant] = $this->userWithPlan('basico');
+
+        $response = $this->actingAs($user)
+            ->withSession(['admin_restaurant_id' => $restaurant->id])
+            ->get('/settings/ai-billing');
+
+        $response->assertRedirect(route('dashboard'));
+    }
 }

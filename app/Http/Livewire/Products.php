@@ -795,7 +795,7 @@ class Products extends Component
 
     public function confirmAiAction(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             $this->confirmingAiAction = false;
             $this->pendingAiAction = null;
 
@@ -833,7 +833,7 @@ class Products extends Component
 
     public function generateDescriptionWithAi(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             return;
         }
 
@@ -884,7 +884,7 @@ class Products extends Component
 
     public function generateAllergenTextWithAi(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             return;
         }
 
@@ -935,7 +935,7 @@ class Products extends Component
 
     public function improveCurrentProductPhotoWithAi(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             return;
         }
 
@@ -995,7 +995,7 @@ class Products extends Component
 
     public function generateCurrentProductPhotoWithAi(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             return;
         }
 
@@ -1057,7 +1057,7 @@ class Products extends Component
 
     public function generateMissingProductPhotos(): void
     {
-        if (! $this->guardAiPlan()) {
+        if (! $this->guardAiExecution()) {
             return;
         }
 
@@ -1138,6 +1138,21 @@ class Products extends Component
         session()->flash('message', __('admin.plan.feature_not_available'));
 
         return false;
+    }
+
+    private function guardAiExecution(): bool
+    {
+        if (! $this->guardAiPlan()) {
+            return false;
+        }
+
+        if (! PlanFeatureGate::attemptAiAction()) {
+            session()->flash('message', __('admin.plan.ai_rate_limited'));
+
+            return false;
+        }
+
+        return true;
     }
 
     private function selectedAllergenNames(): array

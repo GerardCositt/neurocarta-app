@@ -88,7 +88,7 @@
 
 | # | Acción | Resultado esperado |
 |---|--------|--------------------|
-| 7.1 | Forzar la caducidad del trial (desde la DB o cambiando `current_period_end_at` al pasado) | El panel muestra la pantalla de trial expirado al recargar |
+| 7.1 | Forzar la caducidad del trial: `php artisan trial:expire email@ejemplo.com` (en prod: añadir `--force`) | El panel muestra la pantalla de trial expirado al recargar |
 | 7.2 | Intentar acceder a `/dashboard` con el trial caducado | Redirige a `/subscription/expired` |
 | 7.3 | Intentar acceder a la carta pública del restaurante con trial caducado | La URL pública muestra la pantalla de bloqueo (no la carta) |
 | 7.4 | El QR del restaurante redirige a la pantalla de bloqueo (no a la carta) | Sin carta accesible mientras no hay suscripción activa |

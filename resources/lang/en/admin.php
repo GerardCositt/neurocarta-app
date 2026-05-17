@@ -3,6 +3,7 @@
 return [
     'plan' => [
         'feature_not_available' => 'This feature is not available on your current plan. Upgrade to Pro or Premium to access it.',
+        'ai_rate_limited'       => 'You have reached the AI action limit per minute. Please wait and try again.',
     ],
     'nav' => [
         'subtitle' => 'Admin panel',

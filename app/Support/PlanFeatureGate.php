@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\Restaurant;
 use App\Services\PlanEntitlementService;
+use Illuminate\Support\Facades\RateLimiter;
 
 class PlanFeatureGate
 {
@@ -22,5 +23,17 @@ class PlanFeatureGate
         }
 
         return $svc->planHasFeature($svc->effectivePlanForAccount($account), $feature);
+    }
+
+    /** Throttle OpenAI/Livewire AI actions: 30 per minute per user. */
+    public static function attemptAiAction(): bool
+    {
+        if (auth()->user()?->is_admin) {
+            return true;
+        }
+
+        $key = 'ai-actions:'.(auth()->id() ?? request()->ip());
+
+        return RateLimiter::attempt($key, 30, static fn () => null, 60);
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Restaurant;
 use App\Services\AiCreditService;
 use App\Services\OpenAiService;
 use App\Services\PlanEntitlementService;
+use App\Support\PlanFeatureGate;
 use App\Services\ProductImageAiService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -87,6 +88,11 @@ class ImportAi extends Component
     {
         if (! $this->planAllows('ai')) {
             $this->flash(__('admin.plan.feature_not_available'), 'error');
+            return;
+        }
+
+        if (! PlanFeatureGate::attemptAiAction()) {
+            $this->flash(__('admin.plan.ai_rate_limited'), 'error');
             return;
         }
 
@@ -169,6 +175,11 @@ class ImportAi extends Component
         if (! $this->planAllows('ai')) {
             $this->flash(__('admin.plan.feature_not_available'), 'error');
             $this->step = 'upload';
+            return;
+        }
+
+        if (! PlanFeatureGate::attemptAiAction()) {
+            $this->flash(__('admin.plan.ai_rate_limited'), 'error');
             return;
         }
 
