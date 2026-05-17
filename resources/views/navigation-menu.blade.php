@@ -159,14 +159,11 @@
                           {{ request()->is('settings/appearance') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     {{ __('admin.nav.appearance') }}
                 </a>
-                @if ($canUseCsvImport ?? false)
                 <a href="{{ url('/settings/import-products') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('settings/import-products') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     {{ __('admin.nav.import_products') }}
                 </a>
-                @endif
-                @if ($canUseAi ?? false)
                 <a href="{{ url('/settings/import-ai') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('settings/import-ai') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
@@ -177,14 +174,11 @@
                           {{ request()->is('settings/ai-billing') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     {{ __('admin.nav.ai_billing') }}
                 </a>
-                @endif
-                @if ($canUseTranslations ?? false)
                 <a href="{{ url('/translations') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('translations*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     {{ __('admin.nav.translations') }}
                 </a>
-                @endif
                 <a href="{{ url('/settings/orders') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('settings/orders') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
