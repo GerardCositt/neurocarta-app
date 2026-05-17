@@ -7,7 +7,14 @@ use Livewire\Component;
 
 class AiCreditsBanner extends Component
 {
+    public bool $dismissed = false;
+
     protected $listeners = ['aiCreditsUpdated' => '$refresh'];
+
+    public function dismiss(): void
+    {
+        $this->dismissed = true;
+    }
 
     public function render()
     {
