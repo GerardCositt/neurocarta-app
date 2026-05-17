@@ -34,7 +34,7 @@
              role="dialog" aria-modal="true">
 
             {{-- Cabecera --}}
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
                 <h2 class="text-base font-semibold text-gray-800">
                     {{ $product_id ? __('admin.product_form.edit_title') : __('admin.product_form.new_title') }}
                 </h2>
@@ -47,8 +47,8 @@
             </div>
 
             <form onsubmit="return false">
-                <div class="px-6 py-5 overflow-y-auto" style="max-height: 70vh;">
-                    <div class="grid grid-cols-2 gap-x-6 gap-y-5">
+                <div class="px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto" style="max-height: 70vh;">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
 
                         {{-- COLUMNA IZQUIERDA --}}
                         <div class="space-y-5">
@@ -296,7 +296,7 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+                <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
                     <div class="flex justify-center sm:justify-start">
                         @if($product_id)
                             <button type="button"

@@ -187,9 +187,133 @@
         </div>
     </div>
 
+    {{-- ────────────────────────────────────────────────────────────
+         Tarjetas móvil: visibles solo en < md (768 px).
+         La tabla de abajo queda visible solo en ≥ md.
+    ──────────────────────────────────────────────────────────── --}}
+    <ul class="md:hidden space-y-2" id="products-cards">
+    @forelse($products as $product)
+        <li wire:key="card-{{ $product->id }}"
+            class="admin-products-card bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div class="flex gap-3 p-3">
+
+                {{-- Checkbox selección masiva --}}
+                <div class="flex-shrink-0 pt-1" onclick="event.stopPropagation()">
+                    <input type="checkbox"
+                           wire:click.prevent="toggleProductSelection({{ $product->id }})"
+                           wire:loading.attr="disabled"
+                           @if(in_array((int) $product->id, array_map('intval', $selectedProducts ?? []), true)) checked @endif
+                           title="{{ __('admin.products.row_select_title') }}"
+                           class="rounded border-amber-800 text-amber-900 focus:ring-amber-700 cursor-pointer w-4 h-4">
+                </div>
+
+                {{-- Foto --}}
+                <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                         alt="{{ $product->name }}"
+                         class="w-full h-full object-cover"
+                         onerror="this.onerror=null;this.src={{ json_encode(asset('img/noimg.png')) }};">
+                </div>
+
+                {{-- Contenido --}}
+                <div class="flex-1 min-w-0">
+                    {{-- Nombre + badges --}}
+                    <div class="flex flex-wrap items-start gap-x-1.5 gap-y-1">
+                        <button type="button"
+                                wire:click.stop="edit({{ $product->id }})"
+                                title="{{ __('admin.products.name_open_sheet') }}"
+                                class="text-sm font-semibold text-left text-gray-800 {{ $product->active ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm bg-transparent border-0 p-0 break-words">
+                            {{ $product->name }}
+                        </button>
+                        @if($product->offer)
+                            @if($product->offer_end && \Carbon\Carbon::parse($product->offer_end)->isPast())
+                                <span class="text-xs bg-orange-100 text-orange-600 font-semibold px-1.5 py-0.5 rounded-full shrink-0" title="{{ __('admin.products.badge_expired_title') }}">{{ __('admin.products.badge_expired') }}</span>
+                            @else
+                                <span class="text-xs bg-red-100 text-red-600 font-semibold px-1.5 py-0.5 rounded-full shrink-0">{{ __('admin.products.badge_offer') }}</span>
+                            @endif
+                        @endif
+                        @if($product->featured)
+                            <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-1.5 py-0.5 rounded-full shrink-0">{{ __('admin.products.badge_featured') }}</span>
+                        @endif
+                        @if($product->recommended)
+                            <span class="text-xs bg-sky-100 text-sky-800 font-semibold px-1.5 py-0.5 rounded-full shrink-0">{{ __('admin.products.badge_rec_short') }}</span>
+                        @endif
+                    </div>
+
+                    {{-- Categoría · Precio --}}
+                    <p class="mt-1 text-xs text-gray-500 truncate">
+                        {{ $product->category?->name }}
+                        @if($product->price)
+                            · <span class="font-semibold text-gray-700 {{ $product->offer ? 'line-through' : '' }}">{{ $product->price }}</span>
+                            @if(strlen($product->offer_price ?? '') >= 1)
+                                <span class="font-bold text-red-500 {{ !$product->offer ? 'line-through opacity-40' : '' }}">{{ $product->offer_price }}</span>
+                            @endif
+                        @endif
+                    </p>
+
+                    {{-- Alérgenos --}}
+                    @if($product->allergens->isNotEmpty())
+                        <div class="mt-1.5 flex flex-wrap gap-1" role="list">
+                            @foreach($product->allergens->sortBy(fn ($a) => sprintf('%05d-%s', $a->sort_order ?? 0, $a->name)) as $al)
+                                @if($al->image)
+                                    <span role="listitem"
+                                          class="inline-flex shrink-0 rounded overflow-hidden border border-gray-200 bg-white {{ $al->active ? 'opacity-45' : '' }}"
+                                          title="{{ $al->name }}">
+                                        <img src="{{ $al->image_url }}" alt="" class="w-5 h-5 object-cover" loading="lazy">
+                                    </span>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Toggle ocultar (derecha) --}}
+                <div class="flex-shrink-0 flex items-start pt-1">
+                    <label class="inline-flex items-center cursor-pointer"
+                           title="{{ $product->active ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
+                        <input type="checkbox"
+                               wire:key="card-active-{{ $product->id }}-{{ $product->active ? '1' : '0' }}"
+                               class="form-checkbox w-4 h-4 rounded text-gray-400 border-gray-300 focus:ring-gray-300 cursor-pointer"
+                               wire:click.prevent="toggleState({{ $product->id }})"
+                               @if($product->active) checked @endif>
+                    </label>
+                </div>
+
+            </div>
+        </li>
+    @empty
+        <li class="bg-white rounded-2xl border border-gray-100 shadow-sm text-center py-12 px-4 text-sm text-gray-400">
+            @if(($commercialFilterNorm ?? '') !== '')
+                <p class="mb-2">{{ __('admin.products.empty_filtered') }}</p>
+            @else
+                <p class="mb-2">{{ __('admin.products.empty_none') }}</p>
+                <div class="mt-4 flex flex-col items-center gap-3">
+                    @if ($canUseCsvImport ?? false)
+                    <a href="{{ route('settings.import-products') }}"
+                       class="inline-flex items-center gap-2 bg-white border border-gray-200 hover:border-amber-300 text-gray-800 text-sm font-semibold py-2 px-4 rounded-xl shadow-sm">
+                        {{ __('admin.products.import_csv') }}
+                    </a>
+                    @endif
+                    @if ($canUseAi ?? false)
+                    <a href="{{ route('settings.import-ai') }}"
+                       class="inline-flex items-center gap-2 bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm">
+                        {{ __('admin.products.add_with_ai') }}
+                    </a>
+                    @endif
+                    <button type="button" wire:click="create()"
+                            class="inline-flex items-center gap-2 bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm">
+                        {{ __('admin.products.add_one_by_one') }}
+                    </button>
+                </div>
+            @endif
+        </li>
+    @endforelse
+    </ul>
+
     {{-- Tabla: scroll horizontal en móvil (muchas columnas) --}}
     {{-- Bleed horizontal = padding de <main> (app layout). --}}
-    <div class="-mx-4 sm:-mx-6 lg:-mx-8">
+    {{-- Oculta en < md; la lista de tarjetas de arriba la sustituye. --}}
+    <div class="hidden md:block -mx-4 sm:-mx-6 lg:-mx-8">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 max-w-full min-w-0">
             <div class="overflow-x-auto overscroll-x-contain rounded-2xl">
             <table class="w-full min-w-[640px] sm:min-w-[960px]">
@@ -419,6 +543,7 @@
             </div>
         </div>
     </div>
+    </div>{{-- /hidden md:block --}}
 
     {{-- Modal confirmación eliminar producto --}}
     @if($confirmingProductDeletion)

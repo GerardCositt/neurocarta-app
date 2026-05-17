@@ -712,3 +712,15 @@ html[data-effective-theme="dark"] .admin-footer {
 }
 html[data-effective-theme="dark"] .admin-footer a { color: var(--text-muted) !important; }
 html[data-effective-theme="dark"] .admin-footer a:hover { color: var(--text) !important; }
+
+/* ─── Tarjetas de producto (móvil < md) ──────────────────────── */
+.admin-products-card {
+    transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.admin-products-card:active {
+    box-shadow: 0 0 0 2px #fcd34d; /* amber-300 */
+}
+html[data-effective-theme="dark"] .admin-products-card {
+    background: var(--surface-el);
+    border-color: rgba(255, 255, 255, 0.08);
+}
