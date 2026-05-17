@@ -104,7 +104,8 @@ class LaunchCheckCommand extends Command
         $this->line('▶ Restaurante demo público');
         $demo = Restaurant::where('subdomain', 'demo')->first();
         if (! $demo) {
-            $this->warn('  No existe subdomain «demo». Ejecuta: php artisan db:seed --class=RestaurantSeeder && php artisan demo:prepare --subdomain=demo');
+            $this->warn('  No existe subdomain «demo». Ejecuta: php artisan demo:ensure --menu --force');
+            $this->warn('  En Docker: bash scripts/ensure-demo-docker.sh');
 
             return self::SUCCESS;
         }
