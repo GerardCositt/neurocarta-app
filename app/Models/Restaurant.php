@@ -60,4 +60,16 @@ class Restaurant extends Model
     {
         return $this->belongsTo(Account::class);
     }
+
+    /** Carta de ventas / ferias: demo.neurocarta.ai o flag explícito en BD. */
+    public function isPublicSalesDemo(): bool
+    {
+        if ($this->ai_demo_unlimited) {
+            return true;
+        }
+
+        $demoSub = (string) config('neurocarta.demo_subdomain', 'demo');
+
+        return $demoSub !== '' && $this->subdomain === $demoSub;
+    }
 }

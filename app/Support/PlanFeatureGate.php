@@ -19,7 +19,7 @@ class PlanFeatureGate
             $rid = session('admin_restaurant_id');
             $restaurant = $rid ? Restaurant::find($rid) : null;
         }
-        if ($restaurant?->ai_demo_unlimited) {
+        if ($restaurant?->isPublicSalesDemo()) {
             return true;
         }
 

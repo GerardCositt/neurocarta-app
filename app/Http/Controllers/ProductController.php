@@ -286,7 +286,7 @@ class ProductController extends Controller
 
         // Carta de ventas: mostrar idiomas aunque falte alguna traducción suelta.
         $restaurant = app()->bound('restaurant') ? app('restaurant') : null;
-        if ($restaurant && $restaurant->ai_demo_unlimited) {
+        if ($restaurant && $restaurant->isPublicSalesDemo()) {
             $merged = array_values(array_unique(array_merge($merged, ['en', 'fr'])));
         }
 

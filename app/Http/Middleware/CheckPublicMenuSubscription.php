@@ -16,7 +16,7 @@ class CheckPublicMenuSubscription
         }
 
         // Carta de ventas / ferias: el restaurante demo no debe depender de Stripe.
-        if ($restaurant->ai_demo_unlimited) {
+        if ($restaurant->isPublicSalesDemo()) {
             return $next($request);
         }
 

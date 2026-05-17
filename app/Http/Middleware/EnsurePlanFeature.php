@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Restaurant;
 use App\Services\PlanEntitlementService;
 use Closure;
 use Illuminate\Http\Request;
@@ -13,6 +14,15 @@ class EnsurePlanFeature
     public function handle(Request $request, Closure $next, string $feature)
     {
         if ($request->user()?->is_admin) {
+            return $next($request);
+        }
+
+        $restaurant = app()->bound('restaurant') ? app('restaurant') : null;
+        if (! $restaurant) {
+            $rid = session('admin_restaurant_id');
+            $restaurant = $rid ? Restaurant::find($rid) : null;
+        }
+        if ($restaurant?->isPublicSalesDemo()) {
             return $next($request);
         }
 

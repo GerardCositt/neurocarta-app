@@ -22,17 +22,17 @@ class DemoMenuTranslationsSeeder extends Seeder
         }
 
         $categoryLabels = [
-            'Entrantes' => [
-                'en' => 'Starters',
-                'fr' => 'Entrées',
-            ],
+            'Entrantes' => ['en' => 'Starters', 'fr' => 'Entrées'],
+            'Principales' => ['en' => 'Main courses', 'fr' => 'Plats'],
+            'Postres' => ['en' => 'Desserts', 'fr' => 'Desserts'],
+            'Bebidas' => ['en' => 'Drinks', 'fr' => 'Boissons'],
         ];
 
         foreach (Category::where('restaurant_id', $restaurant->id)->get() as $category) {
-            $labels = $categoryLabels[$category->name] ?? null;
-            if (! $labels) {
-                continue;
-            }
+            $labels = $categoryLabels[$category->name] ?? [
+                'en' => $category->name,
+                'fr' => $category->name,
+            ];
             foreach ($labels as $locale => $name) {
                 $category->setTranslation($locale, 'name', $name);
             }
@@ -51,13 +51,22 @@ class DemoMenuTranslationsSeeder extends Seeder
 
         foreach (Product::where('restaurant_id', $restaurant->id)->get() as $product) {
             $copy = $productCopy[$product->name] ?? null;
-            if (! $copy) {
+            if ($copy) {
+                foreach ($copy as $locale => $fields) {
+                    foreach ($fields as $key => $value) {
+                        $product->setTranslation($locale, $key, $value);
+                    }
+                }
+
                 continue;
             }
-            foreach ($copy as $locale => $fields) {
-                foreach ($fields as $key => $value) {
-                    $product->setTranslation($locale, $key, $value);
-                }
+
+            // Fallback: al menos nombre en EN/FR para que el cambio de idioma se note en la carta.
+            $product->setTranslation('en', 'name', $product->name);
+            $product->setTranslation('fr', 'name', $product->name);
+            if ($product->description) {
+                $product->setTranslation('en', 'description', $product->description);
+                $product->setTranslation('fr', 'description', $product->description);
             }
         }
 

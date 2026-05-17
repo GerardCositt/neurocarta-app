@@ -31,10 +31,22 @@ class AdminRestaurant
 
         // Si no hay restaurante en sesión (o era inválido), cargar el primero de la cuenta
         if (! $restaurantId) {
-            $restaurant = $account ? $account->restaurants()->first() : null;
-            if ($restaurant) {
-                session(['admin_restaurant_id' => $restaurant->id]);
-                $restaurantId = $restaurant->id;
+            if ($isAdmin) {
+                $demo = Restaurant::query()
+                    ->where('subdomain', config('neurocarta.demo_subdomain', 'demo'))
+                    ->first();
+                if ($demo) {
+                    session(['admin_restaurant_id' => $demo->id]);
+                    $restaurantId = $demo->id;
+                }
+            }
+
+            if (! $restaurantId) {
+                $restaurant = $account ? $account->restaurants()->first() : null;
+                if ($restaurant) {
+                    session(['admin_restaurant_id' => $restaurant->id]);
+                    $restaurantId = $restaurant->id;
+                }
             }
         }
 

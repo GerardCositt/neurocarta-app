@@ -1138,7 +1138,7 @@
                 @endif
             @endforeach
 
-            @if((count($availableLocales ?? ['es']) > 1))
+            @if($restaurant?->isPublicSalesDemo() || (count($availableLocales ?? ['es']) > 1))
             @php
                 $bjFlagMap = $bjFlagMap ?? [
                     'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪','it'=>'🇮🇹','pt'=>'🇵🇹',

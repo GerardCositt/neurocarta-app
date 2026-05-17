@@ -176,6 +176,6 @@ class AiCreditService
 
     private function isDemoUnlimited(Restaurant $restaurant): bool
     {
-        return (bool) $restaurant->ai_demo_unlimited || app()->environment('demo');
+        return $restaurant->isPublicSalesDemo() || app()->environment('demo');
     }
 }

@@ -75,11 +75,17 @@ class PlanEntitlementService
         }
 
         $boundRestaurant = app()->bound('restaurant') ? app('restaurant') : null;
-        if ($boundRestaurant && $boundRestaurant->ai_demo_unlimited) {
+        if ($boundRestaurant && $boundRestaurant->isPublicSalesDemo()) {
             return self::PLAN_PREMIUM;
         }
 
-        if ($account && $account->restaurants()->where('ai_demo_unlimited', true)->exists()) {
+        $demoSub = (string) config('neurocarta.demo_subdomain', 'demo');
+        if ($account && $account->restaurants()->where(function ($q) use ($demoSub) {
+            $q->where('ai_demo_unlimited', true);
+            if ($demoSub !== '') {
+                $q->orWhere('subdomain', $demoSub);
+            }
+        })->exists()) {
             return self::PLAN_PREMIUM;
         }
 
