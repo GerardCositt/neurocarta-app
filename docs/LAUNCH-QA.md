@@ -7,8 +7,20 @@
 **Antes de empezar (automático):**
 
 ```bash
+# Opción A — solo tests críticos (13 tests, salida clara):
+./scripts/launch-test.sh
+
+# Opción B — tests + scheduler + avisos .env + demo:
 php artisan launch:check
+
 php artisan demo:prepare --subdomain=demo   # carta de ventas (subdominio demo)
+```
+
+**En producción (Jotelulu):**
+
+```bash
+docker exec neurocarta-app-1 bash /opt/neurocarta/scripts/launch-test.sh
+docker exec neurocarta-app-1 php artisan launch:check
 ```
 
 ---

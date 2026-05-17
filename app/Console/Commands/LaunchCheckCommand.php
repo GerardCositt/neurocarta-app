@@ -18,27 +18,46 @@ class LaunchCheckCommand extends Command
         $this->newLine();
 
         if (! $this->option('skip-tests')) {
-            $this->line('▶ Tests críticos…');
-            $critical = [
-                'tests/Feature/TenantIsolationTest.php',
-                'tests/Feature/SubscriptionExpiryTest.php',
-                'tests/Feature/PlanFeatureGateTest.php',
-                'tests/Feature/AuthenticationTest.php',
-                'tests/Feature/RegistrationTest.php',
-            ];
-            $code = 0;
-            foreach ($critical as $file) {
-                $code = $this->call('test', [$file]);
-                if ($code !== 0) {
-                    break;
-                }
-            }
-            if ($code !== 0) {
-                $this->error('Tests fallidos. Corrige antes de lanzar.');
+            $this->line('▶ Tests críticos (suite Launch, 5 archivos / ~12 tests)…');
+            $phpunit = base_path('vendor/bin/phpunit');
+            if (! is_file($phpunit)) {
+                $this->error('Ejecuta composer install primero.');
 
                 return self::FAILURE;
             }
-            $this->info('  Tests OK.');
+
+            $process = proc_open(
+                [PHP_BINARY, $phpunit, '--testsuite=Launch', '--testdox', '--colors=always'],
+                [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+                $pipes,
+                base_path()
+            );
+
+            if (! is_resource($process)) {
+                $this->error('No se pudo ejecutar PHPUnit.');
+
+                return self::FAILURE;
+            }
+
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            $code = proc_close($process);
+
+            $this->output->write($stdout ?: '');
+            if ($stderr) {
+                $this->output->write($stderr);
+            }
+
+            if ($code !== 0) {
+                $this->newLine();
+                $this->error('Tests fallidos (exit '.$code.'). Alternativa: ./scripts/launch-test.sh');
+
+                return self::FAILURE;
+            }
+            $this->newLine();
+            $this->info('  Tests Launch OK.');
             $this->newLine();
         }
 
