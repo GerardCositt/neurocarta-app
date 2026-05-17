@@ -68,9 +68,11 @@
 
         <div class="flex min-h-screen w-full">
 
-            @livewire('navigation-menu')
+            <div class="flex-shrink-0">
+                @livewire('navigation-menu')
+            </div>
 
-            <div class="flex-1 flex flex-col min-w-0 w-full">
+            <div class="flex-1 flex flex-col min-w-0">
 
                 @if (isset($header) || auth()->check())
                     <div class="admin-page-header px-4 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-2 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
