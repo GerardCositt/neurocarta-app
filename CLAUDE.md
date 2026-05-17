@@ -119,15 +119,17 @@ Variables clave:
 - **Turnstile desactivado en login**: El widget estaba fuera del `<form>` (token nunca se enviaba) y bloqueaba el login. Eliminado del blade y del pipeline de Fortify. Pendiente reactivar correctamente con claves reales de Cloudflare.
 - **DNS en Cloudflare**: `app.neurocarta.ai` → `149.71.98.240`, proxy desactivado (nube gris).
 - **Seguridad de uploads públicos (2026-05-16)**: Las subidas de cliente para logos, fotos de productos y alérgenos no aceptan SVG ni GIF. Solo se permiten imágenes raster conservadoras (`jpg/jpeg`, `png`, `webp`) con límites explícitos de tamaño. `ImageAssetService` revalida el MIME real (`image/jpeg`, `image/png`, `image/webp`) y re-encodea las imágenes antes de guardarlas, de modo que no se almacenen SVG subidos por usuarios aunque un formulario omitiera la validación.
+- **Gates por plan (2026-05-17)**: `PlanEntitlementService` define cuotas (productos/cats/restaurantes) y features booleanas (`ai`, `csv_import`, `translations`). Básico sin IA/CSV/traducciones; Pro/Premium con acceso; trial activo equivale a Premium. Middleware `EnsurePlanFeature` en rutas; helper `App\Support\PlanFeatureGate` para blades/Livewire; guards en `ProductImport`, `ImportAi`, `TranslationManager`, `Products`, `Pairings`. Rutas protegidas: import CSV (+ plantilla), import IA, traducciones, facturación IA (`/settings/ai-billing`). Banner `plan_error` en layout admin. Tests: `TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`. Commit: `d38cc17`.
 
 ---
 
-## Estado Git revisado (2026-05-16)
+## Estado Git (2026-05-17)
 
-- La rama local `main` estaba sincronizada con `origin/main`: 0 commits por bajar y 0 commits por subir.
-- Había cambios locales sin commitear posteriores al último commit remoto, incluyendo documentación de Odoo, comandos de consola, soporte de importación SQL, `design-system.md`, script de bootstrap local y archivos generados en `storage/`.
-- Último commit remoto revisado: `11dbe5b` de Juan Guerrero (`desarrollo@cositt.com`), `feat(ui): igualar sidebar cliente al estilo Filament con branding actualizado`.
-- Ese commit ajustó principalmente el diseño del panel cliente: sidebar estilo Filament, branding `NeuroCarta.ai`, logo en `public/img/logo.png`, mejoras de contraste en modo claro/oscuro, z-index de cabecera/dropdowns/tablas sticky y previsualización de logo en Ajustes > Apariencia.
+- Local sincronizado con `origin/main` (48 commits incorporados desde staging antiguo).
+- Commit local pendiente de push: `d38cc17` — gates por plan + tests.
+- **QA manual**: script en `docs/LAUNCH-QA.md` (11 bloques, español, pre-lanzamiento).
+- **Stripe en producción**: código listo; claves live y prueba de pago → pendiente.
+- **Siguiente prioridad**: ejecutar `docs/LAUNCH-QA.md` en prod/staging; legal; luego Stripe live.
 
 ---
 
@@ -192,7 +194,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Trial gratis con fechas correctas y avisos coherentes.
 - [ ] Pantalla de trial terminado clara y con CTA real para contratar.
 - [ ] Bloqueo correcto de panel, QR y carta pública cuando trial/suscripción caduca.
-- [ ] Planes Básico / Pro / Premium conectados a límites reales: productos, categorías, IA, traducciones, CSV, etc.
+- [x] Planes Básico / Pro / Premium conectados a límites reales: cuotas + features IA/CSV/traducciones en código (`d38cc17`). Pendiente: validación manual en `docs/LAUNCH-QA.md` bloques 4-6 y 8.
 - [ ] Panel de gestión usable en móvil y escritorio.
 - [ ] Crear, editar, ocultar y ordenar categorías.
 - [ ] Crear, editar, ocultar y ordenar productos.
@@ -212,13 +214,13 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Cancelación, impago y renovación gestionados.
 - [ ] Facturación anual/mensual clara.
 - [ ] Emails de trial, alta, pago fallido y renovación.
-- [ ] Límite por plan aplicado de forma centralizada y auditada.
+- [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Pendiente: Stripe live y prueba de cobro.
 
 ### Fase 3 — Multi-restaurante / tenants
 - [ ] Cada restaurante aislado correctamente.
 - [ ] Subdominio o URL pública por restaurante funcionando.
 - [ ] Usuario asignado a su cuenta/restaurante.
-- [ ] Evitar que un usuario vea datos de otro restaurante.
+- [x] Evitar que un usuario vea datos de otro restaurante (scopes + test `TenantIsolationTest`; validar manual bloque 9 de `docs/LAUNCH-QA.md`).
 - [ ] Selector de restaurante probado si una cuenta tiene varios.
 - [ ] Seeds/demo separados de datos reales.
 - [ ] Eliminar o justificar cualquier consulta tipo `Restaurant::first()` fuera de seeds/demo.
@@ -274,12 +276,12 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Auditoría básica de dependencias.
 
 ### Fase 8 — Calidad
-- [ ] Prueba manual completa: registro -> trial -> crear carta -> verla pública.
-- [ ] Prueba manual: importar CSV.
-- [ ] Prueba manual: subir imágenes.
-- [ ] Prueba manual: cambiar plan/caducar trial.
-- [ ] Prueba manual: usuario sin suscripción.
-- [ ] Tests mínimos de login, registro, aislamiento por restaurante y suscripción.
+- [ ] Prueba manual completa: registro -> trial -> crear carta -> verla pública → **script**: `docs/LAUNCH-QA.md` bloques 1-3.
+- [ ] Prueba manual: importar CSV → bloque 4.
+- [ ] Prueba manual: subir imágenes → bloque 2.
+- [ ] Prueba manual: cambiar plan/caducar trial → bloques 4 y 7.
+- [ ] Prueba manual: usuario sin suscripción → bloque 7.
+- [x] Tests mínimos de aislamiento por restaurante y suscripción (`TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`). Login/registro: tests existentes; 419 en prod sin verificar.
 - [ ] Revisar responsive en Chrome, Safari y móvil.
 - [ ] Revisar rendimiento de carta con 100-300 productos.
 
