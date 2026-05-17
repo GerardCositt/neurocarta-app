@@ -1102,7 +1102,13 @@
 
     {{-- HERO --}}
     <header class="hero">
-        @php($publicLogoPath = \App\Models\Setting::get('admin_logo_path', null, $restaurant->id ?? (app()->bound('restaurant') ? app('restaurant')->id : null)))
+        @php
+            $publicLogoPath = \App\Models\Setting::get(
+                'admin_logo_path',
+                null,
+                $restaurant->id ?? (app()->bound('restaurant') ? app('restaurant')->id : null)
+            );
+        @endphp
         <div class="hero-logo">
             @if($publicLogoPath)
                 <img src="{{ asset('storage/'.$publicLogoPath) }}" alt="{{ ($restaurant->name ?? config('app.name')) }} logo">
@@ -1132,7 +1138,7 @@
                 @endif
             @endforeach
 
-            @if(count($availableLocales ?? ['es']) > 1)
+            @if((count($availableLocales ?? ['es']) > 1))
             @php
                 $bjFlagMap = $bjFlagMap ?? [
                     'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪','it'=>'🇮🇹','pt'=>'🇵🇹',
@@ -1160,7 +1166,9 @@
                            class="nav-lang-item{{ $bjActNav ? ' is-active' : '' }}">
                             <span>{{ $bjLfNav }}</span>
                             <span>{{ strtoupper($bjLocNav) }}</span>
-                            @if($bjActNav)<span>✓</span>@endif
+                            @if($bjActNav)
+                                <span>✓</span>
+                            @endif
                         </a>
                     @endforeach
                 </div>
@@ -1969,58 +1977,6 @@
     });
     </script>
 
-    {{-- ── SELECTOR DE IDIOMA FLOTANTE ─────────────────────── --}}
-    <?php
-        $bjFlagMap = [
-            'es'=>'🇪🇸','en'=>'🇬🇧','fr'=>'🇫🇷','de'=>'🇩🇪',
-            'it'=>'🇮🇹','pt'=>'🇵🇹','pt_BR'=>'🇧🇷','nl'=>'🇳🇱',
-            'pl'=>'🇵🇱','ru'=>'🇷🇺','zh'=>'🇨🇳','ja'=>'🇯🇵',
-            'ko'=>'🇰🇷','ar'=>'🇸🇦','tr'=>'🇹🇷','sv'=>'🇸🇪',
-            'da'=>'🇩🇰','nb'=>'🇳🇴','fi'=>'🇫🇮','cs'=>'🇨🇿',
-            'sk'=>'🇸🇰','hu'=>'🇭🇺','ro'=>'🇷🇴','bg'=>'🇧🇬',
-            'el'=>'🇬🇷','uk'=>'🇺🇦','lt'=>'🇱🇹','lv'=>'🇱🇻',
-            'et'=>'🇪🇪','sl'=>'🇸🇮','id'=>'🇮🇩',
-        ];
-        $bjLocale   = $locale ?? 'es';
-        $bjFlag     = $bjFlagMap[$bjLocale] ?? '🌐';
-        $bjLocales  = $availableLocales ?? ['es'];
-    ?>
-
-    <div id="langWidget" style="display:none !important;">
-        <button id="langBtn" type="button"
-                style="display:flex;align-items:center;gap:6px;padding:6px 12px;
-                       background:var(--surface);border:1px solid var(--prod-border);
-                       border-radius:50px;cursor:pointer;font-weight:700;
-                       color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.25);
-                       backdrop-filter:blur(8px);transition:box-shadow .2s;"
-                aria-label="{{ __('public_menu.lang_change_aria') }}">
-            <span style="font-size:20px;line-height:1;"><?= $bjFlag ?></span>
-            <span style="font-size:11px;letter-spacing:.06em;"><?= strtoupper($bjLocale) ?></span>
-            <span style="font-size:9px;opacity:.5;">▼</span>
-        </button>
-
-        <div id="langMenu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;
-             background:var(--surface);border:1px solid var(--prod-border);
-             border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.35);
-             min-width:150px;overflow:hidden;">
-            <?php foreach($bjLocales as $bjLoc):
-                $bjLf  = $bjFlagMap[$bjLoc] ?? '🌐';
-                $bjAct = ($bjLoc === $bjLocale);
-            ?>
-            <a href="<?= e(\App\Support\PublicMenuUrl::withLang(request(), $bjLoc)) ?>"
-               style="display:flex;align-items:center;gap:10px;padding:10px 14px;
-                      font-size:13px;font-weight:<?= $bjAct ? '700' : '500' ?>;
-                      color:<?= $bjAct ? 'var(--gold)' : 'var(--text)' ?>;
-                      text-decoration:none;background:<?= $bjAct ? 'var(--surface-el)' : 'transparent' ?>;"
-               onmouseover="this.style.background='var(--surface-el)'"
-               onmouseout="this.style.background='<?= $bjAct ? 'var(--surface-el)' : 'transparent' ?>'">
-                <span style="font-size:20px;line-height:1;"><?= $bjLf ?></span>
-                <span><?= strtoupper($bjLoc) ?></span>
-                <?= $bjAct ? '<span style="margin-left:auto;font-size:11px;">✓</span>' : '' ?>
-            </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
     <script>
     (function() {
         var btn  = document.getElementById('langBtnNav');
