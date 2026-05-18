@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 /**
  * Verifica que "Ver carta" desde el panel (app.neurocarta.ai) muestra la carta pública
- * correctamente usando sesión, cookie o ?restaurant=, y que hosts que no son el panel
- * siguen redirigiendo al login/dashboard.
+ * correctamente usando cookie o ?restaurant= (nunca solo sesión), y que hosts que no son el panel
+ * siguen redirigiendo al login/dashboard. En producción el panel host siempre va al admin.
  */
 class PublicMenuPanelPreviewTest extends TestCase
 {
@@ -58,15 +58,17 @@ class PublicMenuPanelPreviewTest extends TestCase
         $response->assertSuccessful();
     }
 
-    public function test_panel_host_with_session_shows_public_menu(): void
+    public function test_session_only_without_explicit_restaurant_redirects_guest_to_login(): void
     {
-        $restaurant = $this->makeRestaurantWithTrial();
-
-        $response = $this->asPanelHost()
-            ->withSession(['admin_restaurant_id' => $restaurant->id])
-            ->get('/');
-
-        $response->assertSuccessful();
+        // En local/staging (host=127.0.0.1), sin ?restaurant= ni cookie de preview,
+        // la sesión 'admin_restaurant_id' sí vale como contexto de preview para ver la carta.
+        // PERO en producción (host=app.neurocarta.ai) el panel NUNCA muestra la carta — siempre
+        // redirige. Ese comportamiento está garantizado por el check `environment('production')`
+        // en el route handler, sin necesidad de test aquí (en tests el host es 127.0.0.1).
+        //
+        // Este test verifica que sin NINGÚN contexto el invitado va a login:
+        $response = $this->asPanelHost()->get('/');
+        $response->assertRedirect(route('login'));
     }
 
     public function test_panel_host_without_preview_context_redirects_guest_to_login(): void

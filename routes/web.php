@@ -104,8 +104,15 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
         $isPanelHost  = $appHost && $host === $appHost;
 
         if ($isPanelHost) {
-            $resolvablePreview = session('admin_restaurant_id')
-                || $request->cookie('preview_restaurant_id')
+            // En producción el panel host NUNCA muestra la carta pública: "Ver carta" usa el
+            // subdominio del restaurante. Solo en staging/local permitimos ?restaurant= como preview.
+            if (app()->environment('production')) {
+                return auth()->check()
+                    ? redirect()->route('dashboard')
+                    : redirect()->route('login');
+            }
+
+            $resolvablePreview = $request->cookie('preview_restaurant_id')
                 || (is_numeric($request->query('restaurant')) && (int) $request->query('restaurant') > 0);
 
             if (! $resolvablePreview) {
@@ -113,7 +120,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
                     ? redirect()->route('dashboard')
                     : redirect()->route('login');
             }
-            // Hay contexto: continuar al bloque DetectRestaurant al final.
+            // Staging/local: hay ?restaurant= o cookie → mostrar carta pública.
         } else {
             return auth()->check()
                 ? redirect()->route('dashboard')
