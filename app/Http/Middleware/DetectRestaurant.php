@@ -27,6 +27,19 @@ class DetectRestaurant
             }
         }
 
+        // Host del panel (APP_URL, ej. app.neurocarta.ai): no extraer subdomain del host.
+        // Resolver igual que IP/localhost — sesión, cookie, ?restaurant= (solo en este host).
+        $appHost = parse_url(config('app.url'), PHP_URL_HOST);
+        if ($appHost && $host === $appHost) {
+            $restaurant = $this->resolveRestaurantWithoutSubdomain($request);
+            if (! $restaurant) {
+                abort(404, 'Restaurante no encontrado.');
+            }
+            app()->instance('restaurant', $restaurant);
+
+            return $next($request);
+        }
+
         // GitHub Codespaces: el host NO es carta.dominio.com (da 404 si mezclamos con lógica de subdominio).
         // Debe funcionar aunque APP_ENV no sea "local" en el Codespace.
         if (Str::endsWith($host, '.app.github.dev')) {
@@ -165,11 +178,13 @@ class DetectRestaurant
         // En producción real el host es subdominio.dominio; aquí no hay riesgo de enumeración.
         // Si APP_ENV=production pero accedes por 127.0.0.1/localhost (dev con .env mal copiado),
         // antes se ignoraba ?restaurant= y siempre salía Restaurant::first() (p. ej. Bar Jaén III).
+        $appHost = parse_url(config('app.url'), PHP_URL_HOST);
         $allowPreviewQuery = ! app()->environment('production')
             || filter_var($host, FILTER_VALIDATE_IP) !== false
             || $host === 'localhost'
             || Str::endsWith($host, '.localhost')
-            || Str::endsWith($host, '.app.github.dev');
+            || Str::endsWith($host, '.app.github.dev')
+            || ($appHost && $host === $appHost);
 
         if (! $allowPreviewQuery) {
             return null;

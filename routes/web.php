@@ -96,13 +96,29 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
         $isRestaurantSubdomain = $subdomain && ! in_array($subdomain, ['app', 'www'], true);
     }
 
-    // Hosts centrales (app.neurocarta.ai / www.neurocarta.ai): siempre panel admin.
-    // DetectRestaurant no puede resolver la carta desde estos hosts; cualquier preview
-    // context aquí causaría un 404 al buscar subdomain 'app' en la BD.
+    // Hosts centrales (app.neurocarta.ai / www.neurocarta.ai).
+    // Si es el host del panel (APP_URL) y hay contexto de preview, pasamos a DetectRestaurant
+    // para mostrar la carta (sesión, cookie o ?restaurant=). Sin contexto → panel/login.
     if (! $isDirectLocalAccess && ! $isRestaurantSubdomain) {
-        return auth()->check()
-            ? redirect()->route('dashboard')
-            : redirect()->route('login');
+        $appHost      = parse_url(config('app.url'), PHP_URL_HOST);
+        $isPanelHost  = $appHost && $host === $appHost;
+
+        if ($isPanelHost) {
+            $resolvablePreview = session('admin_restaurant_id')
+                || $request->cookie('preview_restaurant_id')
+                || (is_numeric($request->query('restaurant')) && (int) $request->query('restaurant') > 0);
+
+            if (! $resolvablePreview) {
+                return auth()->check()
+                    ? redirect()->route('dashboard')
+                    : redirect()->route('login');
+            }
+            // Hay contexto: continuar al bloque DetectRestaurant al final.
+        } else {
+            return auth()->check()
+                ? redirect()->route('dashboard')
+                : redirect()->route('login');
+        }
     }
 
     // IP / localhost: solo ir a la carta si hay un contexto de preview que DetectRestaurant
