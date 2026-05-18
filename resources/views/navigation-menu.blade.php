@@ -210,14 +210,14 @@
                 default   => ['label' => 'Trial',   'bg' => 'bg-green-100', 'text' => 'text-green-700', 'dot' => 'bg-green-500'],
             };
         @endphp
-        <div class="pt-3 space-y-1">
+        <div class="pt-3">
             <span class="flex items-center gap-2 px-3 py-2 rounded-xl {{ $planMeta['bg'] }} {{ $planMeta['text'] }} text-xs font-semibold">
                 <span class="w-2 h-2 rounded-full {{ $planMeta['dot'] }} shrink-0"></span>
                 <span class="admin-nav-label">Plan {{ $planMeta['label'] }}</span>
             </span>
             @if($currentPlan === 'basico')
             <a href="{{ route('subscription.expired') }}"
-               class="admin-nav-label flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors">
+               class="admin-nav-label mt-2 flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl text-xs text-gray-400 hover:text-gray-600 transition-colors border border-dashed border-gray-200 hover:border-gray-300">
                 Mejora tu plan →
             </a>
             @endif
