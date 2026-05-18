@@ -604,8 +604,14 @@ class Products extends Component
 
         $data['offer_start'] = filled($data['offer_start'] ?? null) ? $data['offer_start'] : null;
         $data['offer_end']   = filled($data['offer_end'] ?? null) ? $data['offer_end'] : null;
-        $data['offer']       = (bool) ($data['offer'] ?? false);
-        $data['featured']    = (bool) ($data['featured'] ?? false);
+
+        if (! PlanFeatureGate::allows('offers')) {
+            $data['offer']    = false;
+            $data['featured'] = false;
+        } else {
+            $data['offer']    = (bool) ($data['offer'] ?? false);
+            $data['featured'] = (bool) ($data['featured'] ?? false);
+        }
         $data['recommended'] = (bool) ($data['recommended'] ?? false);
 
         unset($data['selectedAllergens']);

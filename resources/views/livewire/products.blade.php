@@ -125,6 +125,7 @@
                         {{ trans_choice('admin.products.selected_count', count($selectedProducts)) }}
                     </p>
                     <div class="flex flex-wrap gap-2 flex-1 min-w-0">
+                        @if($canUseOffers ?? true)
                         <button type="button" wire:click="bulkSetFeatured(true)"
                                 class="px-3 py-1.5 btn-carta-primary text-xs sm:text-sm cursor-pointer shadow-sm">
                             {{ __('admin.products.bulk_feature') }}
@@ -133,6 +134,7 @@
                                 class="px-3 py-1.5 rounded-lg bg-white border border-amber-400 text-amber-900 text-xs sm:text-sm font-semibold hover:bg-amber-50 cursor-pointer">
                             {{ __('admin.products.bulk_unfeature') }}
                         </button>
+                        @endif
                         <button type="button" wire:click="bulkSetRecommended(true)"
                                 class="px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs sm:text-sm font-semibold hover:bg-sky-700 cursor-pointer shadow-sm">
                             {{ __('admin.products.bulk_recommend') }}
