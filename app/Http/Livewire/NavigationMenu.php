@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Restaurant;
 use App\Models\Setting;
+use App\Services\PlanEntitlementService;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -11,8 +12,9 @@ class NavigationMenu extends Component
 {
     public ?string $adminLogoPath = null;
 
-    public string $qrMenuUrl = '';
-    public string $qrFilename = 'qr-carta.png';
+    public string $qrMenuUrl   = '';
+    public string $qrFilename  = 'qr-carta.png';
+    public string $currentPlan = '';
 
     public function mount(): void
     {
@@ -33,6 +35,11 @@ class NavigationMenu extends Component
         }
 
         $this->adminLogoPath = Setting::get('admin_logo_path', null, $restaurantId);
+
+        $svc = app(PlanEntitlementService::class);
+        $user = auth()->user();
+        $account = $user ? $user->accounts()->first() : null;
+        $this->currentPlan = $svc->effectivePlanForAccount($account);
 
         // Solo el restaurante del selector del admin (no app('restaurant') del middleware, que puede ser otro).
         // Si no hay restaurante resuelto y validado, $restaurant queda null (comportamiento vacío seguro).
@@ -99,8 +106,9 @@ class NavigationMenu extends Component
     {
         return view('navigation-menu', [
             'adminLogoPath' => $this->adminLogoPath,
-            'qrMenuUrl' => $this->qrMenuUrl,
-            'qrFilename' => $this->qrFilename,
+            'qrMenuUrl'     => $this->qrMenuUrl,
+            'qrFilename'    => $this->qrFilename,
+            'currentPlan'   => $this->currentPlan,
         ]);
     }
 }

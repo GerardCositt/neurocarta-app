@@ -189,6 +189,25 @@
 
     </nav>
 
+    {{-- Badge de plan activo --}}
+    @if($currentPlan)
+    @php
+        $planMeta = match($currentPlan) {
+            'premium' => ['label' => 'Premium', 'bg' => 'bg-amber-100', 'text' => 'text-amber-800', 'dot' => 'bg-amber-500'],
+            'pro'     => ['label' => 'Pro',     'bg' => 'bg-indigo-100','text' => 'text-indigo-700','dot' => 'bg-indigo-500'],
+            'basico'  => ['label' => 'Básico',  'bg' => 'bg-gray-100',  'text' => 'text-gray-600',  'dot' => 'bg-gray-400'],
+            default   => ['label' => 'Trial',   'bg' => 'bg-green-100', 'text' => 'text-green-700', 'dot' => 'bg-green-500'],
+        };
+    @endphp
+    <div class="px-4 pb-3 admin-nav-label">
+        <a href="{{ route('subscription.expired') }}"
+           class="flex items-center gap-2 px-3 py-2 rounded-xl {{ $planMeta['bg'] }} {{ $planMeta['text'] }} text-xs font-semibold transition-opacity hover:opacity-80">
+            <span class="w-2 h-2 rounded-full {{ $planMeta['dot'] }} shrink-0"></span>
+            Plan {{ $planMeta['label'] }}
+        </a>
+    </div>
+    @endif
+
 </aside>
 
     {{-- Fuera de <aside>: evita que el flex lo coloque arriba; el banner usa position:fixed al pie del viewport --}}
