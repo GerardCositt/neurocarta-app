@@ -121,11 +121,12 @@ Variables clave:
 - **Búsqueda admin y landing tras login (2026-05-18)**: Los filtros de búsqueda en Livewire (`Products`, `Category\Show`, `Allergen\Show`, `Advices\Show`, `OrderList`) usan `LOWER(campo) LIKE ?` con el término en minúsculas y `%`/`_` escapados, para que PostgreSQL/MySQL no distingan mayúsculas. `RouteServiceProvider::HOME`, la ruta `dashboard` y el alta tras reset de contraseña (`SetPasswordController`) redirigen a `/product` en servidor; se retira el shim `window.location` de `dashboard.blade.php`. Tests `RegistrationTrialFlowTest` y `SubscriptionExpiryTest` actualizados. Commit: `79b3bde`.
 - **Alérgenos oficiales cargables desde UI (2026-05-18)**: Los 14 alérgenos obligatorios UE (Reg. 1169/2011) están centralizados en `App\Support\OfficialAllergens` (fuente única usada por `MandatoryAllergensSeeder` y por la UI). En `/allergen` aparece un botón "Cargar alérgenos oficiales" (índigo) solo cuando falta alguno de los 14; al pulsarlo inserta únicamente los ausentes (idempotente) y muestra un flash con el recuento. Los alérgenos son globales (sin `account_id`/`restaurant_id`); el scoping por restaurante está en el pivot `allergen_product`. Commit: `66fa6e0`.
 - **Raíz `/` en producción redirige siempre al panel (2026-05-18)**: `routes/web.php` — el host del panel (`app.neurocarta.ai`) en entorno `production` redirige siempre a login o dashboard, nunca muestra la carta pública. El bug anterior era que `session('admin_restaurant_id')` estaba en la condición de preview, que siempre estaba set para admins logueados. Commit: `f9a76e4`.
+- **Límites y gates de plan alineados con landing (2026-05-18)**: `PlanEntitlementService` actualizado con los límites definitivos de la landing: Básico 70/6/1, Pro 250/15/2, Premium 1.000/100/3. Nueva feature gate `offers` (false en Básico): los toggles de oferta y destacado en la tabla muestran candado en Básico; la sección de oferta en el formulario de producto se oculta; guards en `offerToggleFromTable()`, `toggleFeatured()` y `bulkSetFeatured()`. Commit: `b95fdf1`.
 - **"Ver carta" genera URL de subdominio en producción (2026-05-18)**: Jetstream registraba su propia clase `Laravel\Jetstream\Http\Livewire\NavigationMenu` (sin `mount()`, sin `$qrMenuUrl`) bajo el alias `navigation-menu` en su ServiceProvider, sobreescribiendo nuestra clase `App\Http\Livewire\NavigationMenu`. Resultado: la URL siempre caía al fallback `?restaurant=10`. Fix: registrar explícitamente nuestra clase en `AppServiceProvider::boot()` con `Livewire::component('navigation-menu', \App\Http\Livewire\NavigationMenu::class)`. Commit: `e94c04b`. **Regla general**: si se añade un componente Livewire con el mismo nombre que uno de Jetstream, siempre registrarlo en AppServiceProvider para que tome precedencia.
 
 ---
 
-## Estado Git (2026-05-18, último commit e94c04b)
+## Estado Git (2026-05-18, último commit b95fdf1)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
@@ -135,14 +136,16 @@ Variables clave:
 
 ---
 
-## Planes y precios (actualizado 2026-05-16)
+## Planes y precios (actualizado 2026-05-18)
 
-| Plan | Precio mensual | Precio anual | Límites |
-|---|---|---|---|
-| **Gratis (trial)** | 0€ / 7 días | — | Sin límites — acceso total |
-| **Básico** | 25€/mes | 250€/año (2 meses gratis) | 100 productos, 20 cats, sin IA ni traducciones |
-| **Pro** | 35€/mes | 350€/año (2 meses gratis) | 500 productos, 60 cats, IA + traducciones + CSV |
-| **Premium** | 65€/mes | 650€/año (2 meses gratis) | 2.000 productos, 200 cats, IA ilimitada |
+| Plan | Precio mensual | Precio anual | Límites | Features exclusivas |
+|---|---|---|---|---|
+| **Gratis (trial)** | 0€ / 7 días | — | Sin límites — acceso total | Todo incluido |
+| **Básico** | 25€/mes | 250€/año (2 meses gratis) | 70 productos, 6 cats, 1 restaurante | Sin IA, CSV, traducciones ni ofertas/destacados |
+| **Pro** | 35€/mes | 350€/año (2 meses gratis) | 250 productos, 15 cats, 2 restaurantes | IA, multi-idioma, ofertas/destacados, CSV |
+| **Premium** | 69€/mes | 690€/año (2 meses gratis) | 1.000 productos, 100 cats, 3 restaurantes | Todo lo de Pro + soporte preferente |
+
+> **Nota precio anual Premium**: actualizar price IDs en Stripe cuando se activen claves live (precio mensual subió de 65€ a 69€).
 
 ## Flujo de registro y trial (cerrado 2026-04-12)
 
@@ -188,7 +191,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Crear/usar rama de trabajo de lanzamiento si procede.
 - [ ] Convertir este checklist en tareas cerradas por área: Producto, Stripe, Tenants, UX, Legal, Producción, Seguridad, Calidad y Comercial.
 - [ ] Definir MVP de lanzamiento frente a mejoras post-lanzamiento.
-- [ ] Alinear precios y límites comerciales con los límites reales del código antes de cerrar Stripe.
+- [x] Alinear precios y límites comerciales con los límites reales del código antes de cerrar Stripe. (`b95fdf1`)
 
 ### Fase 1 — Producto crítico
 - [ ] Registro completo de restaurante sin intervención manual.
@@ -196,7 +199,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Trial gratis con fechas correctas y avisos coherentes.
 - [ ] Pantalla de trial terminado clara y con CTA real para contratar.
 - [ ] Bloqueo correcto de panel, QR y carta pública cuando trial/suscripción caduca.
-- [x] Planes Básico / Pro / Premium conectados a límites reales: cuotas + features IA/CSV/traducciones en código (`d38cc17`). Pendiente: validación manual en `docs/LAUNCH-QA.md` bloques 4-6 y 8.
+- [x] Planes Básico / Pro / Premium conectados a límites reales: cuotas + features IA/CSV/traducciones/ofertas en código. Límites alineados con landing (`b95fdf1`). Pendiente: validación manual en `docs/LAUNCH-QA.md` bloques 4-6 y 8.
 - [x] Panel de gestión usable en móvil y escritorio (productos + categorías: tarjetas < md, tabla ≥ md; commit UX móvil).
 - [ ] Crear, editar, ocultar y ordenar categorías. Controles visuales de ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
 - [ ] Crear, editar, ocultar y ordenar productos. Controles visuales de selección/oferta/destacado/recomendado/ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
@@ -217,7 +220,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Cancelación, impago y renovación gestionados.
 - [ ] Facturación anual/mensual clara.
 - [ ] Emails de trial, alta, pago fallido y renovación.
-- [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Pendiente: Stripe live y prueba de cobro.
+- [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Límites y features alineados con landing (`b95fdf1`). Pendiente: Stripe live y prueba de cobro.
 
 ### Fase 3 — Multi-restaurante / tenants
 - [ ] Cada restaurante aislado correctamente.
