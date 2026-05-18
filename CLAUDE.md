@@ -116,6 +116,8 @@ Variables clave:
 - **DNS en Cloudflare**: `app.neurocarta.ai` → `149.71.98.240`, proxy desactivado (nube gris).
 - **Seguridad de uploads públicos (2026-05-16)**: Las subidas de cliente para logos, fotos de productos y alérgenos no aceptan SVG ni GIF. Solo se permiten imágenes raster conservadoras (`jpg/jpeg`, `png`, `webp`) con límites explícitos de tamaño. `ImageAssetService` revalida el MIME real (`image/jpeg`, `image/png`, `image/webp`) y re-encodea las imágenes antes de guardarlas, de modo que no se almacenen SVG subidos por usuarios aunque un formulario omitiera la validación.
 - **Gates por plan (2026-05-17)**: `PlanEntitlementService` define cuotas (productos/cats/restaurantes) y features booleanas (`ai`, `csv_import`, `translations`). Básico sin IA/CSV/traducciones; Pro/Premium con acceso; trial activo equivale a Premium. Middleware `EnsurePlanFeature` en rutas; helper `App\Support\PlanFeatureGate` para blades/Livewire; guards en `ProductImport`, `ImportAi`, `TranslationManager`, `Products`, `Pairings`. Rutas protegidas: import CSV (+ plantilla), import IA, traducciones, facturación IA (`/settings/ai-billing`). Banner `plan_error` en layout admin. Tests: `TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`. Commit: `d38cc17`.
+- **Listados admin y controles visuales (2026-05-18)**: En `/product`, `/category`, `/advice` y `/pairing`, los toggles de selección/ocultar/destacar/recomendar/oferta pasan a botones visuales con `role="checkbox"` y `wire:key` dependiente del estado, para evitar que Livewire v2/morphdom deje checkboxes nativos visualmente desincronizados. Productos adopta el ancho/formato contenido con recuadro usado por categorías/avisos/maridajes. El panel de selección masiva queda por encima de la tabla vía `admin-bulk-panel` con z-index propio. Commit: `6293f49`.
+- **Subidas de imágenes de producto (2026-05-18)**: `Products::persistProduct()` captura errores de `ImageAssetService` y los muestra en el campo `filename` en vez de perder silenciosamente la imagen. `docker/entrypoint.sh` ejecuta `php artisan storage:link || true` en deploy para asegurar el enlace público `public/storage`. Pendiente: prueba manual completa de crear/editar producto con JPG/PNG/WebP en producción.
 
 ---
 
@@ -192,9 +194,9 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Bloqueo correcto de panel, QR y carta pública cuando trial/suscripción caduca.
 - [x] Planes Básico / Pro / Premium conectados a límites reales: cuotas + features IA/CSV/traducciones en código (`d38cc17`). Pendiente: validación manual en `docs/LAUNCH-QA.md` bloques 4-6 y 8.
 - [x] Panel de gestión usable en móvil y escritorio (productos + categorías: tarjetas < md, tabla ≥ md; commit UX móvil).
-- [ ] Crear, editar, ocultar y ordenar categorías.
-- [ ] Crear, editar, ocultar y ordenar productos.
-- [ ] Subida de imágenes de platos estable.
+- [ ] Crear, editar, ocultar y ordenar categorías. Controles visuales de ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
+- [ ] Crear, editar, ocultar y ordenar productos. Controles visuales de selección/oferta/destacado/recomendado/ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
+- [ ] Subida de imágenes de platos estable. Errores visibles y `storage:link` en deploy (`6293f49`); pendiente probar JPG/PNG/WebP reales en producción.
 - [ ] Imagen placeholder correcta cuando no hay foto.
 - [ ] Alérgenos visibles y editables.
 - [x] Vista pública de carta optimizada en consultas (locales en 1 query, ofertas sin duplicar eager load; test `PublicMenuPerformanceTest` 120 platos). Pendiente: validación manual < 3 s en prod (bloque 3.4).
@@ -223,7 +225,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Eliminar o justificar `Restaurant::first()` fuera de seeds: solo en `DemoMenuSeeder` (fallback); `DetectRestaurant` usa subdominio/sesión/cookie.
 
 ### Fase 4 — Diseño y UX
-- [ ] Revisar panel de productos con muchos platos (manual).
+- [ ] Revisar panel de productos con muchos platos (manual). Tabla de productos ajustada a formato contenido con recuadro y controles visuales estables (`6293f49`).
 - [x] Tabla de productos en pantallas pequeñas: tarjetas móvil en `/product` y `/category` (< md).
 - [ ] Revisar carta pública en móvil real (bloque 3 / 11.4 de `LAUNCH-QA.md`).
 - [ ] Revisar estados vacíos: sin productos, sin categorías, sin imagen, sin suscripción.
@@ -246,7 +248,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Base de datos PostgreSQL en Docker; migraciones en `deploy.sh`.
 - [x] Backups automáticos DB + storage (`scripts/backup.sh`, cron 03:00) — restauración probada 2026-05-16.
 - [ ] Copia off-server de backups (recomendado antes de escalar).
-- [x] Storage público en volumen Docker.
+- [x] Storage público en volumen Docker; deploy asegura `php artisan storage:link || true` (`6293f49`).
 - [x] `QUEUE_CONNECTION=sync` aceptable al inicio (sin worker).
 - [ ] Scheduler/cron activo → **verificar** `/etc/cron.d/neurocarta` (`SERVIDOR-LANZAMIENTO.md` §4).
 - [ ] Logs / monitorización (Sentry, etc.) — opcional pre-lanzamiento.
@@ -269,7 +271,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 ### Fase 8 — Calidad
 - [ ] Prueba manual completa: registro -> trial -> crear carta -> verla pública → **script**: `docs/LAUNCH-QA.md` bloques 1-3.
 - [ ] Prueba manual: importar CSV → bloque 4.
-- [ ] Prueba manual: subir imágenes → bloque 2.
+- [ ] Prueba manual: subir imágenes → bloque 2. Pendiente validar tras fix de errores visibles y `storage:link` (`6293f49`).
 - [ ] Prueba manual: cambiar plan/caducar trial → bloques 4 y 7.
 - [ ] Prueba manual: usuario sin suscripción → bloque 7.
 - [x] Tests mínimos de aislamiento por restaurante y suscripción (`TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`, `PublicMenuSubscriptionTest`). Registro crea restaurante + trial en BD. Login/registro: tests existentes; 419 en prod sin verificar.
