@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Category;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Support\CaseInsensitiveLike;
 use App\Services\PlanEntitlementService;
 use Livewire\Component;
 
@@ -43,9 +44,9 @@ class Show extends Component
             $query->where('restaurant_id', $restaurantId);
         }
 
-        if ($this->q) {
-            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
-            $query->whereRaw('LOWER(name) LIKE ?', [$term]);
+        $search = trim((string) ($this->q ?? ''));
+        if ($search !== '') {
+            CaseInsensitiveLike::applyWhere($query, 'categories.name', $search);
         }
 
         $expandedProducts = collect();

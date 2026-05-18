@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Allergen;
 
 use App\Models\Allergen;
+use App\Support\CaseInsensitiveLike;
 use App\Models\Product;
 use App\Services\ImageAssetService;
 use Illuminate\Support\Facades\Storage;
@@ -71,19 +72,20 @@ class Show extends Component
             ->orderBy('sort_order')
             ->orderBy('name');
 
-        if ($this->q) {
-            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
-            $query->whereRaw('LOWER(name) LIKE ?', [$term]);
+        $search = trim((string) ($this->q ?? ''));
+        if ($search !== '') {
+            CaseInsensitiveLike::applyWhere($query, 'allergens.name', $search);
         }
 
         $productsForLinkQuery = Product::with('category')
             ->when($restaurantId, fn ($q) => $q->where('restaurant_id', $restaurantId))
             ->orderBy('name');
-        if ($this->isOpen && $this->linkProductQ !== '') {
-            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->linkProductQ)), '%_\\') . '%';
-            $productsForLinkQuery->where(function ($q) use ($term) {
-                $q->whereRaw('LOWER(name) LIKE ?', [$term])
-                    ->orWhereHas('category', fn ($c) => $c->whereRaw('LOWER(name) LIKE ?', [$term]));
+        if ($this->isOpen && ($linkNeedle = trim((string) $this->linkProductQ)) !== '') {
+            $productsForLinkQuery->where(function ($q) use ($linkNeedle) {
+                CaseInsensitiveLike::applyWhere($q, 'products.name', $linkNeedle);
+                $q->orWhereHas('category', function ($c) use ($linkNeedle) {
+                    CaseInsensitiveLike::applyWhere($c, 'categories.name', $linkNeedle);
+                });
             });
         }
 

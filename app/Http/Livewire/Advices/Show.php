@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Advices;
 
 use App\Models\Advice;
+use App\Support\CaseInsensitiveLike;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -46,11 +47,11 @@ class Show extends Component
     {
         $items = Advice::query()
             ->where('restaurant_id', $this->restaurantId())
-            ->when($this->q, function ($query) {
-                $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
+            ->when(trim((string) ($this->q ?? '')) !== '', function ($query) {
+                $needle = trim((string) $this->q);
 
-                return $query->where(function ($query) use ($term) {
-                    $query->whereRaw('LOWER(title) LIKE ?', [$term]);
+                return $query->where(function ($query) use ($needle) {
+                    CaseInsensitiveLike::applyWhere($query, 'advice.title', $needle);
                 });
             })
             ->when($this->active, function ($query) {

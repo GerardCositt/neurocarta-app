@@ -11,6 +11,7 @@ use App\Services\AiCreditService;
 use App\Services\ImageAssetService;
 use App\Services\OpenAiService;
 use App\Services\PlanEntitlementService;
+use App\Support\CaseInsensitiveLike;
 use App\Support\PlanFeatureGate;
 use App\Services\ProductImageAiService;
 use Illuminate\Support\Facades\Log;
@@ -182,9 +183,9 @@ class Products extends Component
 
         $query = Product::query()->where('restaurant_id', $restaurantId);
 
-        if ($this->q) {
-            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
-            $query->whereRaw('LOWER(name) LIKE ?', [$term]);
+        $search = trim((string) ($this->q ?? ''));
+        if ($search !== '') {
+            CaseInsensitiveLike::applyWhere($query, 'products.name', $search);
         }
 
         if ($this->selectedCategory) {

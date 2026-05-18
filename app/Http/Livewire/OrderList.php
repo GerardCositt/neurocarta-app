@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Order;
+use App\Support\CaseInsensitiveLike;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -58,15 +59,14 @@ class OrderList extends Component
             ->when($this->statusFilter !== '', function ($query) {
                 $query->where('status', $this->statusFilter);
             })
-            ->when($this->q, function ($query) {
-                $raw = trim($this->q);
-                $term = '%' . addcslashes(mb_strtolower($raw), '%_\\') . '%';
-                $query->where(function ($q) use ($term, $raw) {
-                    $q->whereRaw('LOWER(customer_name) LIKE ?', [$term])
-                        ->orWhereRaw('LOWER(customer_phone) LIKE ?', [$term])
-                        ->orWhereRaw('LOWER(COALESCE(customer_notes, \'\')) LIKE ?', [$term]);
+            ->when(trim((string) $this->q) !== '', function ($query) {
+                $raw = trim((string) $this->q);
+                $query->where(function ($q) use ($raw) {
+                    CaseInsensitiveLike::applyWhere($q, 'orders.customer_name', $raw);
+                    CaseInsensitiveLike::applyOrWhere($q, 'orders.customer_phone', $raw);
+                    CaseInsensitiveLike::applyOrWhere($q, 'COALESCE(orders.customer_notes, \'\')', $raw);
                     if (preg_match('/^#?(\d+)$/', $raw, $m)) {
-                        $q->orWhere('id', (int) $m[1]);
+                        $q->orWhere('orders.id', (int) $m[1]);
                     }
                 });
             })
