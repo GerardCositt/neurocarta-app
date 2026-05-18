@@ -118,10 +118,11 @@ Variables clave:
 - **Gates por plan (2026-05-17)**: `PlanEntitlementService` define cuotas (productos/cats/restaurantes) y features booleanas (`ai`, `csv_import`, `translations`). Básico sin IA/CSV/traducciones; Pro/Premium con acceso; trial activo equivale a Premium. Middleware `EnsurePlanFeature` en rutas; helper `App\Support\PlanFeatureGate` para blades/Livewire; guards en `ProductImport`, `ImportAi`, `TranslationManager`, `Products`, `Pairings`. Rutas protegidas: import CSV (+ plantilla), import IA, traducciones, facturación IA (`/settings/ai-billing`). Banner `plan_error` en layout admin. Tests: `TenantIsolationTest`, `SubscriptionExpiryTest`, `PlanFeatureGateTest`. Commit: `d38cc17`.
 - **Listados admin y controles visuales (2026-05-18)**: En `/product`, `/category`, `/advice` y `/pairing`, los toggles de selección/ocultar/destacar/recomendar/oferta pasan a botones visuales con `role="checkbox"` y `wire:key` dependiente del estado, para evitar que Livewire v2/morphdom deje checkboxes nativos visualmente desincronizados. Productos adopta el ancho/formato contenido con recuadro usado por categorías/avisos/maridajes. El panel de selección masiva queda por encima de la tabla vía `admin-bulk-panel` con z-index propio. Commit: `6293f49`.
 - **Subidas de imágenes de producto (2026-05-18)**: `Products::persistProduct()` captura errores de `ImageAssetService` y los muestra en el campo `filename` en vez de perder silenciosamente la imagen. `docker/entrypoint.sh` ejecuta `php artisan storage:link || true` en deploy para asegurar el enlace público `public/storage`. Pendiente: prueba manual completa de crear/editar producto con JPG/PNG/WebP en producción.
+- **Búsqueda admin y landing tras login (2026-05-18)**: Los filtros de búsqueda en Livewire (`Products`, `Category\Show`, `Allergen\Show`, `Advices\Show`, `OrderList`) usan `LOWER(campo) LIKE ?` con el término en minúsculas y `%`/`_` escapados, para que PostgreSQL/MySQL no distingan mayúsculas. `RouteServiceProvider::HOME`, la ruta `dashboard` y el alta tras reset de contraseña (`SetPasswordController`) redirigen a `/product` en servidor; se retira el shim `window.location` de `dashboard.blade.php`. Tests `RegistrationTrialFlowTest` y `SubscriptionExpiryTest` actualizados. Commit: `79b3bde`.
 
 ---
 
-## Estado Git (2026-05-17)
+## Estado Git (2026-05-18)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
