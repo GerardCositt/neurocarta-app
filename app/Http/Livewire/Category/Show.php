@@ -44,7 +44,8 @@ class Show extends Component
         }
 
         if ($this->q) {
-            $query->where('name', 'like', '%' . $this->q . '%');
+            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
+            $query->whereRaw('LOWER(name) LIKE ?', [$term]);
         }
 
         $expandedProducts = collect();

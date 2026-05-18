@@ -56,7 +56,7 @@ class SetPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('dashboard');
+            return redirect()->route('product');
         }
 
         return back()->withErrors(['email' => __($status)]);

@@ -79,7 +79,7 @@ class RegistrationTrialFlowTest extends TestCase
         $this->actingAs($user)
             ->withSession(['admin_restaurant_id' => $restaurant->id])
             ->get('/dashboard')
-            ->assertSuccessful();
+            ->assertRedirect(route('product'));
     }
 
     public function test_expired_trial_is_blocked_from_product_panel(): void
@@ -109,7 +109,7 @@ class RegistrationTrialFlowTest extends TestCase
         $this->actingAs($user)
             ->withSession(['admin_restaurant_id' => $restaurant->id])
             ->get('/dashboard')
-            ->assertSuccessful();
+            ->assertRedirect(route('product'));
     }
 
     public function test_active_pro_subscription_allows_dashboard(): void
@@ -119,7 +119,7 @@ class RegistrationTrialFlowTest extends TestCase
         $this->actingAs($user)
             ->withSession(['admin_restaurant_id' => $restaurant->id])
             ->get('/dashboard')
-            ->assertSuccessful();
+            ->assertRedirect(route('product'));
     }
 
     public function test_trial_day5_warning_email_is_sent(): void

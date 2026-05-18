@@ -72,17 +72,18 @@ class Show extends Component
             ->orderBy('name');
 
         if ($this->q) {
-            $query->where('name', 'like', '%' . $this->q . '%');
+            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
+            $query->whereRaw('LOWER(name) LIKE ?', [$term]);
         }
 
         $productsForLinkQuery = Product::with('category')
             ->when($restaurantId, fn ($q) => $q->where('restaurant_id', $restaurantId))
             ->orderBy('name');
         if ($this->isOpen && $this->linkProductQ !== '') {
-            $term = '%' . addcslashes($this->linkProductQ, '%_\\') . '%';
+            $term = '%' . addcslashes(mb_strtolower(trim((string) $this->linkProductQ)), '%_\\') . '%';
             $productsForLinkQuery->where(function ($q) use ($term) {
-                $q->where('name', 'like', $term)
-                    ->orWhereHas('category', fn ($c) => $c->where('name', 'like', $term));
+                $q->whereRaw('LOWER(name) LIKE ?', [$term])
+                    ->orWhereHas('category', fn ($c) => $c->whereRaw('LOWER(name) LIKE ?', [$term]));
             });
         }
 

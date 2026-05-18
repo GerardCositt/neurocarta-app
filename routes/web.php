@@ -156,7 +156,7 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
 
 Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription.check'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return redirect()->route('product');
     })->name('dashboard');
 
     Route::get('/category', App\Http\Livewire\Category\Show::class)->name('category_list');

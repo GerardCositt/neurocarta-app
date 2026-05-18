@@ -62,7 +62,7 @@ class SubscriptionExpiryTest extends TestCase
         $response = $this->actingAs($user)
             ->get('/dashboard');
 
-        $response->assertSuccessful();
+        $response->assertRedirect(route('product'));
     }
 
     public function test_no_subscription_is_redirected_from_dashboard(): void

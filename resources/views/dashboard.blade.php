@@ -1,3 +1,1 @@
-<x-app-layout>
-    <script>window.location.replace('/product');</script>
-</x-app-layout>
+{{-- Dashboard placeholder. The route redirects to /product server-side. --}}

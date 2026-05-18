@@ -47,8 +47,10 @@ class Show extends Component
         $items = Advice::query()
             ->where('restaurant_id', $this->restaurantId())
             ->when($this->q, function ($query) {
-                return $query->where(function ($query) {
-                    $query->where('title', 'like', '%'.$this->q.'%');
+                $term = '%' . addcslashes(mb_strtolower(trim((string) $this->q)), '%_\\') . '%';
+
+                return $query->where(function ($query) use ($term) {
+                    $query->whereRaw('LOWER(title) LIKE ?', [$term]);
                 });
             })
             ->when($this->active, function ($query) {

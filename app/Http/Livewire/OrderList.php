@@ -60,11 +60,11 @@ class OrderList extends Component
             })
             ->when($this->q, function ($query) {
                 $raw = trim($this->q);
-                $term = '%' . $raw . '%';
+                $term = '%' . addcslashes(mb_strtolower($raw), '%_\\') . '%';
                 $query->where(function ($q) use ($term, $raw) {
-                    $q->where('customer_name', 'like', $term)
-                        ->orWhere('customer_phone', 'like', $term)
-                        ->orWhere('customer_notes', 'like', $term);
+                    $q->whereRaw('LOWER(customer_name) LIKE ?', [$term])
+                        ->orWhereRaw('LOWER(customer_phone) LIKE ?', [$term])
+                        ->orWhereRaw('LOWER(COALESCE(customer_notes, \'\')) LIKE ?', [$term]);
                     if (preg_match('/^#?(\d+)$/', $raw, $m)) {
                         $q->orWhere('id', (int) $m[1]);
                     }
