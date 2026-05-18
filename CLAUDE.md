@@ -123,10 +123,15 @@ Variables clave:
 - **Raíz `/` en producción redirige siempre al panel (2026-05-18)**: `routes/web.php` — el host del panel (`app.neurocarta.ai`) en entorno `production` redirige siempre a login o dashboard, nunca muestra la carta pública. El bug anterior era que `session('admin_restaurant_id')` estaba en la condición de preview, que siempre estaba set para admins logueados. Commit: `f9a76e4`.
 - **Límites y gates de plan alineados con landing (2026-05-18)**: `PlanEntitlementService` actualizado con los límites definitivos de la landing: Básico 70/6/1, Pro 250/15/2, Premium 1.000/100/3. Nueva feature gate `offers` (false en Básico): los toggles de oferta y destacado en la tabla muestran candado en Básico; la sección de oferta en el formulario de producto se oculta; guards en `offerToggleFromTable()`, `toggleFeatured()` y `bulkSetFeatured()`. Commit: `b95fdf1`.
 - **"Ver carta" genera URL de subdominio en producción (2026-05-18)**: Jetstream registraba su propia clase `Laravel\Jetstream\Http\Livewire\NavigationMenu` (sin `mount()`, sin `$qrMenuUrl`) bajo el alias `navigation-menu` en su ServiceProvider, sobreescribiendo nuestra clase `App\Http\Livewire\NavigationMenu`. Resultado: la URL siempre caía al fallback `?restaurant=10`. Fix: registrar explícitamente nuestra clase en `AppServiceProvider::boot()` con `Livewire::component('navigation-menu', \App\Http\Livewire\NavigationMenu::class)`. Commit: `e94c04b`. **Regla general**: si se añade un componente Livewire con el mismo nombre que uno de Jetstream, siempre registrarlo en AppServiceProvider para que tome precedencia.
+- **Badge de plan y botón "Mejora tu plan" en sidebar (2026-05-18)**: `NavigationMenu` expone `$currentPlan` (via `PlanEntitlementService::effectivePlanForAccount`). El sidebar muestra un badge de color con el plan activo. Con plan Básico aparece un enlace discreto "Mejora tu plan →" (borde discontinuo gris, sin color de fondo) y los items del submenú de Ajustes bloqueados (import CSV, import IA, IA billing, traducciones) muestran un pill "Pro" en índigo. Commits: `95510ce`, `4e07876`.
+- **`@php($expr)` shorthand causa ParseError en Blade (2026-05-18)**: La forma `@php($variable = valor)` compila a `<?php($variable = valor)` sin cerrar, dejando el HTML siguiente como código PHP y fallando en el token `class`. Siempre usar `@php $variable = valor; @endphp` en su lugar. Commit fix: `6692df5`.
+- **Precios anuales actualizados a "1 mes gratis" (2026-05-18)**: Cambiado de "2 meses gratis" a "1 mes gratis" en `subscription/expired.blade.php`. Precios anuales recalculados: Básico 275€, Pro 385€, Premium 759€. Límites corregidos (estaban desfasados: Pro 500/60→250/15, Básico 100/20→70/6, Premium 2000/200→1000/100, precio 65€→69€). Commit: `84e27d0`.
+- **Checkout Stripe redirige al admin si suscripción está `active` (decisión de diseño)**: `CheckoutController::create()` redirige a dashboard si `$subscription->status === 'active'`. Esto es correcto: la página `/subscription/expired` es para usuarios expirados, no para cambio de plan desde panel activo. El checkout no funcionará hasta configurar `STRIPE_SECRET` y los `STRIPE_PRICE_*` en el `.env` de producción.
+- **Usuario de prueba para planes**: `geycor@gmail.com` / `1234` (Bar Geycor, subdominio `bar-geycor`). Usar `php artisan dev:set-plan basico --email=geycor@gmail.com` para cambiar de plan. `test@test.com` es el admin de Filament y no tiene cuenta/suscripción asociada — no usar para pruebas de planes.
 
 ---
 
-## Estado Git (2026-05-18, último commit b95fdf1)
+## Estado Git (2026-05-18, último commit 4e07876)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
@@ -141,11 +146,11 @@ Variables clave:
 | Plan | Precio mensual | Precio anual | Límites | Features exclusivas |
 |---|---|---|---|---|
 | **Gratis (trial)** | 0€ / 7 días | — | Sin límites — acceso total | Todo incluido |
-| **Básico** | 25€/mes | 250€/año (2 meses gratis) | 70 productos, 6 cats, 1 restaurante | Sin IA, CSV, traducciones ni ofertas/destacados |
-| **Pro** | 35€/mes | 350€/año (2 meses gratis) | 250 productos, 15 cats, 2 restaurantes | IA, multi-idioma, ofertas/destacados, CSV |
-| **Premium** | 69€/mes | 690€/año (2 meses gratis) | 1.000 productos, 100 cats, 3 restaurantes | Todo lo de Pro + soporte preferente |
+| **Básico** | 25€/mes | 275€/año (1 mes gratis) | 70 productos, 6 cats, 1 restaurante | Sin IA, CSV, traducciones ni ofertas/destacados |
+| **Pro** | 35€/mes | 385€/año (1 mes gratis) | 250 productos, 15 cats, 2 restaurantes | IA, multi-idioma, ofertas/destacados, CSV |
+| **Premium** | 69€/mes | 759€/año (1 mes gratis) | 1.000 productos, 100 cats, 3 restaurantes | Todo lo de Pro + soporte preferente |
 
-> **Nota precio anual Premium**: actualizar price IDs en Stripe cuando se activen claves live (precio mensual subió de 65€ a 69€).
+> **Descuento anual**: 1 mes gratis = pagar 11 meses (25×11=275, 35×11=385, 69×11=759). Actualizar price IDs en Stripe cuando se activen claves live.
 
 ## Flujo de registro y trial (cerrado 2026-04-12)
 
