@@ -456,6 +456,9 @@ return [
         'label_hide' => 'Ocultar en carta',
         'load_official' => 'Cargar alérgenos oficiales',
         'load_official_flash' => '{0} Los alérgenos oficiales ya están cargados.|{1} 1 alérgeno oficial restaurado.|[2,*] :count alérgenos oficiales restaurados.',
+        'load_official_modal_title' => 'Cargar alérgenos oficiales',
+        'load_official_modal_body' => 'Faltan :count de los 14 alérgenos obligatorios (UE). Se añadirán los que faltan sin modificar los existentes.',
+        'load_official_modal_confirm' => 'Sí, cargar',
     ],
 
     'pairing_page' => [

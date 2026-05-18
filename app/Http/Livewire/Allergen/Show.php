@@ -36,6 +36,9 @@ class Show extends Component
 
     public $linkProductQ = '';
 
+    /** @var bool */
+    public $confirmingLoadOfficial = false;
+
     /** @var bool|int */
     public $confirmingAllergenDeletion = false;
 
@@ -289,8 +292,20 @@ class Show extends Component
         }
     }
 
+    public function confirmLoadOfficialAllergens(): void
+    {
+        $this->confirmingLoadOfficial = true;
+    }
+
+    public function cancelLoadOfficialAllergens(): void
+    {
+        $this->confirmingLoadOfficial = false;
+    }
+
     public function loadOfficialAllergens(): void
     {
+        $this->confirmingLoadOfficial = false;
+
         $existing = Allergen::query()
             ->whereNotNull('slug')
             ->whereIn('slug', OfficialAllergens::slugs())

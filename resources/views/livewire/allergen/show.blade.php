@@ -24,16 +24,11 @@
 
         <div class="flex items-center gap-2">
             @if($missingOfficialCount > 0)
-            <button wire:click="loadOfficialAllergens()"
-                    wire:loading.attr="disabled"
-                    wire:target="loadOfficialAllergens"
-                    class="bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2">
-                <svg wire:loading.remove wire:target="loadOfficialAllergens" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <button wire:click="confirmLoadOfficialAllergens()"
+                    class="text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2"
+                    style="background-color:#f5a623;" onmouseover="this.style.backgroundColor='#d4891a'" onmouseout="this.style.backgroundColor='#f5a623'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.955 11.955 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
-                </svg>
-                <svg wire:loading wire:target="loadOfficialAllergens" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
                 {{ __('admin.allergen_page.load_official') }}
             </button>
@@ -171,6 +166,27 @@
     </div>
 
     </div>
+
+    @if($confirmingLoadOfficial)
+    <div class="fixed inset-0 z-50 flex items-center justify-center" wire:click.stop>
+        <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelLoadOfficialAllergens"></div>
+        <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.allergen_page.load_official_modal_title') }}</h3>
+            <p class="text-sm text-gray-600 mb-6">{{ __('admin.allergen_page.load_official_modal_body', ['count' => $missingOfficialCount]) }}</p>
+            <div class="flex justify-end gap-3">
+                <button wire:click="cancelLoadOfficialAllergens" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+                    {{ __('admin.allergen_page.cancel_title') }}
+                </button>
+                <button wire:click="loadOfficialAllergens" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-white font-semibold rounded-xl transition-colors cursor-pointer"
+                        style="background-color:#f5a623;" onmouseover="this.style.backgroundColor='#d4891a'" onmouseout="this.style.backgroundColor='#f5a623'">
+                    {{ __('admin.allergen_page.load_official_modal_confirm') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 
     @if($showRemoveAllergenImageModal)
     <div class="fixed inset-0 z-50 flex items-center justify-center" wire:click.stop>
