@@ -60,9 +60,16 @@
         <x-jet-banner />
 
         @if (session('plan_error'))
-            <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+            <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 flex items-center justify-between gap-4"
                  role="alert">
-                {{ session('plan_error') }}
+                <span class="flex items-center gap-2">
+                    <span aria-hidden="true">❌</span>
+                    {{ session('plan_error') }}
+                </span>
+                <a href="{{ route('subscription.expired') }}"
+                   class="shrink-0 font-semibold underline underline-offset-2 hover:opacity-80 whitespace-nowrap">
+                    Ver planes →
+                </a>
             </div>
         @endif
 

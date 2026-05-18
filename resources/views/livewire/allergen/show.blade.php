@@ -54,7 +54,13 @@
         <div class="admin-banner admin-banner--danger mb-4" role="alert">
             <span class="admin-banner__icon" aria-hidden="true">❌</span>
             <div class="admin-banner__content flex items-start justify-between gap-3">
-                <span>{{ $msgError }}</span>
+                <span>
+                    {{ $msgError }}
+                    <a href="{{ route('subscription.expired') }}"
+                       class="ml-2 inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:opacity-80 whitespace-nowrap">
+                        Ver planes →
+                    </a>
+                </span>
                 <button type="button" wire:click="$set('msgError', null)" class="opacity-60 hover:opacity-100 flex-shrink-0 font-bold text-base leading-none">✕</button>
             </div>
         </div>

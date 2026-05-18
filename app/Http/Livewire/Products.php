@@ -632,7 +632,7 @@ class Products extends Component
                 try {
                     $svc->assertCanCreateProduct($account);
                 } catch (\RuntimeException $e) {
-                    session()->flash('message', $e->getMessage());
+                    session()->flash('plan_error', $e->getMessage());
                     return null;
                 }
             }
