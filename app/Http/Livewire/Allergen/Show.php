@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Allergen;
 
 use App\Models\Allergen;
 use App\Support\CaseInsensitiveLike;
+use App\Support\OfficialAllergens;
 use App\Models\Product;
 use App\Services\ImageAssetService;
 use Illuminate\Support\Facades\Storage;
@@ -113,12 +114,21 @@ class Show extends Component
             $editingAllergenImageUrl = $a?->image_url;
         }
 
+        $existingSlugs = Allergen::query()
+            ->whereNotNull('slug')
+            ->whereIn('slug', OfficialAllergens::slugs())
+            ->pluck('slug')
+            ->all();
+
+        $missingSlugs = array_diff(OfficialAllergens::slugs(), $existingSlugs);
+
         return view('livewire.allergen.show', [
             'allergens'               => $query->get(),
             'productsForLink'         => $productsForLinkQuery->get(),
             'expandedLinkedProducts'  => $expandedLinkedProducts,
             'expandedAllergenName'    => $expandedAllergenName,
             'editingAllergenImageUrl' => $editingAllergenImageUrl,
+            'missingOfficialCount'    => count($missingSlugs),
         ]);
     }
 
@@ -277,6 +287,37 @@ class Show extends Component
             $this->image = null;
             session()->flash('message', __('admin.allergen_ui.flash_created'));
         }
+    }
+
+    public function loadOfficialAllergens(): void
+    {
+        $existing = Allergen::query()
+            ->whereNotNull('slug')
+            ->whereIn('slug', OfficialAllergens::slugs())
+            ->pluck('slug')
+            ->all();
+
+        $created = 0;
+        foreach (OfficialAllergens::list() as $row) {
+            if (in_array($row['slug'], $existing, true)) {
+                continue;
+            }
+            Allergen::create([
+                'slug'        => $row['slug'],
+                'name'        => $row['name'],
+                'image'       => 'allergens/official/' . $row['file'],
+                'is_official' => true,
+                'sort_order'  => $row['sort'],
+                'active'      => false,
+            ]);
+            $created++;
+        }
+
+        session()->flash('message', trans_choice(
+            'admin.allergen_page.load_official_flash',
+            $created,
+            ['count' => $created]
+        ));
     }
 
     public function toggleState(Allergen $allergen): void

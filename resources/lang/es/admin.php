@@ -454,6 +454,8 @@ return [
         'save_keep_open' => 'Guardar',
         'save_and_close' => 'Guardar y cerrar',
         'label_hide' => 'Ocultar en carta',
+        'load_official' => 'Cargar alérgenos oficiales',
+        'load_official_flash' => '{0} Los alérgenos oficiales ya están cargados.|{1} 1 alérgeno oficial restaurado.|[2,*] :count alérgenos oficiales restaurados.',
     ],
 
     'pairing_page' => [
