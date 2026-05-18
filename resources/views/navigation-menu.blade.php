@@ -153,6 +153,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                 </svg>
             </summary>
+            @php($needsUpgrade = $currentPlan === 'basico')
             <div class="mt-1 pl-9 pr-2 space-y-1">
                 <a href="{{ url('/settings/appearance') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
@@ -160,24 +161,36 @@
                     {{ __('admin.nav.appearance') }}
                 </a>
                 <a href="{{ url('/settings/import-products') }}"
-                   class="block px-3 py-2 rounded-xl text-sm transition-colors
+                   class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('settings/import-products') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    {{ __('admin.nav.import_products') }}
+                    <span class="admin-nav-label">{{ __('admin.nav.import_products') }}</span>
+                    @if($needsUpgrade)
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                    @endif
                 </a>
                 <a href="{{ url('/settings/import-ai') }}"
-                   class="block px-3 py-2 rounded-xl text-sm transition-colors
+                   class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('settings/import-ai') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    {{ __('admin.nav.import_ai') }}
+                    <span class="admin-nav-label">{{ __('admin.nav.import_ai') }}</span>
+                    @if($needsUpgrade)
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                    @endif
                 </a>
                 <a href="{{ url('/settings/ai-billing') }}"
-                   class="block px-3 py-2 rounded-xl text-sm transition-colors
+                   class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('settings/ai-billing') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    {{ __('admin.nav.ai_billing') }}
+                    <span class="admin-nav-label">{{ __('admin.nav.ai_billing') }}</span>
+                    @if($needsUpgrade)
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                    @endif
                 </a>
                 <a href="{{ url('/translations') }}"
-                   class="block px-3 py-2 rounded-xl text-sm transition-colors
+                   class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm transition-colors
                           {{ request()->is('translations*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    {{ __('admin.nav.translations') }}
+                    <span class="admin-nav-label">{{ __('admin.nav.translations') }}</span>
+                    @if($needsUpgrade)
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                    @endif
                 </a>
                 <a href="{{ url('/settings/orders') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
@@ -197,11 +210,17 @@
                 default   => ['label' => 'Trial',   'bg' => 'bg-green-100', 'text' => 'text-green-700', 'dot' => 'bg-green-500'],
             };
         @endphp
-        <div class="pt-3">
+        <div class="pt-3 space-y-1">
             <span class="flex items-center gap-2 px-3 py-2 rounded-xl {{ $planMeta['bg'] }} {{ $planMeta['text'] }} text-xs font-semibold">
                 <span class="w-2 h-2 rounded-full {{ $planMeta['dot'] }} shrink-0"></span>
                 <span class="admin-nav-label">Plan {{ $planMeta['label'] }}</span>
             </span>
+            @if($currentPlan === 'basico')
+            <a href="{{ route('subscription.expired') }}"
+               class="admin-nav-label flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors">
+                Mejora tu plan →
+            </a>
+            @endif
         </div>
         @endif
 
