@@ -153,7 +153,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                 </svg>
             </summary>
-            @php($needsUpgrade = $currentPlan === 'basico')
+            @php $needsUpgrade = $currentPlan === 'basico'; @endphp
             <div class="mt-1 pl-9 pr-2 space-y-1">
                 <a href="{{ url('/settings/appearance') }}"
                    class="block px-3 py-2 rounded-xl text-sm transition-colors
