@@ -24,37 +24,40 @@ class PlanEntitlementService
     private const LIMITS = [
         self::PLAN_BASIC => [
             'restaurants' => 1,
-            'products'    => 100,
-            'categories'  => 20,
+            'products'    => 70,
+            'categories'  => 6,
         ],
         self::PLAN_PRO => [
             'restaurants' => 2,
-            'products'    => 500,
-            'categories'  => 60,
+            'products'    => 250,
+            'categories'  => 15,
         ],
         self::PLAN_PREMIUM => [
-            'restaurants' => 5,
-            'products'    => 2000,
-            'categories'  => 200,
+            'restaurants' => 3,
+            'products'    => 1000,
+            'categories'  => 100,
         ],
     ];
 
-    /** Features booleanas por plan. Basic no tiene IA, CSV ni traducciones. */
+    /** Features booleanas por plan. Básico no tiene IA, CSV, traducciones ni ofertas/destacados. */
     private const FEATURES = [
         self::PLAN_BASIC => [
             'ai'           => false,
             'csv_import'   => false,
             'translations' => false,
+            'offers'       => false,
         ],
         self::PLAN_PRO => [
             'ai'           => true,
             'csv_import'   => true,
             'translations' => true,
+            'offers'       => true,
         ],
         self::PLAN_PREMIUM => [
             'ai'           => true,
             'csv_import'   => true,
             'translations' => true,
+            'offers'       => true,
         ],
     ];
 

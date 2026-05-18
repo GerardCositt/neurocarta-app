@@ -102,6 +102,7 @@
                             </div>
 
                             {{-- Oferta --}}
+                            @if($canUseOffers ?? true)
                             <div class="admin-inset admin-inset--danger p-3 space-y-2.5">
                                 <label class="flex items-center gap-2.5 cursor-pointer">
                                     <input type="checkbox" wire:model="offer"
@@ -126,6 +127,12 @@
                                     </div>
                                 </div>
                             </div>
+                            @else
+                            <div class="admin-inset p-3 flex items-center gap-2 text-xs text-gray-400 border border-gray-200 rounded-xl bg-gray-50">
+                                <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                                <span>{{ __('admin.plan.offers_required') }}</span>
+                            </div>
+                            @endif
 
                             {{-- Visibilidad comercial (carta pública) --}}
                             <div class="admin-inset admin-inset--info p-3 space-y-2.5">
@@ -137,11 +144,18 @@
                                     'recommended' => '<strong>'.e(__('admin.product_form.visibility_recommended_word')).'</strong>',
                                     'offer' => '<strong>'.e(__('admin.product_form.visibility_offer_word')).'</strong>',
                                 ]) !!}</p>
+                                @if($canUseOffers ?? true)
                                 <label class="flex items-center gap-2.5 cursor-pointer">
                                     <input type="checkbox" wire:model="featured"
                                            class="form-checkbox w-4 h-4 rounded text-amber-600 border-gray-300 focus:ring-amber-300 cursor-pointer">
                                     <span class="text-sm font-medium text-gray-800">{{ __('admin.product_form.featured') }}</span>
                                 </label>
+                                @else
+                                <label class="flex items-center gap-2.5 opacity-40 cursor-not-allowed" title="{{ __('admin.plan.offers_required') }}">
+                                    <input type="checkbox" disabled class="form-checkbox w-4 h-4 rounded text-amber-600 border-gray-300 cursor-not-allowed">
+                                    <span class="text-sm font-medium text-gray-800">{{ __('admin.product_form.featured') }}</span>
+                                </label>
+                                @endif
                                 <label class="flex items-center gap-2.5 cursor-pointer">
                                     <input type="checkbox" wire:model="recommended"
                                            class="form-checkbox w-4 h-4 rounded text-amber-600 border-gray-300 focus:ring-amber-300 cursor-pointer">

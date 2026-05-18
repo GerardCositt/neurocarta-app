@@ -12,6 +12,7 @@ use App\Services\ImageAssetService;
 use App\Services\OpenAiService;
 use App\Services\PlanEntitlementService;
 use App\Support\CaseInsensitiveLike;
+use App\Support\DemoContent;
 use App\Support\PlanFeatureGate;
 use App\Services\ProductImageAiService;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,8 @@ class Products extends Component
 
     /** @var string 15 | 30 | 50 | all — cuántos registros mostrar por página (por defecto 15). */
     public $perPageOption = '15';
+
+    public $confirmingLoadDemo = false;
 
     public $confirmingProductDeletion = false;
     public $pendingProductDeletionId = null;
@@ -267,6 +270,10 @@ class Products extends Component
 
     public function bulkSetFeatured(bool $on): void
     {
+        if (! PlanFeatureGate::allows('offers')) {
+            session()->flash('plan_error', __('admin.plan.offers_required'));
+            return;
+        }
         $ids = $this->validatedSelectedIds();
         if ($ids === []) {
             return;
@@ -381,8 +388,13 @@ class Products extends Component
             $pairingsQuery->where('restaurant_id', $restaurantId);
         }
 
+        $hasNoProducts = $restaurantId
+            ? ! \App\Models\Product::where('restaurant_id', $restaurantId)->exists()
+            : false;
+
         return view('livewire.products', [
             'products'              => $products,
+            'hasNoProducts'         => $hasNoProducts,
             'commercialFilterNorm'  => $commercialFilter,
             'allowProductDragSort'  => $commercialFilter === '',
             'aiCredits'             => $this->aiCredits()->summary(),
@@ -401,6 +413,7 @@ class Products extends Component
                 ->get(),
             'canUseAi'              => PlanFeatureGate::allows('ai'),
             'canUseCsvImport'       => PlanFeatureGate::allows('csv_import'),
+            'canUseOffers'          => PlanFeatureGate::allows('offers'),
         ]);
     }
 
@@ -412,6 +425,10 @@ class Products extends Component
 
     public function toggleFeatured(int $id): void
     {
+        if (! PlanFeatureGate::allows('offers')) {
+            session()->flash('plan_error', __('admin.plan.offers_required'));
+            return;
+        }
         $product = $this->findOwnedProductOrFail($id);
         $product->featured = ! $product->featured;
         $product->save();
@@ -441,6 +458,10 @@ class Products extends Component
      */
     public function offerToggleFromTable(int $id): void
     {
+        if (! PlanFeatureGate::allows('offers')) {
+            session()->flash('plan_error', __('admin.plan.offers_required'));
+            return;
+        }
         $product = Product::findOrFail($id);
         if ($product->offer) {
             $product->offer = false;
@@ -1193,5 +1214,70 @@ class Products extends Component
         }
 
         return false;
+    }
+
+    public function confirmLoadDemo(): void
+    {
+        $this->confirmingLoadDemo = true;
+    }
+
+    public function cancelLoadDemo(): void
+    {
+        $this->confirmingLoadDemo = false;
+    }
+
+    public function loadDemoContent(): void
+    {
+        $this->confirmingLoadDemo = false;
+
+        $restaurantId = $this->getRestaurantId();
+        if (! $restaurantId) {
+            return;
+        }
+
+        if (\App\Models\Product::where('restaurant_id', $restaurantId)->exists()) {
+            return;
+        }
+
+        $allergenMap = \App\Models\Allergen::query()
+            ->whereNotNull('slug')
+            ->pluck('id', 'slug')
+            ->all();
+
+        $categoryMap = [];
+        foreach (DemoContent::categories() as $cat) {
+            $category = \App\Models\Category::create([
+                'name'          => $cat['name'],
+                'active'        => false,
+                'order'         => $cat['order'],
+                'restaurant_id' => $restaurantId,
+            ]);
+            $categoryMap[$cat['name']] = $category->id;
+        }
+
+        foreach (DemoContent::products() as $data) {
+            $product = \App\Models\Product::create([
+                'name'          => $data['name'],
+                'description'   => $data['description'],
+                'price'         => $data['price'],
+                'category_id'   => $categoryMap[$data['category']] ?? null,
+                'restaurant_id' => $restaurantId,
+                'photo'         => file_exists(public_path($data['photo'])) ? $data['photo'] : null,
+                'featured'      => $data['featured'],
+                'recommended'   => $data['recommended'],
+                'active'        => false,
+                'offer'         => false,
+                'order'         => $data['order'],
+            ]);
+
+            $allergenIds = array_values(array_filter(
+                array_map(fn ($slug) => $allergenMap[$slug] ?? null, $data['allergens'])
+            ));
+            if ($allergenIds) {
+                $product->allergens()->sync($allergenIds);
+            }
+        }
+
+        session()->flash('message', __('admin.products.demo_loaded_flash'));
     }
 }

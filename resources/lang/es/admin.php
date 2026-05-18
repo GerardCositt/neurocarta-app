@@ -4,6 +4,7 @@ return [
     'plan' => [
         'feature_not_available' => 'Esta función no está disponible en tu plan actual. Actualiza a Pro o Premium para acceder.',
         'ai_rate_limited'       => 'Has alcanzado el límite de acciones con IA por minuto. Espera un momento e inténtalo de nuevo.',
+        'offers_required'       => 'Las ofertas y destacados están disponibles en el plan Pro y Premium.',
     ],
     'nav' => [
         'subtitle' => 'Panel admin',

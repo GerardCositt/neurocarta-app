@@ -467,35 +467,49 @@
 
                     {{-- Oferta: activar abre la ficha; desactivar quita la oferta en el listado --}}
                     <td class="px-2 py-3 text-center hidden sm:table-cell">
-                        @php($offerChecked = $product->offer || (int) $offerFormOpenedForId === (int) $product->id)
-                        <button type="button"
-                                wire:key="offer-toggle-{{ $product->id }}-{{ $offerChecked ? '1' : '0' }}"
-                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-red-300 cursor-pointer
-                                    {{ $offerChecked ? 'bg-red-500 border-red-500 text-white' : 'bg-white border-gray-300 text-red-500' }}"
-                                wire:click.stop.prevent="offerToggleFromTable({{ $product->id }})"
-                                aria-checked="{{ $offerChecked ? 'true' : 'false' }}"
-                                role="checkbox"
-                                title="{{ $product->offer ? __('admin.products.offer_toggle_title_on') : __('admin.products.offer_toggle_title_off') }}">
-                            @if($offerChecked)
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                            @endif
-                        </button>
+                        @if($canUseOffers ?? true)
+                            @php($offerChecked = $product->offer || (int) $offerFormOpenedForId === (int) $product->id)
+                            <button type="button"
+                                    wire:key="offer-toggle-{{ $product->id }}-{{ $offerChecked ? '1' : '0' }}"
+                                    class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-red-300 cursor-pointer
+                                        {{ $offerChecked ? 'bg-red-500 border-red-500 text-white' : 'bg-white border-gray-300 text-red-500' }}"
+                                    wire:click.stop.prevent="offerToggleFromTable({{ $product->id }})"
+                                    aria-checked="{{ $offerChecked ? 'true' : 'false' }}"
+                                    role="checkbox"
+                                    title="{{ $product->offer ? __('admin.products.offer_toggle_title_on') : __('admin.products.offer_toggle_title_off') }}">
+                                @if($offerChecked)
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                @endif
+                            </button>
+                        @else
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded border border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+                                  title="{{ __('admin.plan.offers_required') }}">
+                                <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                            </span>
+                        @endif
                     </td>
 
                     {{-- Destacado --}}
                     <td class="px-2 py-3 text-center hidden sm:table-cell">
-                        <button type="button"
-                                wire:key="featured-toggle-{{ $product->id }}-{{ $product->featured ? '1' : '0' }}"
-                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-amber-300 cursor-pointer
-                                    {{ $product->featured ? 'bg-amber-500 border-amber-500 text-white' : 'bg-white border-gray-300 text-amber-500' }}"
-                                wire:click.stop.prevent="toggleFeatured({{ $product->id }})"
-                                aria-checked="{{ $product->featured ? 'true' : 'false' }}"
-                                role="checkbox"
-                                title="{{ __('admin.products.featured_toggle_title') }}">
-                            @if($product->featured)
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                            @endif
-                        </button>
+                        @if($canUseOffers ?? true)
+                            <button type="button"
+                                    wire:key="featured-toggle-{{ $product->id }}-{{ $product->featured ? '1' : '0' }}"
+                                    class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-amber-300 cursor-pointer
+                                        {{ $product->featured ? 'bg-amber-500 border-amber-500 text-white' : 'bg-white border-gray-300 text-amber-500' }}"
+                                    wire:click.stop.prevent="toggleFeatured({{ $product->id }})"
+                                    aria-checked="{{ $product->featured ? 'true' : 'false' }}"
+                                    role="checkbox"
+                                    title="{{ __('admin.products.featured_toggle_title') }}">
+                                @if($product->featured)
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                @endif
+                            </button>
+                        @else
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded border border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+                                  title="{{ __('admin.plan.offers_required') }}">
+                                <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                            </span>
+                        @endif
                     </td>
 
                     {{-- Recomendado --}}
