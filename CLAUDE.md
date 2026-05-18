@@ -119,10 +119,11 @@ Variables clave:
 - **Listados admin y controles visuales (2026-05-18)**: En `/product`, `/category`, `/advice` y `/pairing`, los toggles de selección/ocultar/destacar/recomendar/oferta pasan a botones visuales con `role="checkbox"` y `wire:key` dependiente del estado, para evitar que Livewire v2/morphdom deje checkboxes nativos visualmente desincronizados. Productos adopta el ancho/formato contenido con recuadro usado por categorías/avisos/maridajes. El panel de selección masiva queda por encima de la tabla vía `admin-bulk-panel` con z-index propio. Commit: `6293f49`.
 - **Subidas de imágenes de producto (2026-05-18)**: `Products::persistProduct()` captura errores de `ImageAssetService` y los muestra en el campo `filename` en vez de perder silenciosamente la imagen. `docker/entrypoint.sh` ejecuta `php artisan storage:link || true` en deploy para asegurar el enlace público `public/storage`. Pendiente: prueba manual completa de crear/editar producto con JPG/PNG/WebP en producción.
 - **Búsqueda admin y landing tras login (2026-05-18)**: Los filtros de búsqueda en Livewire (`Products`, `Category\Show`, `Allergen\Show`, `Advices\Show`, `OrderList`) usan `LOWER(campo) LIKE ?` con el término en minúsculas y `%`/`_` escapados, para que PostgreSQL/MySQL no distingan mayúsculas. `RouteServiceProvider::HOME`, la ruta `dashboard` y el alta tras reset de contraseña (`SetPasswordController`) redirigen a `/product` en servidor; se retira el shim `window.location` de `dashboard.blade.php`. Tests `RegistrationTrialFlowTest` y `SubscriptionExpiryTest` actualizados. Commit: `79b3bde`.
+- **Alérgenos oficiales cargables desde UI (2026-05-18)**: Los 14 alérgenos obligatorios UE (Reg. 1169/2011) están centralizados en `App\Support\OfficialAllergens` (fuente única usada por `MandatoryAllergensSeeder` y por la UI). En `/allergen` aparece un botón "Cargar alérgenos oficiales" (índigo) solo cuando falta alguno de los 14; al pulsarlo inserta únicamente los ausentes (idempotente) y muestra un flash con el recuento. Los alérgenos son globales (sin `account_id`/`restaurant_id`); el scoping por restaurante está en el pivot `allergen_product`. Commit: `66fa6e0`.
 
 ---
 
-## Estado Git (2026-05-18)
+## Estado Git (2026-05-18, último commit 66fa6e0)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
