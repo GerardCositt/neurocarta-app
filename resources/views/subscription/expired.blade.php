@@ -43,7 +43,7 @@
         <button id="btn-annual" type="button" onclick="selectInterval('annual')"
                 style="border:none;border-radius:26px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,.55);transition:all .15s ease;">
             Anual
-            <span style="display:inline-block;margin-left:6px;font-size:11px;background:rgba(255,193,7,.18);color:#FFC107;padding:2px 7px;border-radius:20px;font-weight:700;">2 meses gratis</span>
+            <span style="display:inline-block;margin-left:6px;font-size:11px;background:rgba(255,193,7,.18);color:#FFC107;padding:2px 7px;border-radius:20px;font-weight:700;">1 mes gratis</span>
         </button>
     </div>
 
@@ -63,12 +63,12 @@
                     <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Pro</span>
                 </div>
                 <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">
-                    <span class="plan-price" data-monthly="35€" data-annual="350€">35€</span><span class="plan-unit" style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);" data-monthly="/mes" data-annual="/año">/mes</span>
+                    <span class="plan-price" data-monthly="35€" data-annual="385€">35€</span><span class="plan-unit" style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);" data-monthly="/mes" data-annual="/año">/mes</span>
                 </div>
-                <div class="plan-subtitle" style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;" data-monthly="350€/año · 2 meses gratis" data-annual="2 meses gratis">350€/año · 2 meses gratis</div>
+                <div class="plan-subtitle" style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;" data-monthly="385€/año · 1 mes gratis" data-annual="1 mes gratis">385€/año · 1 mes gratis</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
-                    <li>✓ 500 productos</li>
-                    <li>✓ 60 categorías</li>
+                    <li>✓ 250 productos</li>
+                    <li>✓ 15 categorías</li>
                     <li>✓ IA + traducciones + CSV</li>
                 </ul>
                 <div class="plan-btn" style="margin-top:24px;background:#c52439;color:#fff;">Elegir Pro</div>
@@ -85,12 +85,12 @@
                     <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Básico</span>
                 </div>
                 <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">
-                    <span class="plan-price" data-monthly="25€" data-annual="250€">25€</span><span class="plan-unit" style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);" data-monthly="/mes" data-annual="/año">/mes</span>
+                    <span class="plan-price" data-monthly="25€" data-annual="275€">25€</span><span class="plan-unit" style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);" data-monthly="/mes" data-annual="/año">/mes</span>
                 </div>
-                <div class="plan-subtitle" style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;" data-monthly="250€/año · 2 meses gratis" data-annual="2 meses gratis">250€/año · 2 meses gratis</div>
+                <div class="plan-subtitle" style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;" data-monthly="275€/año · 1 mes gratis" data-annual="1 mes gratis">275€/año · 1 mes gratis</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
-                    <li>✓ 100 productos</li>
-                    <li>✓ 20 categorías</li>
+                    <li>✓ 70 productos</li>
+                    <li>✓ 6 categorías</li>
                     <li>✗ Sin IA ni traducciones</li>
                 </ul>
                 <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Básico</div>
@@ -107,12 +107,12 @@
                     <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;">Premium</span>
                 </div>
                 <div style="font-size:34px;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px;">
-                    <span class="plan-price" data-monthly="65€" data-annual="650€">65€</span><span class="plan-unit" style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);" data-monthly="/mes" data-annual="/año">/mes</span>
+                    <span class="plan-price" data-monthly="69€" data-annual="759€">69€</span><span class="plan-unit" style="font-size:16px;font-weight:400;color:rgba(255,255,255,.50);" data-monthly="/mes" data-annual="/año">/mes</span>
                 </div>
-                <div class="plan-subtitle" style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;" data-monthly="650€/año · 2 meses gratis" data-annual="2 meses gratis">650€/año · 2 meses gratis</div>
+                <div class="plan-subtitle" style="font-size:13px;color:rgba(255,255,255,.50);margin-bottom:20px;" data-monthly="759€/año · 1 mes gratis" data-annual="1 mes gratis">759€/año · 1 mes gratis</div>
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
-                    <li>✓ 2.000 productos</li>
-                    <li>✓ 200 categorías</li>
+                    <li>✓ 1.000 productos</li>
+                    <li>✓ 100 categorías</li>
                     <li>✓ IA ilimitada</li>
                 </ul>
                 <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Premium</div>
