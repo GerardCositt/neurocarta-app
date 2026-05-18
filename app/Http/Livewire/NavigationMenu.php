@@ -62,27 +62,21 @@ class NavigationMenu extends Component
             return;
         }
 
-        // En el admin, si hay restaurante seleccionado, el QR debe apuntar SIEMPRE a ese restaurante.
-        // Usamos ?restaurant= para que en dominios compartidos (demo/staging) no acabe abriendo el restaurante por defecto.
-        if ($restaurantId && $restaurant) {
-            $this->qrMenuUrl = $this->publicMenuUrlWithRestaurantQuery($restaurant);
-
-            return;
-        }
-
-        // Panel servido en dominio real: enlace público por subdominio (sin query).
+        // Producción con dominio real: el enlace público es siempre por subdominio del restaurante.
+        // Este bloque debe ir ANTES del fallback ?restaurant= para que no lo cortocircuite.
         $useSubdomainPublicUrl = $restaurant
             && ! empty($restaurant->subdomain)
             && app()->environment('production')
             && ! $appRunsOnLoopbackOrIp;
 
         if ($useSubdomainPublicUrl) {
-            $baseDomain        = config('app.base_domain', 'marisqueriabarjaen.com');
+            $baseDomain      = config('app.base_domain', 'neurocarta.ai');
             $this->qrMenuUrl = 'https://' . $restaurant->subdomain . '.' . $baseDomain;
 
             return;
         }
 
+        // Staging/dominio compartido: ?restaurant= para que el QR apunte al restaurante correcto.
         $this->qrMenuUrl = $this->publicMenuUrlWithRestaurantQuery($restaurant);
     }
 
