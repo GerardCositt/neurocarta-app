@@ -8,6 +8,7 @@ fi
 if [ -n "$APP_KEY" ]; then
   php artisan config:cache || true
   php artisan migrate --force || true
+  php artisan storage:link || true
   php artisan route:cache || true
   php artisan view:cache || true
 fi

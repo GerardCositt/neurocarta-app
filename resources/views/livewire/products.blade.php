@@ -112,6 +112,7 @@
         $pageIntersection = array_intersect($pageIds, $sel);
         $pageAllSelected = count($pageIds) > 0 && count($pageIntersection) === count($pageIds);
         $pageSomeSelected = count($pageIds) > 0 && count($pageIntersection) > 0 && ! $pageAllSelected;
+        $bulkHeaderState = $pageAllSelected ? 'all' : ($pageSomeSelected ? 'some' : 'none');
     @endphp
 
     <div class="admin-bulk-panel flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 min-w-0"
@@ -313,8 +314,8 @@
     {{-- Tabla: scroll horizontal en móvil (muchas columnas) --}}
     {{-- Bleed horizontal = padding de <main> (app layout). --}}
     {{-- Oculta en < md; la lista de tarjetas de arriba la sustituye. --}}
-    <div class="hidden md:block -mx-4 sm:-mx-6 lg:-mx-8">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 max-w-full min-w-0">
+    <div class="hidden md:block">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 max-w-full min-w-0 overflow-hidden">
             <div class="overflow-x-auto overscroll-x-contain rounded-2xl">
             <table class="w-full min-w-[640px] sm:min-w-[960px]">
             <thead>
@@ -322,9 +323,9 @@
                     <th class="pl-2 pr-0 py-3 w-8 text-center align-middle admin-sticky-col admin-sticky-hdr admin-sticky-left-0" title="{{ __('admin.products.th_select_all_title') }}">
                         <span class="sr-only">{{ __('admin.products.th_select_all') }}</span>
                         <button type="button"
-                                wire:click="toggleSelectCurrentPage"
+                                wire:click.stop.prevent="toggleSelectCurrentPage"
                                 wire:loading.attr="disabled"
-                                wire:key="hdr-bulk-{{ $page }}-{{ count($pageIds) }}"
+                                wire:key="hdr-bulk-{{ $page }}-{{ count($pageIds) }}-{{ $bulkHeaderState }}"
                                 title="{{ __('admin.products.th_select_all_title') }}"
                                 aria-label="{{ __('admin.products.th_select_all_title') }}"
                                 @if($pageSomeSelected) aria-checked="mixed" @else aria-checked="{{ $pageAllSelected ? 'true' : 'false' }}" @endif
@@ -361,11 +362,19 @@
                     <td class="pl-2 pr-0 py-3 text-center align-middle bulk-select-cell admin-sticky-col admin-sticky-left-0" wire:key="cb-{{ $product->id }}"
                         title="{{ __('admin.products.row_select_title') }}"
                         onclick="event.stopPropagation()">
-                        <input type="checkbox"
-                               wire:click.prevent="toggleProductSelection({{ $product->id }})"
-                               wire:loading.attr="disabled"
-                               @if(in_array((int) $product->id, array_map('intval', $selectedProducts ?? []), true)) checked @endif
-                               class="rounded border-amber-800 text-amber-900 focus:ring-amber-700 cursor-pointer w-4 h-4">
+                        @php($isSelected = in_array((int) $product->id, array_map('intval', $selectedProducts ?? []), true))
+                        <button type="button"
+                                wire:click.stop.prevent="toggleProductSelection({{ $product->id }})"
+                                wire:loading.attr="disabled"
+                                wire:key="row-bulk-{{ $product->id }}-{{ $isSelected ? '1' : '0' }}"
+                                aria-checked="{{ $isSelected ? 'true' : 'false' }}"
+                                role="checkbox"
+                                class="inline-flex items-center justify-center w-4 h-4 shrink-0 rounded border-2 focus:outline-none focus:ring-2 focus:ring-amber-700 focus:ring-offset-1 cursor-pointer mx-auto
+                                    {{ $isSelected ? 'bg-amber-900 text-amber-50 border-amber-900' : 'bg-white text-amber-900 border-amber-800' }}">
+                            @if($isSelected)
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            @endif
+                        </button>
                     </td>
 
                     {{-- Handle (arrastrar) — icono hamburguesa 3 líneas --}}
@@ -458,47 +467,67 @@
 
                     {{-- Oferta: activar abre la ficha; desactivar quita la oferta en el listado --}}
                     <td class="px-2 py-3 text-center hidden sm:table-cell">
-                        <label class="inline-flex items-center cursor-pointer" title="{{ $product->offer ? __('admin.products.offer_toggle_title_on') : __('admin.products.offer_toggle_title_off') }}">
-                            {{-- wire:key evita que la casilla quede “pegada” en marcada: con wire:click.prevent morphdom no siempre actualiza el estado checked del input. --}}
-                            <input type="checkbox"
-                                   wire:key="offer-toggle-{{ $product->id }}-{{ $product->offer ? '1' : '0' }}-{{ (int) $offerFormOpenedForId === (int) $product->id ? 'm' : '-' }}"
-                                   class="form-checkbox w-4 h-4 rounded text-red-500 border-gray-300 focus:ring-red-300 cursor-pointer"
-                                   wire:click.prevent="offerToggleFromTable({{ $product->id }})"
-                                   @if($product->offer || (int) $offerFormOpenedForId === (int) $product->id) checked @endif>
-                        </label>
+                        @php($offerChecked = $product->offer || (int) $offerFormOpenedForId === (int) $product->id)
+                        <button type="button"
+                                wire:key="offer-toggle-{{ $product->id }}-{{ $offerChecked ? '1' : '0' }}"
+                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-red-300 cursor-pointer
+                                    {{ $offerChecked ? 'bg-red-500 border-red-500 text-white' : 'bg-white border-gray-300 text-red-500' }}"
+                                wire:click.stop.prevent="offerToggleFromTable({{ $product->id }})"
+                                aria-checked="{{ $offerChecked ? 'true' : 'false' }}"
+                                role="checkbox"
+                                title="{{ $product->offer ? __('admin.products.offer_toggle_title_on') : __('admin.products.offer_toggle_title_off') }}">
+                            @if($offerChecked)
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            @endif
+                        </button>
                     </td>
 
                     {{-- Destacado --}}
                     <td class="px-2 py-3 text-center hidden sm:table-cell">
-                        <label class="inline-flex items-center cursor-pointer" title="{{ __('admin.products.featured_toggle_title') }}">
-                            <input type="checkbox"
-                                   wire:key="featured-toggle-{{ $product->id }}-{{ $product->featured ? '1' : '0' }}"
-                                   class="form-checkbox w-4 h-4 rounded text-amber-500 border-gray-300 focus:ring-amber-300 cursor-pointer"
-                                   wire:click.prevent="toggleFeatured({{ $product->id }})"
-                                   @if($product->featured) checked @endif>
-                        </label>
+                        <button type="button"
+                                wire:key="featured-toggle-{{ $product->id }}-{{ $product->featured ? '1' : '0' }}"
+                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-amber-300 cursor-pointer
+                                    {{ $product->featured ? 'bg-amber-500 border-amber-500 text-white' : 'bg-white border-gray-300 text-amber-500' }}"
+                                wire:click.stop.prevent="toggleFeatured({{ $product->id }})"
+                                aria-checked="{{ $product->featured ? 'true' : 'false' }}"
+                                role="checkbox"
+                                title="{{ __('admin.products.featured_toggle_title') }}">
+                            @if($product->featured)
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            @endif
+                        </button>
                     </td>
 
                     {{-- Recomendado --}}
                     <td class="px-2 py-3 text-center hidden sm:table-cell">
-                        <label class="inline-flex items-center cursor-pointer" title="{{ __('admin.products.recommended_toggle_title') }}">
-                            <input type="checkbox"
-                                   wire:key="recommended-toggle-{{ $product->id }}-{{ $product->recommended ? '1' : '0' }}"
-                                   class="form-checkbox w-4 h-4 rounded text-sky-500 border-gray-300 focus:ring-sky-300 cursor-pointer"
-                                   wire:click.prevent="toggleRecommended({{ $product->id }})"
-                                   @if($product->recommended) checked @endif>
-                        </label>
+                        <button type="button"
+                                wire:key="recommended-toggle-{{ $product->id }}-{{ $product->recommended ? '1' : '0' }}"
+                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-sky-300 cursor-pointer
+                                    {{ $product->recommended ? 'bg-sky-500 border-sky-500 text-white' : 'bg-white border-gray-300 text-sky-500' }}"
+                                wire:click.stop.prevent="toggleRecommended({{ $product->id }})"
+                                aria-checked="{{ $product->recommended ? 'true' : 'false' }}"
+                                role="checkbox"
+                                title="{{ __('admin.products.recommended_toggle_title') }}">
+                            @if($product->recommended)
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            @endif
+                        </button>
                     </td>
 
                     {{-- Toggle ocultar --}}
                     <td class="px-2 py-3 text-center">
-                        <label class="inline-flex items-center cursor-pointer" title="{{ $product->active ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
-                            <input type="checkbox"
-                                   wire:key="active-toggle-{{ $product->id }}-{{ $product->active ? '1' : '0' }}"
-                                   class="form-checkbox w-4 h-4 rounded text-gray-400 border-gray-300 focus:ring-gray-300 cursor-pointer"
-                                   wire:click.prevent="toggleState({{ $product->id }})"
-                                   @if($product->active) checked @endif>
-                        </label>
+                        <button type="button"
+                                wire:key="active-toggle-{{ $product->id }}-{{ $product->active ? '1' : '0' }}"
+                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer
+                                    {{ $product->active ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}"
+                                wire:click.stop.prevent="toggleState({{ $product->id }})"
+                                aria-checked="{{ $product->active ? 'true' : 'false' }}"
+                                role="checkbox"
+                                title="{{ $product->active ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
+                            @if($product->active)
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            @endif
+                        </button>
                     </td>
 
                 </tr>
@@ -543,7 +572,6 @@
             </div>
         </div>
     </div>
-    </div>{{-- /hidden md:block --}}
 
     {{-- Modal confirmación eliminar producto --}}
     @if($confirmingProductDeletion)

@@ -566,7 +566,12 @@ class Products extends Component
             if ($data['photo'] != null) {
                 Storage::disk('public')->delete($data['photo']);
             }
-            $data['photo'] = $this->imageAssets()->storeUploadedImage($this->filename, 'img', 1600);
+            try {
+                $data['photo'] = $this->imageAssets()->storeUploadedImage($this->filename, 'img', 1600);
+            } catch (\RuntimeException $e) {
+                $this->addError('filename', $e->getMessage());
+                return null;
+            }
         } else {
             unset($data['photo']);
         }

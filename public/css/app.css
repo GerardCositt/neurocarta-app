@@ -38354,6 +38354,36 @@ html[data-effective-theme="dark"] .admin-footer a { color: var(--text-muted) !im
 html[data-effective-theme="dark"] .admin-footer a:hover { color: var(--text) !important;
 }
 
+/* ─── Tarjetas de producto (móvil < md) ──────────────────────── */
+
+.admin-products-card {
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.admin-products-card:active {
+  box-shadow: 0 0 0 2px #fcd34d; /* amber-300 */
+}
+
+html[data-effective-theme="dark"] .admin-products-card {
+  background: var(--surface-el);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Tarjetas de categoría (móvil < md) ───────────────────────── */
+
+.admin-categories-card {
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.admin-categories-card:active {
+  box-shadow: 0 0 0 2px #fcd34d;
+}
+
+html[data-effective-theme="dark"] .admin-categories-card {
+  background: var(--surface-el);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
 /**
  * DEBE IMPORTARSE AL FINAL de app.css (después de Tailwind utilities).
  * Las utilidades Tailwind (.bg-white, .text-gray-600, etc.) ganaban a admin-shell.css
@@ -38996,13 +39026,19 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
 .admin-shell .admin-main .-mx-4,
 .admin-shell .admin-main .sm\:-mx-6,
 .admin-shell .admin-main .lg\:-mx-8,
-.admin-shell .admin-main .admin-bulk-panel,
 .admin-shell .admin-main .overflow-x-auto,
 .admin-shell .admin-main table,
 .admin-shell .admin-main .admin-sticky-col,
 .admin-shell .admin-main .admin-sticky-hdr {
   position: relative !important;
   z-index: 2 !important;
+}
+
+/* El panel bulk necesita estar por encima de la tabla para que el tooltip/dropdown sea visible */
+
+.admin-shell .admin-main .admin-bulk-panel {
+  position: relative !important;
+  z-index: 28 !important;
 }
 
 /* =====================================================================

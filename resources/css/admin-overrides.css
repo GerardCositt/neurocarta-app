@@ -581,13 +581,18 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
 .admin-shell .admin-main .-mx-4,
 .admin-shell .admin-main .sm\:-mx-6,
 .admin-shell .admin-main .lg\:-mx-8,
-.admin-shell .admin-main .admin-bulk-panel,
 .admin-shell .admin-main .overflow-x-auto,
 .admin-shell .admin-main table,
 .admin-shell .admin-main .admin-sticky-col,
 .admin-shell .admin-main .admin-sticky-hdr {
     position: relative !important;
     z-index: 2 !important;
+}
+
+/* El panel bulk necesita estar por encima de la tabla para que el tooltip/dropdown sea visible */
+.admin-shell .admin-main .admin-bulk-panel {
+    position: relative !important;
+    z-index: 28 !important;
 }
 
 /* =====================================================================

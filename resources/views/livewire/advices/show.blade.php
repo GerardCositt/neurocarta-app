@@ -67,12 +67,19 @@
                         @php
                             $onCarta = $item->isVisibleOnPublicCarta();
                         @endphp
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox"
-                                   wire:click.prevent="toggleState({{ $item->id }})"
-                                   @if($item->status) checked @endif
-                                   class="form-checkbox w-4 h-4 rounded text-amber-500 border-gray-300 focus:ring-amber-300 cursor-pointer">
-                        </label>
+                        <button type="button"
+                                wire:key="advice-status-{{ $item->id }}-{{ $item->status ? '1' : '0' }}"
+                                wire:click.stop.prevent="toggleState({{ $item->id }})"
+                                wire:loading.attr="disabled"
+                                aria-checked="{{ $item->status ? 'true' : 'false' }}"
+                                role="checkbox"
+                                title="{{ $onCarta ? __('admin.advice_page.visible_now') : __('admin.advice_page.hidden_now') }}"
+                                class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-amber-300 cursor-pointer
+                                    {{ $item->status ? 'bg-amber-500 border-amber-500 text-white' : 'bg-white border-gray-300 text-amber-500' }}">
+                            @if($item->status)
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            @endif
+                        </button>
                     </td>
                 </tr>
             @empty
