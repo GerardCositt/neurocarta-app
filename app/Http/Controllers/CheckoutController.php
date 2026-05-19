@@ -91,9 +91,10 @@ class CheckoutController extends Controller
                 }
 
                 $customer = $stripe->customers->create([
-                    'email'    => $user->email,
-                    'name'     => $account->name,
-                    'metadata' => ['account_id' => (string) $account->id],
+                    'email'              => $user->email,
+                    'name'               => $account->name,
+                    'preferred_locales'  => ['es'],
+                    'metadata'           => ['account_id' => (string) $account->id],
                 ]);
 
                 $locked->update(['stripe_customer_id' => $customer->id]);
