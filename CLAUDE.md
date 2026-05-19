@@ -71,6 +71,7 @@
    - Copia `.env` al contenedor
    - Limpia config cache
    - Corre migraciones
+3. Tras deploy con plantilla demo (si aplica): `docker exec neurocarta-app-1 php artisan demo:resync-template-photos --by-name` y comprobar que existen `public/demo/*.jpg` en la imagen
 
 ### App (Render — staging legacy)
 1. `git push` a `main` → Render detecta el push y despliega automáticamente
@@ -102,6 +103,8 @@ Variables clave:
 | `TURNSTILE_SECRET_KEY` | vacía (desactivado en login) |
 | `TURNSTILE_SITE_KEY` | vacía (desactivado en login) |
 | `FILAMENT_ADMIN_EMAIL` | test@test.com |
+| `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL` | opcional — CDN sin barra final; vacío = `public/demo/` → storage |
+| `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_FLAT` | `false` por defecto — `true` si en el CDN los JPG están en la raíz del bucket (sin carpeta `demo/`) |
 
 ---
 
@@ -128,10 +131,11 @@ Variables clave:
 - **Precios anuales actualizados a "1 mes gratis" (2026-05-18)**: Cambiado de "2 meses gratis" a "1 mes gratis" en `subscription/expired.blade.php`. Precios anuales recalculados: Básico 275€, Pro 385€, Premium 759€. Límites corregidos (estaban desfasados: Pro 500/60→250/15, Básico 100/20→70/6, Premium 2000/200→1000/100, precio 65€→69€). Commit: `84e27d0`.
 - **Checkout Stripe redirige al admin si suscripción está `active` (decisión de diseño)**: `CheckoutController::create()` redirige a dashboard si `$subscription->status === 'active'`. Esto es correcto: la página `/subscription/expired` es para usuarios expirados, no para cambio de plan desde panel activo. El checkout no funcionará hasta configurar `STRIPE_SECRET` y los `STRIPE_PRICE_*` en el `.env` de producción.
 - **Usuario de prueba para planes**: `geycor@gmail.com` / `1234` (Bar Geycor, subdominio `bar-geycor`). Usar `php artisan dev:set-plan basico --email=geycor@gmail.com` para cambiar de plan. `test@test.com` es el admin de Filament y no tiene cuenta/suscripción asociada — no usar para pruebas de planes.
+- **Plantilla «Cargar datos de prueba» y fotos demo (2026-05-19)**: Una sola plantilla fija en `App\Support\DemoContent` (18 platos + 5 categorías). El cliente pulsa **Cargar datos de prueba** solo si la carta **no tiene ningún producto**; **Borrar datos de prueba** solo si todos los productos son plantilla (`products.is_template = true`) o legado que coincide por firma nombre+descripción+precio — en cuanto exista **un producto propio** (`is_template = false`), no hay carga ni borrado masivo. Columna `products.is_template` (migración `2026_05_19_200000`). Import CSV/IA y guardar ficha marcan `is_template = false`. Fotos: `App\Support\DemoProductPhotoResolver` + `App\Support\ProductPhotoUrl` (rutas `demo/*.jpg`, URLs `http(s)://` o `storage/`). **18 JPEG en `public/demo/`** = stock Pexels **por tipo de plato** (croquetas, entrecot, gambas…), no fotos aleatorias; ver `public/demo/SOURCES.md` y `bash scripts/download-demo-food-images.sh`. Para carta real: JPG propios en `local/demo-product-images/` (misma prioridad al cargar). CDN opcional: `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL` + `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_FLAT`. Tras SQL/rutas rotas: `php artisan demo:resync-template-photos` (`--by-name`, `--restaurant=ID`, `--dry-run`). **Cabecera tabla `/product`**: sin sticky en `<thead>`. Commits: `407fb35`, fotos Pexels en commit posterior.
 
 ---
 
-## Estado Git (2026-05-18, último commit 4e07876)
+## Estado Git (2026-05-19, último commit 407fb35)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
@@ -209,7 +213,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Crear, editar, ocultar y ordenar categorías. Controles visuales de ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
 - [ ] Crear, editar, ocultar y ordenar productos. Controles visuales de selección/oferta/destacado/recomendado/ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
 - [ ] Subida de imágenes de platos estable. Errores visibles y `storage:link` en deploy (`6293f49`); pendiente probar JPG/PNG/WebP reales en producción.
-- [ ] Imagen placeholder correcta cuando no hay foto.
+- [x] Imagen placeholder correcta cuando no hay foto (`img/noimg.png`; plantilla demo con `public/demo/` + `ProductPhotoUrl`). Commit: `407fb35`. Pendiente: fotos reales de carta (sustituir Picsum) y validar tras SQL import en prod.
 - [ ] Alérgenos visibles y editables.
 - [x] Vista pública de carta optimizada en consultas (locales en 1 query, ofertas sin duplicar eager load; test `PublicMenuPerformanceTest` 120 platos). Pendiente: validación manual < 3 s en prod (bloque 3.4).
 - [ ] Selector de idioma revisado.
@@ -294,7 +298,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Definir precios finales.
 - [ ] Definir qué incluye cada plan.
 - [ ] Demo preparada en **producción** → `bash scripts/ensure-demo-docker.sh` (`SERVIDOR-LANZAMIENTO.md` §7).
-- [x] Restaurante demo en código (`demo:ensure`, `subdomain=demo`, `DemoMenuSeeder`).
+- [x] Restaurante demo en código (`demo:ensure`, `subdomain=demo`, `DemoMenuSeeder`). Plantilla de ejemplo en panel: `DemoContent` + `demo:resync-template-photos` (`407fb35`).
 - [ ] Preparar onboarding para primeros clientes.
 - [ ] Preparar soporte: email, WhatsApp o formulario.
 - [ ] Preparar FAQ.
