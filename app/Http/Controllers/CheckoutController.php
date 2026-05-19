@@ -130,6 +130,7 @@ class CheckoutController extends Controller
                 'mode'                       => 'subscription',
                 'billing_address_collection' => 'required',
                 'tax_id_collection'          => ['enabled' => true],
+                'customer_update'            => ['name' => 'auto', 'address' => 'auto'],
                 'line_items'                 => [[
                     'price'    => $priceId,
                     'quantity' => 1,
