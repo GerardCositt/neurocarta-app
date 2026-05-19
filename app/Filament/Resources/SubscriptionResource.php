@@ -5,10 +5,13 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SubscriptionResource\Pages;
 use App\Models\Subscription;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Support\Facades\Log;
+use Stripe\StripeClient;
 
 class SubscriptionResource extends Resource
 {
@@ -102,6 +105,59 @@ class SubscriptionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('delete')
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Eliminar cuenta completa')
+                    ->modalSubheading('Se eliminará la suscripción, el restaurante, la cuenta y el usuario. Si tiene suscripción activa en Stripe se cancelará primero. Esta acción no se puede deshacer.')
+                    ->modalButton('Sí, eliminar todo')
+                    ->action(function (Subscription $record) {
+                        // Cancel in Stripe if subscription exists there
+                        if ($record->stripe_subscription_id && config('stripe.secret')) {
+                            try {
+                                $stripe = new StripeClient(config('stripe.secret'));
+                                $stripe->subscriptions->cancel($record->stripe_subscription_id);
+                            } catch (\Stripe\Exception\InvalidRequestException $e) {
+                                // Already canceled in Stripe — safe to continue
+                                Log::info('Filament delete: Stripe subscription already canceled.', [
+                                    'stripe_subscription_id' => $record->stripe_subscription_id,
+                                ]);
+                            } catch (\Throwable $e) {
+                                Log::error('Filament delete: failed to cancel Stripe subscription — ' . $e->getMessage());
+                                Notification::make()
+                                    ->title('Error al cancelar en Stripe')
+                                    ->body('No se pudo cancelar la suscripción en Stripe. Cancélala manualmente y vuelve a intentarlo.')
+                                    ->danger()
+                                    ->send();
+                                return;
+                            }
+                        }
+
+                        // Delete account, restaurants, users and subscription
+                        $account = $record->account;
+                        if ($account) {
+                            $account->subscriptions()->delete();
+                            $account->restaurants()->delete();
+                            $users = $account->users;
+                            $account->users()->detach();
+                            $account->delete();
+                            foreach ($users as $user) {
+                                // Only delete the user if they have no other accounts
+                                if ($user->accounts()->count() === 0) {
+                                    $user->delete();
+                                }
+                            }
+                        } else {
+                            $record->delete();
+                        }
+
+                        Notification::make()
+                            ->title('Cuenta eliminada correctamente')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->defaultSort('created_at', 'desc');
     }
