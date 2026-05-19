@@ -30,7 +30,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'phone',
         'password',
         'locale',
-        'is_admin',
     ];
 
     // Verification is handled by the WelcomeSetPassword email + SetPasswordController

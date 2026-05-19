@@ -52,6 +52,7 @@ class Show extends Component
         $expandedProducts = collect();
         if ($this->expandedCategoryId) {
             $expandedProducts = Product::where('category_id', $this->expandedCategoryId)
+                ->when($restaurantId, fn ($q) => $q->where('restaurant_id', $restaurantId))
                 ->orderBy('order')
                 ->get();
         }
