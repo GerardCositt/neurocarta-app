@@ -52,7 +52,7 @@ class SetPasswordController extends Controller
                 ])->save();
 
                 Auth::login($user);
-                $request->session()->regenerate();
+                session()->regenerate();
             }
         );
 
