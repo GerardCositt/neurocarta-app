@@ -43,22 +43,25 @@ class SetPasswordController extends Controller
             'password'              => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $activatedUser = null;
+
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
+            function (User $user, string $password) use (&$activatedUser) {
                 $user->forceFill([
-                    'password'           => Hash::make($password),
-                    'email_verified_at'  => now(),
+                    'password'          => Hash::make($password),
+                    'email_verified_at' => now(),
                 ])->save();
 
-                Auth::login($user);
-                session()->regenerate();
+                $activatedUser = $user;
             }
         );
 
-        if ($status === Password::PASSWORD_RESET) {
-            // If user registered with a paid plan, send them directly to Stripe checkout
-            $account = Auth::user()?->accounts()->first();
+        if ($status === Password::PASSWORD_RESET && $activatedUser) {
+            Auth::login($activatedUser);
+            $request->session()->regenerate();
+
+            $account      = $activatedUser->accounts()->first();
             $subscription = $account?->subscriptions()->latest()->first();
 
             if ($subscription && $subscription->status === 'inactive' && $subscription->plan_code !== 'trial') {
