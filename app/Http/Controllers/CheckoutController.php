@@ -125,9 +125,11 @@ class CheckoutController extends Controller
             }
 
             $session = $stripe->checkout->sessions->create([
-                'customer'          => $stripeCustomerId,
-                'mode'              => 'subscription',
-                'line_items'        => [[
+                'customer'                   => $stripeCustomerId,
+                'mode'                       => 'subscription',
+                'billing_address_collection' => 'required',
+                'tax_id_collection'          => ['enabled' => true],
+                'line_items'                 => [[
                     'price'    => $priceId,
                     'quantity' => 1,
                 ]],
