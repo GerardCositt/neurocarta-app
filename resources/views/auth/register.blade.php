@@ -6,13 +6,22 @@
 
         {{-- Plan seleccionado --}}
         @php
+            $interval = $interval ?? 'monthly';
             $planLabels = [
-                'trial'   => ['label' => 'Trial gratuito', 'color' => '#FFC107', 'bg' => 'rgba(255,193,7,.12)'],
-                'basico'  => ['label' => 'Plan Básico · 25€/mes', 'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
-                'pro'     => ['label' => 'Plan Pro · 35€/mes', 'color' => '#fff', 'bg' => 'rgba(197,36,57,.15)'],
-                'premium' => ['label' => 'Plan Premium · 65€/mes', 'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                'monthly' => [
+                    'trial'   => ['label' => 'Trial gratuito',           'color' => '#FFC107',              'bg' => 'rgba(255,193,7,.12)'],
+                    'basico'  => ['label' => 'Plan Básico · 25€/mes',    'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                    'pro'     => ['label' => 'Plan Pro · 35€/mes',       'color' => '#fff',                 'bg' => 'rgba(197,36,57,.15)'],
+                    'premium' => ['label' => 'Plan Premium · 69€/mes',   'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                ],
+                'annual' => [
+                    'trial'   => ['label' => 'Trial gratuito',           'color' => '#FFC107',              'bg' => 'rgba(255,193,7,.12)'],
+                    'basico'  => ['label' => 'Plan Básico · 275€/año',   'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                    'pro'     => ['label' => 'Plan Pro · 385€/año',      'color' => '#fff',                 'bg' => 'rgba(197,36,57,.15)'],
+                    'premium' => ['label' => 'Plan Premium · 759€/año',  'color' => 'rgba(255,255,255,.8)', 'bg' => 'rgba(255,255,255,.06)'],
+                ],
             ];
-            $planInfo = $planLabels[$plan] ?? $planLabels['trial'];
+            $planInfo = ($planLabels[$interval] ?? $planLabels['monthly'])[$plan] ?? $planLabels['monthly']['trial'];
         @endphp
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
@@ -27,6 +36,7 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <input type="hidden" name="plan" value="{{ $plan }}">
+            <input type="hidden" name="billing_interval" value="{{ $interval }}">
 
             {{-- Email --}}
             <div>

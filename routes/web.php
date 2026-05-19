@@ -40,12 +40,15 @@ Route::get('/register/check-email', function () {
 })->middleware('guest')->name('register.check-email');
 
 // GET /register/{plan} → formulario de registro con plan preseleccionado
-Route::get('/register/{plan}', function (string $plan) {
+Route::get('/register/{plan}', function (string $plan, \Illuminate\Http\Request $request) {
     $validPlans = ['trial', 'basico', 'pro', 'premium'];
     if (! in_array($plan, $validPlans, true)) {
         return redirect()->route('register');
     }
-    return view('auth.register', ['plan' => $plan]);
+    $interval = in_array($request->query('interval'), ['monthly', 'annual'], true)
+        ? $request->query('interval')
+        : 'monthly';
+    return view('auth.register', ['plan' => $plan, 'interval' => $interval]);
 })->middleware(['guest', 'throttle:register'])->name('register.plan');
 
 // POST /register/resend-activation → reenvío del email de activación (M2)

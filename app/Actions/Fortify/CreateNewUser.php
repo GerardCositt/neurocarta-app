@@ -114,9 +114,14 @@ class CreateNewUser implements CreatesNewUsers
         });
 
         // 5. Guardar en sesión para la redirección y la pantalla de check-email
+        $billingInterval = in_array($input['billing_interval'] ?? '', ['monthly', 'annual'], true)
+            ? $input['billing_interval']
+            : 'monthly';
+
         session([
-            'registered_plan'  => $plan,
-            'registered_email' => $user->email,
+            'registered_plan'             => $plan,
+            'registered_email'            => $user->email,
+            'registered_billing_interval' => $billingInterval,
         ]);
 
         // 6. Enviar email con enlace firmado para crear contraseña (válido 3 días)

@@ -35,12 +35,13 @@
     @endif
 
     {{-- Selector mensual / anual --}}
-    <div style="display:inline-flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:30px;padding:4px;margin-bottom:28px;gap:2px;">
-        <button id="btn-monthly" type="button" onclick="selectInterval('monthly')"
+    <div role="radiogroup" aria-label="Periodo de facturación"
+         style="display:inline-flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:30px;padding:4px;margin-bottom:28px;gap:2px;">
+        <button id="btn-monthly" type="button" role="radio" aria-checked="true" onclick="selectInterval('monthly')"
                 style="border:none;border-radius:26px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;background:rgba(255,255,255,.15);color:#fff;transition:all .15s ease;">
             Mensual
         </button>
-        <button id="btn-annual" type="button" onclick="selectInterval('annual')"
+        <button id="btn-annual" type="button" role="radio" aria-checked="false" onclick="selectInterval('annual')"
                 style="border:none;border-radius:26px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,.55);transition:all .15s ease;">
             Anual
             <span style="display:inline-block;margin-left:6px;font-size:11px;background:rgba(255,193,7,.18);color:#FFC107;padding:2px 7px;border-radius:20px;font-weight:700;">1 mes gratis</span>
@@ -184,12 +185,21 @@ function selectInterval(val) {
         el.textContent = val === 'monthly' ? el.dataset.monthly : el.dataset.annual;
     });
 
-    // Update toggle button styles
-    var isMonthly = val === 'monthly';
-    document.getElementById('btn-monthly').style.background = isMonthly ? 'rgba(255,255,255,.15)' : 'transparent';
-    document.getElementById('btn-monthly').style.color      = isMonthly ? '#fff' : 'rgba(255,255,255,.55)';
-    document.getElementById('btn-annual').style.background  = isMonthly ? 'transparent' : 'rgba(255,255,255,.15)';
-    document.getElementById('btn-annual').style.color       = isMonthly ? 'rgba(255,255,255,.55)' : '#fff';
+    // Update toggle button styles + aria-checked
+    var isMonthly  = val === 'monthly';
+    var btnMonthly = document.getElementById('btn-monthly');
+    var btnAnnual  = document.getElementById('btn-annual');
+    btnMonthly.style.background = isMonthly ? 'rgba(255,255,255,.15)' : 'transparent';
+    btnMonthly.style.color      = isMonthly ? '#fff' : 'rgba(255,255,255,.55)';
+    btnAnnual.style.background  = isMonthly ? 'transparent' : 'rgba(255,255,255,.15)';
+    btnAnnual.style.color       = isMonthly ? 'rgba(255,255,255,.55)' : '#fff';
+    btnMonthly.setAttribute('aria-checked', isMonthly ? 'true' : 'false');
+    btnAnnual.setAttribute('aria-checked',  isMonthly ? 'false' : 'true');
 }
+
+// Preselect billing interval remembered from registration flow (best-effort)
+@if(session('registered_billing_interval') === 'annual')
+document.addEventListener('DOMContentLoaded', function() { selectInterval('annual'); });
+@endif
 </script>
 </x-guest-layout>
