@@ -1,6 +1,6 @@
 # Fotos demo de productos (opcional, alta calidad)
 
-Coloca aquí tus **JPEG / PNG / WebP** con **exactamente** estos nombres de archivo (o en **`img/demo-product-images/`** o en **`img/`** de la raíz del proyecto con los mismos nombres — la app busca en ese orden). Al pulsar **«Cargar datos de ejemplo»** en Productos, la app usará **primero** esta carpeta y solo si falta un archivo usará **`public/demo/`** del repositorio (fotos de ejemplo empaquetadas) y por último miniaturas vacías.
+Coloca aquí tus **JPEG / PNG / WebP** con **exactamente** estos nombres de archivo (o en **`img/demo-product-images/`** o en **`img/`** de la raíz — la app busca en ese orden). Al pulsar **«Cargar datos de prueba»**, la app copia cada archivo encontrado al storage; **si falta el archivo, el plato se crea sin foto** (icono `noimg` en panel y carta). El repositorio **no incluye** fotos de stock: esta carpeta (o un CDN en `.env`) es la forma de tener imágenes en la demo.
 
 Recomendación: fotos horizontales tipo carta (aprox. **1200–1600 px** de ancho), buena luz, fondo neutro o contextual de restaurante.
 

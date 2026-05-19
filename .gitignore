@@ -45,3 +45,9 @@ yarn-error.log
 *.sql
 *.dump
 *.backup
+
+# Fotos demo opcionales (no versionar stock; usar local/demo-product-images/ o CDN)
+/public/demo/*.jpg
+/public/demo/*.jpeg
+/public/demo/*.png
+/public/demo/*.webp

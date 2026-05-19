@@ -137,7 +137,7 @@ return [
         'add_one_by_one' => 'Adicionar um a um',
         'generate_photos_ai' => 'Gerar fotos com IA',
         'demo_modal_title' => 'Carregar dados de teste',
-        'demo_modal_body' => 'Serão criadas categorias, produtos de exemplo e ligações aos alérgenos oficiais. Só está disponível se a carta ainda não tiver produtos.',
+        'demo_modal_body' => 'Serão criadas categorias, produtos de exemplo e ligações aos alérgenos oficiais. Só com a carta vazia. As fotos só são atribuídas se tiver ficheiros em local/demo-product-images/ (mesmos nomes do modelo) ou CDN configurado; caso contrário, ícone sem foto até carregar imagens.',
         'demo_modal_confirm' => 'Carregar demo',
         'demo_delete_modal_title' => 'Eliminar dados de teste',
         'demo_delete_modal_body' => 'Os produtos e categorias de modelo de demonstração serão eliminados de uma vez. Não está disponível se tiver pelo menos um produto próprio ou se misturar modelo com produtos criados por si.',

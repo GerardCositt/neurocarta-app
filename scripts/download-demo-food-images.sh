@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Fotos de comida alineadas con DemoContent (Pexels, licencia Pexels).
+# Descarga stock Pexels a public/demo/ para pruebas LOCALES (los JPG no van al repo; ver .gitignore).
+# Producción: usa local/demo-product-images/ o NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL.
 # Uso: bash scripts/download-demo-food-images.sh
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

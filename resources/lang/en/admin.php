@@ -142,7 +142,7 @@ return [
         'add_one_by_one' => 'Add one by one',
         'generate_photos_ai' => 'Generate AI photos',
         'demo_modal_title' => 'Load sample data',
-        'demo_modal_body' => 'This will create sample categories, products and links to official allergens. It is only available while this menu has no products.',
+        'demo_modal_body' => 'This creates sample categories, products and links to official allergens. Only when the menu is empty. Photos are added only if you have files in local/demo-product-images/ (same filenames as the template) or a configured CDN; otherwise items show the no-photo placeholder until you upload images.',
         'demo_modal_confirm' => 'Load demo',
         'demo_delete_modal_title' => 'Delete sample data',
         'demo_delete_modal_body' => 'This bulk-deletes sample template products and categories. It is hidden once you have at least one product you created, or if template rows are mixed with your own.',

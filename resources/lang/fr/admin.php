@@ -137,7 +137,7 @@ return [
         'add_one_by_one' => 'Ajouter un par un',
         'generate_photos_ai' => 'Générer des photos IA',
         'demo_modal_title' => 'Charger des données de test',
-        'demo_modal_body' => 'Des catégories, produits d’exemple et liens avec les allergènes officiels seront créés. Disponible uniquement si la carte ne contient encore aucun produit.',
+        'demo_modal_body' => 'Des catégories, produits d’exemple et liens avec les allergènes officiels seront créés. Uniquement si la carte est vide. Les photos ne sont ajoutées que si vous avez des fichiers dans local/demo-product-images/ (mêmes noms que le modèle) ou un CDN configuré ; sinon, icône sans photo jusqu’à import d’images.',
         'demo_modal_confirm' => 'Charger la démo',
         'demo_delete_modal_title' => 'Supprimer les données de test',
         'demo_delete_modal_body' => 'Les produits et catégories modèle de démo seront supprimés en une fois. Indisponible dès qu’au moins un produit vous appartient ou si la carte mélange modèle et produits créés par vous.',

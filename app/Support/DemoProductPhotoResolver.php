@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Fotos del menú demo: busca primero en {@see base_path('local/demo-product-images')},
  * luego en {@see base_path('img/demo-product-images')} y {@see base_path('img')}
- * (solo nombres esperados, p. ej. entrecot.jpg), y por último en {@see public_path('demo')}.
+ * (solo nombres esperados, p. ej. entrecot.jpg), y por último en {@see public_path('demo')} si existe el archivo (p. ej. tras el script local de Pexels).
  *
- * Si existe {@see config('neurocarta.template_product_image_base_url')}, en BD se guarda solo la clave demo/archivo.jpg (sin URL absoluta);
- * {@see ProductPhotoUrl::publicUrl()} la convierte al CDN al mostrar. Sin CDN se copia al disco public como antes.
+ * No hay fotos por defecto en el repo: si no hay origen, devuelve null y el producto usa el placeholder.
+ * CDN: {@see config('neurocarta.template_product_image_base_url')} guarda la clave demo/archivo.jpg; {@see ProductPhotoUrl} resuelve la URL al mostrar.
  */
 final class DemoProductPhotoResolver
 {

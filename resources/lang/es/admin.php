@@ -144,7 +144,7 @@ return [
         'add_one_by_one' => 'Añadir uno a uno',
         'generate_photos_ai' => 'Generar fotos IA',
         'demo_modal_title' => 'Cargar datos de prueba',
-        'demo_modal_body' => 'Se crearán categorías, productos de ejemplo y sus vínculos con alérgenos oficiales. Solo está disponible si la carta aún no tiene productos.',
+        'demo_modal_body' => 'Se crearán categorías, productos de ejemplo y sus vínculos con alérgenos oficiales. Solo si la carta está vacía. Las fotos solo se asignan si tienes archivos en local/demo-product-images/ (mismos nombres que la plantilla) o un CDN configurado; si no, verás el icono sin foto hasta que subas imágenes.',
         'demo_modal_confirm' => 'Cargar demo',
         'demo_delete_modal_title' => 'Borrar datos de prueba',
         'demo_delete_modal_body' => 'Se borrarán de una vez los productos y categorías de plantilla de prueba. No está disponible si ya tienes al menos un producto propio ni si mezclas plantilla con productos creados por ti.',
