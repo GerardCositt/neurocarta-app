@@ -216,9 +216,14 @@
                 <span class="admin-nav-label">Plan {{ $planMeta['label'] }}</span>
             </span>
             @if($currentPlan === 'basico')
-            <a href="{{ route('subscription.expired') }}"
+            <a href="{{ route('subscription.manage') }}"
                class="admin-nav-label mt-2 flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl text-xs text-gray-400 hover:text-gray-600 transition-colors border border-dashed border-gray-200 hover:border-gray-300">
                 Mejora tu plan →
+            </a>
+            @elseif(in_array($currentPlan, ['pro', 'premium']))
+            <a href="{{ route('subscription.manage') }}"
+               class="admin-nav-label mt-2 flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl text-xs text-gray-400 hover:text-gray-600 transition-colors">
+                Gestionar plan
             </a>
             @endif
         </div>

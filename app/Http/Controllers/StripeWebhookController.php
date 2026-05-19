@@ -325,10 +325,31 @@ class StripeWebhookController extends Controller
             $updates['current_period_end_at'] = Carbon::createFromTimestamp($stripeSub->current_period_end);
         }
 
-        // Sync price ID if changed (plan upgrade/downgrade handled by Stripe).
+        // Sync price ID if changed — and resolve plan_code + billing_interval from the new price.
+        // This covers upgrades/downgrades made through the Billing Portal or direct API calls.
         $newPriceId = $stripeSub->items->data[0]->price->id ?? null;
         if ($newPriceId && $newPriceId !== $subscription->stripe_price_id) {
             $updates['stripe_price_id'] = $newPriceId;
+
+            $resolved = $this->resolvePlanFromPriceId($newPriceId);
+            if ($resolved) {
+                $updates['plan_code']        = $resolved['plan_code'];
+                $updates['billing_interval'] = $resolved['billing_interval'];
+
+                Log::info('StripeWebhook: plan change detected via Portal/API.', [
+                    'subscription_id'   => $subscription->id,
+                    'old_plan'          => $subscription->plan_code,
+                    'new_plan'          => $resolved['plan_code'],
+                    'old_interval'      => $subscription->billing_interval,
+                    'new_interval'      => $resolved['billing_interval'],
+                ]);
+            } else {
+                // Price ID not in our config — log for investigation but don't crash.
+                Log::warning('StripeWebhook: unrecognized Stripe price ID on subscription update.', [
+                    'subscription_id' => $subscription->id,
+                    'stripe_price_id' => $newPriceId,
+                ]);
+            }
         }
 
         // Trial or past_due resolved — Stripe confirmed active payment.
@@ -354,6 +375,25 @@ class StripeWebhookController extends Controller
         }
 
         return response('OK', 200);
+    }
+
+    /**
+     * Reverse-lookup plan_code and billing_interval from a Stripe price ID.
+     * Uses the same config('stripe.prices') map used at checkout time.
+     *
+     * Returns ['plan_code' => '...', 'billing_interval' => '...'] or null if not found.
+     */
+    private function resolvePlanFromPriceId(string $priceId): ?array
+    {
+        foreach (config('stripe.prices', []) as $planCode => $intervals) {
+            foreach ($intervals as $interval => $configuredPriceId) {
+                if ($configuredPriceId && $configuredPriceId === $priceId) {
+                    return ['plan_code' => $planCode, 'billing_interval' => $interval];
+                }
+            }
+        }
+
+        return null;
     }
 
     private function mailAccountUsers(Subscription $subscription, \Closure $makeMailFn): void

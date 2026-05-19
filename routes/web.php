@@ -161,10 +161,24 @@ Route::post('/api/orders', StoreOrderController::class)
 Route::middleware(['auth:sanctum', 'verified'])->post('/user/locale', UserLocaleController::class)
     ->name('user.locale');
 
-// ─── Trial expirado ───────────────────────────────────────────────────────────
+// ─── Trial expirado / selector de plan ───────────────────────────────────────
 Route::get('/subscription/expired', function () {
     return view('subscription.expired');
 })->middleware(['auth:sanctum', 'verified'])->name('subscription.expired');
+
+// ─── Gestión de suscripción activa ───────────────────────────────────────────
+// Accessible to all authenticated users (active, past_due, trialing).
+// Shows current plan info and the Stripe Billing Portal button.
+Route::get('/subscription/manage', function () {
+    return view('subscription.manage');
+})->middleware(['auth:sanctum', 'verified'])->name('subscription.manage');
+
+// ─── Stripe Billing Portal redirect ──────────────────────────────────────────
+// Creates a Stripe portal session for upgrade/downgrade/cancel/card management.
+// Requires stripe_customer_id (only set after first Stripe checkout).
+Route::post('/subscription/portal', [\App\Http\Controllers\BillingPortalController::class, 'redirect'])
+    ->middleware(['auth:sanctum', 'verified', 'throttle:10,1'])
+    ->name('subscription.portal');
 
 // ─── Stripe Checkout ──────────────────────────────────────────────────────────
 // No subscription.check — expired/inactive users must be able to reach checkout.
