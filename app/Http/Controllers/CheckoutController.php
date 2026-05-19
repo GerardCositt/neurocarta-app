@@ -102,6 +102,27 @@ class CheckoutController extends Controller
                 return $customer->id;
             });
 
+            // Guard against duplicate subscriptions: if this customer already has an
+            // active or trialing Stripe subscription, sync our DB and redirect to portal.
+            $existingStripeSubscriptions = $stripe->subscriptions->all([
+                'customer' => $stripeCustomerId,
+                'status'   => 'active',
+                'limit'    => 1,
+            ]);
+            if (count($existingStripeSubscriptions->data) > 0) {
+                $existingSub = $existingStripeSubscriptions->data[0];
+                $subscription->update([
+                    'stripe_subscription_id' => $existingSub->id,
+                    'status'                 => 'active',
+                ]);
+                Log::info('Checkout blocked: customer already has active Stripe subscription.', [
+                    'stripe_subscription_id' => $existingSub->id,
+                    'account_id'             => $account->id,
+                ]);
+                return redirect()->route('subscription.manage')
+                    ->with('status', 'Tu suscripción ya está activa. Desde aquí puedes gestionar tu plan.');
+            }
+
             // Preserve remaining trial days only if more than 5 minutes remain.
             // The 5-minute buffer prevents Stripe rejecting a trial_end in the past
             // due to the race between form submission and Stripe's validation.
