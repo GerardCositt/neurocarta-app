@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\RestaurantResource\Pages;
 use App\Models\Restaurant;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -64,6 +65,23 @@ class RestaurantResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('delete')
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Eliminar restaurante')
+                    ->modalSubheading('Se eliminarán el restaurante y todos sus productos, categorías y configuración. La cuenta y suscripción del usuario NO se verán afectadas. Esta acción no se puede deshacer.')
+                    ->modalButton('Sí, eliminar restaurante')
+                    ->action(function (Restaurant $record) {
+                        // Products, categories, settings cascade via DB foreign keys.
+                        $record->delete();
+
+                        Notification::make()
+                            ->title('Restaurante eliminado correctamente')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->defaultSort('created_at', 'desc');
     }
