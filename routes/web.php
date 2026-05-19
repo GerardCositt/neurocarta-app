@@ -183,6 +183,7 @@ Route::post('/subscription/portal', [\App\Http\Controllers\BillingPortalControll
 // ─── Stripe Checkout ──────────────────────────────────────────────────────────
 // No subscription.check — expired/inactive users must be able to reach checkout.
 Route::middleware(['auth:sanctum', 'verified', 'throttle:10,1'])->group(function () {
+    Route::get('/checkout/start', [CheckoutController::class, 'start'])->name('checkout.start');
     Route::post('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');

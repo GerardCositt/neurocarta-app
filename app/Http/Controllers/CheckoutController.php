@@ -10,6 +10,21 @@ use Stripe\StripeClient;
 
 class CheckoutController extends Controller
 {
+    public function start(Request $request)
+    {
+        $plan = $request->input('plan');
+        $interval = $request->input('interval', 'monthly');
+
+        if (! in_array($plan, ['basico', 'pro', 'premium'], true)) {
+            return redirect()->route('subscription.expired');
+        }
+        if (! in_array($interval, ['monthly', 'annual'], true)) {
+            $interval = 'monthly';
+        }
+
+        return view('checkout.start', compact('plan', 'interval'));
+    }
+
     public function create(Request $request)
     {
         $request->validate([

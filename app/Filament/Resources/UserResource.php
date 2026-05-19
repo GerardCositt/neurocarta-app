@@ -84,6 +84,15 @@ class UserResource extends Resource
                     ->modalSubheading('Se eliminará el usuario, su cuenta, restaurante y suscripción. Si tiene suscripción activa en Stripe se cancelará primero. Esta acción no se puede deshacer.')
                     ->modalButton('Sí, eliminar todo')
                     ->action(function (User $record) {
+                        if ($record->email === config('filament.admin.email') || $record->email === env('FILAMENT_ADMIN_EMAIL')) {
+                            Notification::make()
+                                ->title('No se puede eliminar este usuario')
+                                ->body('El usuario administrador principal no se puede eliminar desde el panel.')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+
                         $account = $record->accounts()->first();
 
                         if ($account) {

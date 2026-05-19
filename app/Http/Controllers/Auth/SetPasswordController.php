@@ -56,6 +56,17 @@ class SetPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
+            // If user registered with a paid plan, send them directly to Stripe checkout
+            $account = Auth::user()?->accounts()->first();
+            $subscription = $account?->subscriptions()->latest()->first();
+
+            if ($subscription && $subscription->status === 'inactive' && $subscription->plan_code !== 'trial') {
+                return redirect()->route('checkout.start', [
+                    'plan'     => $subscription->plan_code,
+                    'interval' => $subscription->billing_interval ?? 'monthly',
+                ]);
+            }
+
             return redirect()->route('product');
         }
 

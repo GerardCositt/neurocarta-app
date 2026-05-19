@@ -103,10 +103,15 @@ class CreateNewUser implements CreatesNewUsers
                     'current_period_end_at' => now()->addDays(7),
                 ]);
             } else {
+                $billingIntervalEarly = in_array($input['billing_interval'] ?? '', ['monthly', 'annual'], true)
+                    ? $input['billing_interval']
+                    : 'monthly';
+
                 Subscription::create([
-                    'account_id' => $account->id,
-                    'plan_code'  => $plan,
-                    'status'     => 'inactive',
+                    'account_id'       => $account->id,
+                    'plan_code'        => $plan,
+                    'status'           => 'inactive',
+                    'billing_interval' => $billingIntervalEarly,
                 ]);
             }
 
