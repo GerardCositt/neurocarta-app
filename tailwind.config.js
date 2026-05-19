@@ -18,9 +18,8 @@ module.exports = {
                 '4xs': ['0.4375rem', { lineHeight: '0.625rem' }], // 7px
             },
             fontFamily: {
-                /* Alineado con la carta pública (menu.blade.php): Montserrat cuerpo, Playfair títulos */
-                sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
-                display: ['Playfair Display', 'Georgia', 'serif'],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                display: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             /* Por defecto Tailwind v2 solo expone `yellow` (mapea a la paleta amber), no `amber` ni `sky`/`orange`. Sin esto, clases como bg-amber-50 no generan CSS y el panel parece gris. */
             colors: {

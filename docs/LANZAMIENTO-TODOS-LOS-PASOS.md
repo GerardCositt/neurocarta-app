@@ -110,9 +110,14 @@ En [Stripe Dashboard](https://dashboard.stripe.com) → modo **Live**.
    - `STRIPE_KEY=pk_live_...`
    - `STRIPE_SECRET=sk_live_...`
    - `STRIPE_WEBHOOK_SECRET=whsec_...` (endpoint `https://app.neurocarta.ai/stripe/webhook`)
-2. Recrear app y cachear: `docker compose -f docker-compose.prod.yml up -d --force-recreate app && docker exec neurocarta-app-1 php artisan config:cache`
-3. Cuenta de prueba → trial expirado o sin plan → **Elegir plan** → pago real mínimo (ej. Básico).
-4. Verificar en Stripe: suscripción `active`; en panel: acceso completo; carta pública activa.
+   - `STRIPE_PRICE_*`: seis Prices live, uno por plan/intervalo.
+2. En Stripe Tax, los Prices deben tratarse como **sin IVA incluido**:
+   - Tax behavior/default tax behavior: `exclusive`.
+   - Producto con tax code adecuado para el servicio SaaS/digital.
+   - Con esto, Checkout cobra `25/35/69€ + IVA` y Stripe desglosa el impuesto.
+3. Recrear app y cachear: `docker compose -f docker-compose.prod.yml up -d --force-recreate app && docker exec neurocarta-app-1 php artisan config:cache`
+4. Cuenta de prueba → trial expirado o sin plan → **Elegir plan** → pago real mínimo (ej. Básico).
+5. Verificar en Stripe: suscripción `active`; en panel: acceso completo; carta pública activa.
 
 | ☐ | Pago live completado |
 | ☐ | Webhook 200 en Stripe (últimos eventos) |

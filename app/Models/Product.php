@@ -36,6 +36,7 @@ class Product extends Model
         'featured',
         'recommended',
         'restaurant_id',
+        'is_template',
     ];
 
     protected $casts = [
@@ -43,6 +44,7 @@ class Product extends Model
         'active'       => 'boolean',
         'featured'     => 'boolean',
         'recommended'  => 'boolean',
+        'is_template'  => 'boolean',
         'offer_start' => 'date',
         'offer_end'   => 'date',
     ];

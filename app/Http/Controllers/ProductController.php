@@ -11,6 +11,7 @@ use App\Models\Setting;
 use App\Models\Translation;
 use App\Services\DeepLService;
 use App\Services\MenuBrandPaletteService;
+use App\Support\ProductPhotoUrl;
 use App\Support\PublicMenuUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -122,7 +123,7 @@ class ProductController extends Controller
                     'offer_badge'   => $p->offer_badge ?? __('public_menu.offer_default'),
                     'featured'      => (bool) $p->featured,
                     'recommended'   => (bool) $p->recommended,
-                    'photo'         => $p->photo,
+                    'photo'         => ProductPhotoUrl::publicUrl($p->photo),
                     'aller'         => $p->aller,
                     'allergens'     => $allergenList,
                     'pairing'       => $pairing->id ? $pairing->translate($locale, 'description') : null,

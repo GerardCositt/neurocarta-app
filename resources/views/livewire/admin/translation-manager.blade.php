@@ -47,31 +47,53 @@
             <p class="text-xs text-gray-400 mt-1.5">Restantes: {{ number_format($remaining) }} caracteres este mes.</p>
         </div>
 
-        {{-- ── Acciones principales ──────────────────── --}}
-        <div class="mt-4 flex flex-wrap gap-3">
-            <button type="button" wire:click="translateAll" wire:loading.attr="disabled"
-                    class="px-4 py-2 rounded-xl text-sm font-semibold bg-amber-500 hover:bg-amber-600 text-white transition-colors disabled:opacity-60 flex items-center gap-2">
-                <span wire:loading.remove wire:target="translateAll">⚡ Autotraducir todo (solo nuevos)</span>
-                <span wire:loading wire:target="translateAll">Traduciendo…</span>
-            </button>
+        {{-- ── Acciones principales (chips como estado vacío /product) ──────────────────── --}}
+        @php
+            $tmChip = 'inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:border-amber-300 hover:bg-amber-50 hover:text-amber-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 transition-colors cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed';
+        @endphp
+        <div class="mt-4 flex flex-col gap-3">
+            <div class="w-full min-w-0 overflow-x-auto overscroll-x-contain pb-1">
+                <div class="flex flex-nowrap items-stretch justify-center gap-2 sm:gap-3 w-max max-w-none mx-auto px-0.5">
+                    <button type="button" wire:click="translateAll" wire:loading.attr="disabled"
+                            class="{{ $tmChip }}"
+                            wire:target="translateAll">
+                        <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <span wire:loading.remove wire:target="translateAll">Autotraducir todo (solo nuevos)</span>
+                        <span wire:loading wire:target="translateAll">Traduciendo…</span>
+                    </button>
 
-            <button type="button" wire:click="retranslateAll" wire:loading.attr="disabled"
-                    wire:confirm="{{ __('admin.translation_ui.confirm_retranslate') }}"
-                    class="px-4 py-2 rounded-xl text-sm font-semibold bg-sky-500 hover:bg-sky-600 text-white transition-colors disabled:opacity-60">
-                <span wire:loading.remove wire:target="retranslateAll">🔄 Retraducir todo</span>
-                <span wire:loading wire:target="retranslateAll">Traduciendo…</span>
-            </button>
+                    <button type="button" wire:click="retranslateAll" wire:loading.attr="disabled"
+                            wire:confirm="{{ __('admin.translation_ui.confirm_retranslate') }}"
+                            class="{{ $tmChip }}"
+                            wire:target="retranslateAll">
+                        <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        <span wire:loading.remove wire:target="retranslateAll">Retraducir todo</span>
+                        <span wire:loading wire:target="retranslateAll">Traduciendo…</span>
+                    </button>
 
-            <button type="button" wire:click="clearLocale"
-                    wire:confirm="{{ __('admin.translation_ui.confirm_clear_locale') }}"
-                    class="px-4 py-2 rounded-xl text-sm font-semibold border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
-                🗑 Borrar idioma
-            </button>
+                    <button type="button" wire:click="clearLocale"
+                            wire:confirm="{{ __('admin.translation_ui.confirm_clear_locale') }}"
+                            class="{{ $tmChip }}">
+                        <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m3 0V5a2 2 0 012-2h0a2 2 0 012 2v2"/>
+                        </svg>
+                        Borrar idioma
+                    </button>
+                </div>
+            </div>
 
-            <a href="{{ route('settings.ai-billing') }}"
-                    class="ml-auto px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors">
-                🔑 Abrir APIs
-            </a>
+            <div class="flex justify-end">
+                <a href="{{ route('settings.ai-billing') }}" class="{{ $tmChip }}">
+                    <svg class="w-4 h-4 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                    </svg>
+                    Abrir APIs
+                </a>
+            </div>
         </div>
 
         <div class="mt-4 p-4 rounded-xl border border-gray-200 bg-gray-50">

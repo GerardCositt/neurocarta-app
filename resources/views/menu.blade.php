@@ -16,7 +16,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $restaurant->name ?? config('app.name') }} · {{ __('public_menu.page_title_suffix') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     @php $cartaTokensV = @filemtime(public_path('css/carta-design-tokens.css')) ?: time(); @endphp
     <link rel="stylesheet" href="{{ mix('css/carta-design-tokens.css') }}?v={{ $cartaTokensV }}">
     <style>
@@ -1234,7 +1235,7 @@
                      data-featured="{{ $product->featured ? '1' : '0' }}"
                      data-recommended="{{ $product->recommended ? '1' : '0' }}"
                      onclick="openModal({{ $product->id }})">
-                    <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}" alt="{{ $product->name }}" loading="lazy"
+                    <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}" alt="{{ $product->name }}" loading="lazy"
                          onerror="this.onerror=null;this.src={{ json_encode(asset('img/noimg.png')) }};">
                     <span class="offer-card-tag">{{ $product->offer_badge ?? __('public_menu.offer_default') }}</span>
                     <div class="offer-card-body">
@@ -1276,7 +1277,7 @@
                      data-recommended="{{ $product->recommended ? '1' : '0' }}"
                      onclick="openModal({{ $product->id }})">
                     <div class="prod-img">
-                        <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                        <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                              alt="{{ $product->name }}" loading="lazy"
                              onerror="this.onerror=null;this.src={{ json_encode(asset('img/noimg.png')) }};">
                         @if($product->isOfferActive())
@@ -1502,6 +1503,12 @@
     window.MENU_CATEGORIES_DATA = @json($categoriesData ?? []);
     window.BJ_PUBLIC_STORAGE = @json(rtrim(url('/storage'), '/'));
     window.BJ_NOIMG_URL = @json(asset('img/noimg.png'));
+    function productImgUrl(photo) {
+        if (!photo) return window.BJ_NOIMG_URL;
+        var s = String(photo);
+        if (/^https?:\/\//i.test(s)) return s;
+        return window.BJ_PUBLIC_STORAGE + '/' + s;
+    }
     window.ORDERS_MODE = @json($ordersMode ?? 'list');
     window.ORDERS_ENABLED = !!window.ORDERS_MODE;
     var CART_STORAGE_KEY = 'bjCartDraft';
@@ -1723,7 +1730,7 @@
 
     function menuFlatRowHtml(p) {
         var t = window.BJ_MENU_I18N || {};
-        var img = p.photo ? (window.BJ_PUBLIC_STORAGE + '/' + p.photo) : window.BJ_NOIMG_URL;
+        var img = productImgUrl(p.photo);
         var desc = (p.description || '').toString();
         if (desc.length > 140) desc = desc.slice(0, 137) + '…';
         var priceBlock = (p.offer && p.offer_price)
@@ -1828,8 +1835,13 @@
     }
 
     function allergenImgSrc(a) {
+        if (!a) return '';
         if (a.image_url) return a.image_url;
-        if (a.image) return window.BJ_PUBLIC_STORAGE + '/' + a.image;
+        if (a.image) {
+            var s = String(a.image);
+            if (/^https?:\/\//i.test(s)) return s;
+            return window.BJ_PUBLIC_STORAGE + '/' + s;
+        }
         return '';
     }
 
@@ -1870,7 +1882,7 @@
         if (!p) return;
         var t = window.BJ_MENU_I18N || {};
 
-        const img = p.photo ? window.BJ_PUBLIC_STORAGE + '/' + p.photo : window.BJ_NOIMG_URL;
+        const img = productImgUrl(p.photo);
 
         let priceHtml = p.offer
             ? `<span style="font-size:16px;color:var(--text-muted);text-decoration:line-through">${p.price}</span>

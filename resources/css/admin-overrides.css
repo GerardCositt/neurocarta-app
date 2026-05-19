@@ -11,7 +11,7 @@
     font-family: var(--font-body) !important;
 }
 
-/* Títulos de página (slot header) — Playfair + oro (html… vence reglas en admin-shell) */
+/* Títulos de página (slot header) — Inter + marca (html… vence reglas en admin-shell) */
 html[data-effective-theme="dark"] .admin-shell .admin-page-header h2,
 html[data-effective-theme="light"] .admin-shell .admin-page-header h2,
 .admin-shell .admin-page-header h2,
@@ -20,7 +20,7 @@ html[data-effective-theme="light"] .admin-shell .admin-page-header h2,
     color: var(--color-brand, var(--gold)) !important;
     font-size: 1.5rem !important;
     font-weight: 700 !important;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
 }
 
 /* Sidebar: sin borde derecho (alineado con carta / gris neutro) */
@@ -49,40 +49,16 @@ html[data-effective-theme="dark"] .admin-shell .admin-sidebar .bg-white {
     box-shadow: 0 8px 30px color-mix(in srgb, var(--gold) 12%, transparent), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
 }
 
-/* ── Marca: sidebar (#adminSidebar) — ítems inactivos en oro (vence .text-gray-* y admin-shell) ── */
-/* Nota: sin `>` en `a` — submenú Ajustes va dentro de <details>, no es hijo directo de nav */
+/* ── Sidebar inactivo: texto tipo Stripe (#425466); activo/hover abajo ── */
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav a.text-gray-600,
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav button.text-gray-600,
 html[data-effective-theme="dark"] .admin-shell #adminSidebar details > summary.text-gray-600 {
-    color: var(--color-brand-light) !important;
+    color: #cbd5e1 !important;
 }
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav a.text-gray-600,
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav button.text-gray-600,
 html[data-effective-theme="light"] .admin-shell #adminSidebar details > summary.text-gray-600 {
-    color: var(--color-brand) !important;
-}
-
-html[data-effective-theme="dark"] .admin-shell #adminSidebar nav a.text-gray-600:hover,
-html[data-effective-theme="dark"] .admin-shell #adminSidebar nav button.text-gray-600:hover,
-html[data-effective-theme="dark"] .admin-shell #adminSidebar details > summary.text-gray-600:hover {
-    background-color: var(--chip-bg) !important;
-    color: var(--color-brand) !important;
-}
-html[data-effective-theme="light"] .admin-shell #adminSidebar nav a.text-gray-600:hover,
-html[data-effective-theme="light"] .admin-shell #adminSidebar nav button.text-gray-600:hover,
-html[data-effective-theme="light"] .admin-shell #adminSidebar details > summary.text-gray-600:hover {
-    background-color: var(--chip-bg) !important;
-    color: var(--color-brand-light) !important;
-}
-
-/* Activo: texto marca + borde más visible */
-html[data-effective-theme="dark"] .admin-shell #adminSidebar nav .admin-nav-active {
-    color: var(--color-brand-light) !important;
-    border-color: var(--gold-border-hover) !important;
-}
-html[data-effective-theme="light"] .admin-shell #adminSidebar nav .admin-nav-active {
-    color: var(--color-brand) !important;
-    border-color: var(--gold-border-hover) !important;
+    color: #425466 !important;
 }
 
 /* Tablas admin: cabeceras en marca */
@@ -228,15 +204,7 @@ html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-50 {
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
 }
 
-/* Cabecera de tabla más marcada estilo panel profesional */
-html[data-effective-theme="dark"] .admin-shell .admin-main table thead tr {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent) !important;
-}
-
-html[data-effective-theme="light"] .admin-shell .admin-main table thead tr {
-    background: linear-gradient(180deg, #fafaf9, #f8fafc) !important;
-}
-
+/* Cabecera de tabla (color/borde base; fondo sólido unificado más abajo en STRIPE-LIGHT y al final en oscuro) */
 html[data-effective-theme="dark"] .admin-shell .admin-main table thead th {
     color: #e5e7eb !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
@@ -582,9 +550,7 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
 .admin-shell .admin-main .sm\:-mx-6,
 .admin-shell .admin-main .lg\:-mx-8,
 .admin-shell .admin-main .overflow-x-auto,
-.admin-shell .admin-main table,
-.admin-shell .admin-main .admin-sticky-col,
-.admin-shell .admin-main .admin-sticky-hdr {
+.admin-shell .admin-main table {
     position: relative !important;
     z-index: 2 !important;
 }
@@ -624,40 +590,48 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
     box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.06) !important;
 }
 
-/* Ítems de navegación estilo Filament */
+/* Ítems de navegación — patrón Stripe: inactivo sin caja; activo fondo suave + texto naranja */
 .admin-shell #adminSidebar nav > a,
 .admin-shell #adminSidebar nav > button,
 .admin-shell #adminSidebar nav > details > summary {
     min-height: 2.75rem;
-    border-radius: 0.85rem !important;
-    border: 1px solid transparent;
+    border-radius: 0.75rem !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
 }
 
-/* Inactivos */
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active),
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active),
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active) {
-    color: #d1d5db !important;
+    color: #cbd5e1 !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > button.text-gray-500:not(.admin-nav-active) {
+    color: #94a3b8 !important;
 }
 
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active):hover,
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active):hover,
 html[data-effective-theme="dark"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active):hover {
     background: rgba(255, 255, 255, 0.06) !important;
-    color: #f9fafb !important;
+    border-color: transparent !important;
+    color: #f8fafc !important;
 }
 
-/* Activo: píldora ámbar como Filament */
 html[data-effective-theme="dark"] .admin-shell #adminSidebar .admin-nav-active {
-    background: #f5a623 !important;
-    color: #111827 !important;
-    border-color: #d97706 !important;
-    box-shadow: 0 6px 16px rgba(245, 166, 35, 0.26) !important;
+    background: rgba(255, 106, 26, 0.14) !important;
+    color: #fdba74 !important;
+    border-color: rgba(251, 146, 60, 0.38) !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
 }
 
 html[data-effective-theme="dark"] .admin-shell #adminSidebar .admin-nav-active svg,
 html[data-effective-theme="dark"] .admin-shell #adminSidebar .admin-nav-active .admin-nav-label {
-    color: #111827 !important;
+    color: #fdba74 !important;
 }
 
 /* Subitems de Ajustes */
@@ -668,12 +642,32 @@ html[data-effective-theme="dark"] .admin-shell #adminSidebar details > div a {
 }
 
 html[data-effective-theme="dark"] .admin-shell #adminSidebar details > div a:not(.admin-nav-active) {
+    background: transparent !important;
+    border: none !important;
     color: #cbd5e1 !important;
 }
 
 html[data-effective-theme="dark"] .admin-shell #adminSidebar details > div a:not(.admin-nav-active):hover {
     background: rgba(255, 255, 255, 0.06) !important;
-    color: #f9fafb !important;
+    color: #f8fafc !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar details > div a:not(.admin-nav-active) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #425466 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar details > div a:not(.admin-nav-active):hover {
+    background: rgba(15, 23, 42, 0.045) !important;
+    color: #1a1f36 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar details > div a {
+    border-radius: 0.7rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
 }
 
 /* Light equivalente */
@@ -694,26 +688,35 @@ html[data-effective-theme="light"] .admin-shell .admin-brand-filament {
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active),
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active),
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active) {
-    color: #374151 !important;
+    color: #425466 !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar nav > button.text-gray-500:not(.admin-nav-active) {
+    color: #697386 !important;
 }
 
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav > a:not(.admin-nav-active):hover,
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav > button:not(.admin-nav-active):hover,
 html[data-effective-theme="light"] .admin-shell #adminSidebar nav > details > summary:not(.admin-nav-active):hover {
-    background: #f9fafb !important;
-    color: #111827 !important;
+    background: rgba(15, 23, 42, 0.045) !important;
+    border-color: transparent !important;
+    color: #1a1f36 !important;
 }
 
 html[data-effective-theme="light"] .admin-shell #adminSidebar .admin-nav-active {
-    background: #f5a623 !important;
-    color: #111827 !important;
-    border-color: #d97706 !important;
-    box-shadow: 0 6px 14px rgba(217, 119, 6, 0.18) !important;
+    background: var(--nc-orange-soft, #fff3e8) !important;
+    color: var(--nc-orange-primary, #ff6a1a) !important;
+    border: 1px solid rgba(255, 106, 26, 0.28) !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
 }
 
 html[data-effective-theme="light"] .admin-shell #adminSidebar .admin-nav-active svg,
 html[data-effective-theme="light"] .admin-shell #adminSidebar .admin-nav-active .admin-nav-label {
-    color: #111827 !important;
+    color: var(--nc-orange-primary, #ff6a1a) !important;
 }
 
 /* Preview de logo en Ajustes > Apariencia: fondo blanco forzado en ambos modos */
@@ -728,4 +731,375 @@ html[data-effective-theme="light"] .admin-shell .admin-main .admin-logo-preview-
 html[data-effective-theme="dark"] .admin-shell .admin-main .admin-logo-preview-img,
 html[data-effective-theme="light"] .admin-shell .admin-main .admin-logo-preview-img {
     background: #ffffff !important;
+}
+
+/* =====================================================================
+ * STRIPE-LIKE ORANGE ACCENT
+ * Limpia restos azul/índigo y da a links, tabs y botones importantes
+ * el mismo papel visual que el azul en Stripe, pero con naranja NeuroCarta.
+ * ===================================================================== */
+:root {
+    --nc-accent: #f97316;
+    --nc-accent-strong: #ea580c;
+    --nc-accent-dark: #c2410c;
+    --nc-accent-soft: rgba(249, 115, 22, 0.12);
+    --nc-accent-ring: rgba(249, 115, 22, 0.28);
+}
+
+html[data-effective-theme="dark"] {
+    --nc-accent: #fb923c;
+    --nc-accent-strong: #f97316;
+    --nc-accent-dark: #fdba74;
+    --nc-accent-soft: rgba(251, 146, 60, 0.16);
+    --nc-accent-ring: rgba(251, 146, 60, 0.34);
+}
+
+.admin-shell a:not(.admin-brand-cta):not(.admin-nav-active):not(.text-gray-600),
+.admin-shell .admin-main button.bg-transparent,
+.admin-shell .admin-main .text-sky-700,
+.admin-shell .admin-main .text-sky-800,
+.admin-shell .admin-main .text-sky-900,
+.admin-shell .admin-main .text-indigo-700,
+.admin-shell .admin-main .text-blue-600,
+.admin-shell .admin-main .text-blue-700 {
+    color: var(--nc-accent-dark) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell a:not(.admin-brand-cta):not(.admin-nav-active):not(.text-gray-600),
+html[data-effective-theme="dark"] .admin-shell .admin-main button.bg-transparent,
+html[data-effective-theme="dark"] .admin-shell .admin-main .text-sky-700,
+html[data-effective-theme="dark"] .admin-shell .admin-main .text-sky-800,
+html[data-effective-theme="dark"] .admin-shell .admin-main .text-sky-900,
+html[data-effective-theme="dark"] .admin-shell .admin-main .text-indigo-700,
+html[data-effective-theme="dark"] .admin-shell .admin-main .text-blue-600,
+html[data-effective-theme="dark"] .admin-shell .admin-main .text-blue-700 {
+    color: var(--nc-accent) !important;
+}
+
+.admin-shell .admin-main a:hover,
+.admin-shell .admin-main button.bg-transparent:hover {
+    color: var(--nc-accent-strong) !important;
+}
+
+/* Badges y estados que antes usaban azul/índigo */
+.admin-shell .bg-sky-50,
+.admin-shell .bg-sky-100,
+.admin-shell .bg-indigo-100,
+.admin-shell .bg-blue-50,
+.admin-shell .bg-blue-100,
+.admin-shell .bg-orange-100 {
+    background-color: var(--nc-accent-soft) !important;
+}
+
+.admin-shell .text-sky-500,
+.admin-shell .text-sky-700,
+.admin-shell .text-sky-800,
+.admin-shell .text-indigo-700,
+.admin-shell .text-blue-600,
+.admin-shell .text-blue-700,
+.admin-shell .text-orange-700 {
+    color: var(--nc-accent-dark) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .text-sky-500,
+html[data-effective-theme="dark"] .admin-shell .text-sky-700,
+html[data-effective-theme="dark"] .admin-shell .text-sky-800,
+html[data-effective-theme="dark"] .admin-shell .text-indigo-700,
+html[data-effective-theme="dark"] .admin-shell .text-blue-600,
+html[data-effective-theme="dark"] .admin-shell .text-blue-700,
+html[data-effective-theme="dark"] .admin-shell .text-orange-700 {
+    color: var(--nc-accent) !important;
+}
+
+.admin-shell .bg-sky-500,
+.admin-shell .bg-indigo-500,
+.admin-shell .bg-blue-500,
+.admin-shell .bg-orange-500 {
+    background-color: var(--nc-accent) !important;
+}
+
+.admin-shell .border-sky-400,
+.admin-shell .border-indigo-400,
+.admin-shell .border-blue-400,
+.admin-shell .border-orange-400 {
+    border-color: var(--nc-accent) !important;
+}
+
+/* Botón primario tipo Stripe: sólido, naranja, compacto y claro */
+.admin-shell .admin-main .btn-carta-primary,
+.admin-shell .admin-main .bg-green-500,
+.admin-shell .admin-main .hover\:bg-green-600:hover,
+.admin-shell .admin-main .bg-amber-500,
+.admin-shell .admin-main .hover\:bg-amber-600:hover {
+    background: var(--nc-accent) !important;
+    border: 1px solid var(--nc-accent-strong) !important;
+    color: #ffffff !important;
+    border-radius: 0.625rem !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+}
+
+.admin-shell .admin-main .btn-carta-primary:hover,
+.admin-shell .admin-main .bg-green-500:hover,
+.admin-shell .admin-main .bg-amber-500:hover {
+    background: var(--nc-accent-strong) !important;
+    color: #ffffff !important;
+}
+
+/* Botones secundarios: borde gris y texto oscuro, como acciones de Stripe */
+.admin-shell .admin-main summary,
+.admin-shell .admin-main button.bg-white.border,
+.admin-shell .admin-main a.bg-white.border {
+    border-color: #d8dee8 !important;
+    color: #1f2937 !important;
+    box-shadow: 0 1px 1px rgba(15, 23, 42, 0.04) !important;
+}
+
+.admin-shell .admin-main summary:hover,
+.admin-shell .admin-main button.bg-white.border:hover,
+.admin-shell .admin-main a.bg-white.border:hover {
+    border-color: var(--nc-accent) !important;
+    color: var(--nc-accent-dark) !important;
+    background: #fff7ed !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main summary,
+html[data-effective-theme="dark"] .admin-shell .admin-main button.bg-white.border,
+html[data-effective-theme="dark"] .admin-shell .admin-main a.bg-white.border {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    color: #f3f4f6 !important;
+    background: #171717 !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main summary:hover,
+html[data-effective-theme="dark"] .admin-shell .admin-main button.bg-white.border:hover,
+html[data-effective-theme="dark"] .admin-shell .admin-main a.bg-white.border:hover {
+    border-color: var(--nc-accent) !important;
+    color: var(--nc-accent) !important;
+    background: rgba(251, 146, 60, 0.08) !important;
+}
+
+/* Focos de formulario: naranja consistente */
+.admin-shell .focus\:ring-sky-300:focus,
+.admin-shell .focus\:border-sky-400:focus,
+.admin-shell .focus\:border-blue-300:focus,
+.admin-shell .focus\:shadow-outline-blue:focus,
+.admin-shell input:focus,
+.admin-shell select:focus,
+.admin-shell textarea:focus {
+    --tw-ring-color: var(--nc-accent-ring) !important;
+    border-color: var(--nc-accent) !important;
+    box-shadow: 0 0 0 2px var(--nc-accent-ring) !important;
+}
+
+/* Tabs/segmentos activos: subrayado y texto naranja, no azul */
+.admin-shell [aria-selected="true"],
+.admin-shell [aria-current="page"],
+.admin-shell .border-sky-500,
+.admin-shell .border-blue-500,
+.admin-shell .border-indigo-500 {
+    border-color: var(--nc-accent) !important;
+    color: var(--nc-accent-dark) !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell [aria-selected="true"],
+html[data-effective-theme="dark"] .admin-shell [aria-current="page"],
+html[data-effective-theme="dark"] .admin-shell .border-sky-500,
+html[data-effective-theme="dark"] .admin-shell .border-blue-500,
+html[data-effective-theme="dark"] .admin-shell .border-indigo-500 {
+    color: var(--nc-accent) !important;
+}
+
+/* =====================================================================
+ * STRIPE-LIKE LIGHT FINISH
+ * Fondo blanco continuo, bordes discretos y naranjas con jerarquía.
+ * ===================================================================== */
+html[data-effective-theme="light"] {
+    --nc-page-bg: #ffffff;
+    --nc-panel-bg: #ffffff;
+    --nc-panel-muted: #f7f9fc;
+    --nc-border: #dfe5ef;
+    --nc-border-strong: #cfd7e5;
+    --nc-text-main: #1f2430;
+    --nc-text-muted-2: #667085;
+    --nc-orange-link: #c2410c;
+    --nc-orange-primary: #ff6a1a;
+    --nc-orange-primary-hover: #e6530f;
+    --nc-orange-active: var(--nc-orange-primary);
+    --nc-orange-soft: #fff3e8;
+}
+
+html[data-effective-theme="light"] body.admin-shell,
+html[data-effective-theme="light"] .admin-shell,
+html[data-effective-theme="light"] .admin-shell .admin-main,
+html[data-effective-theme="light"] .admin-shell .admin-page-header,
+html[data-effective-theme="light"] .admin-shell .admin-footer {
+    background: var(--nc-page-bg) !important;
+    color: var(--nc-text-main) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-sidebar,
+html[data-effective-theme="light"] .admin-shell #adminSidebar {
+    background: var(--nc-panel-bg) !important;
+    border-right: 1px solid var(--nc-border) !important;
+    box-shadow: none !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-sidebar-header {
+    border-bottom: 1px solid var(--nc-border) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-brand-filament,
+html[data-effective-theme="light"] .admin-shell .admin-cta-trigger,
+html[data-effective-theme="light"] .admin-shell #restaurantHeaderPicker > summary,
+html[data-effective-theme="light"] .admin-shell details.admin-user-menu > summary {
+    background: #ffffff !important;
+    border-color: var(--nc-border) !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-page-title-carta,
+html[data-effective-theme="light"] .admin-shell .admin-page-header h2 {
+    color: var(--nc-text-main) !important;
+    font-weight: 750 !important;
+}
+
+/* Paneles y tablas: sin borde negro, sin caja pesada */
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-white,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-gray-50,
+html[data-effective-theme="light"] .admin-shell .admin-main div.bg-white.rounded-2xl.shadow-sm.border {
+    background: #ffffff !important;
+    border-color: var(--nc-border) !important;
+    box-shadow: none !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main div.bg-white.rounded-2xl.shadow-sm.border {
+    border-radius: 1rem !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main table.admin-products-table thead tr,
+html[data-effective-theme="light"] .admin-shell .admin-main table thead.admin-products-thead tr {
+    background-color: var(--nc-panel-muted) !important;
+    background-image: none !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main table.admin-products-table thead th,
+html[data-effective-theme="light"] .admin-shell .admin-main table thead.admin-products-thead th {
+    background-color: var(--nc-panel-muted) !important;
+    background-image: none !important;
+    color: #3f4858 !important;
+    border-bottom: 1px solid var(--nc-border) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main table tbody tr {
+    border-color: #edf1f7 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-footer {
+    border-top-color: var(--nc-border) !important;
+}
+
+/* Inputs y selects: blanco sobre blanco, borde suave */
+html[data-effective-theme="light"] .admin-shell .admin-main input,
+html[data-effective-theme="light"] .admin-shell .admin-main select,
+html[data-effective-theme="light"] .admin-shell .admin-main textarea,
+html[data-effective-theme="light"] .admin-shell #admin-panel-locale {
+    background: #ffffff !important;
+    border-color: var(--nc-border) !important;
+    color: var(--nc-text-main) !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main input::placeholder {
+    color: #8a94a6 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main input:focus,
+html[data-effective-theme="light"] .admin-shell .admin-main select:focus,
+html[data-effective-theme="light"] .admin-shell .admin-main textarea:focus {
+    border-color: var(--nc-orange-primary) !important;
+    box-shadow: 0 0 0 3px rgba(255, 106, 26, 0.18) !important;
+}
+
+/* Naranjas diferenciados */
+html[data-effective-theme="light"] .admin-shell .admin-main a,
+html[data-effective-theme="light"] .admin-shell .admin-main .text-sky-700,
+html[data-effective-theme="light"] .admin-shell .admin-main .text-sky-800,
+html[data-effective-theme="light"] .admin-shell .admin-main .text-amber-700,
+html[data-effective-theme="light"] .admin-shell .admin-main .text-amber-800 {
+    color: var(--nc-orange-link) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .bg-sky-50,
+html[data-effective-theme="light"] .admin-shell .bg-sky-100,
+html[data-effective-theme="light"] .admin-shell .bg-amber-50,
+html[data-effective-theme="light"] .admin-shell .bg-amber-100,
+html[data-effective-theme="light"] .admin-shell .bg-orange-100 {
+    background: var(--nc-orange-soft) !important;
+}
+
+/* CTA sólido: naranja vivo y texto blanco */
+html[data-effective-theme="light"] .admin-shell .admin-main .btn-carta-primary,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-green-500,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-green-600:hover,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-amber-500,
+html[data-effective-theme="light"] .admin-shell .admin-main .hover\:bg-amber-600:hover {
+    background: var(--nc-orange-primary) !important;
+    border-color: var(--nc-orange-primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main .btn-carta-primary *,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-green-500 *,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-amber-500 * {
+    color: #ffffff !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main .btn-carta-primary:hover,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-green-500:hover,
+html[data-effective-theme="light"] .admin-shell .admin-main .bg-amber-500:hover {
+    background: var(--nc-orange-primary-hover) !important;
+    border-color: var(--nc-orange-primary-hover) !important;
+    color: #ffffff !important;
+}
+
+/* Botones secundarios: suaves, sin competir con el CTA */
+html[data-effective-theme="light"] .admin-shell .admin-main summary,
+html[data-effective-theme="light"] .admin-shell .admin-main button.bg-white.border,
+html[data-effective-theme="light"] .admin-shell .admin-main a.bg-white.border {
+    background: #ffffff !important;
+    border-color: var(--nc-border) !important;
+    color: var(--nc-text-main) !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell .admin-main summary:hover,
+html[data-effective-theme="light"] .admin-shell .admin-main button.bg-white.border:hover,
+html[data-effective-theme="light"] .admin-shell .admin-main a.bg-white.border:hover {
+    background: var(--nc-orange-soft) !important;
+    border-color: #fdba74 !important;
+    color: var(--nc-orange-link) !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar .bg-amber-100,
+html[data-effective-theme="light"] .admin-shell #adminSidebar .bg-orange-100 {
+    background: #fff4c7 !important;
+}
+
+html[data-effective-theme="light"] .admin-shell #adminSidebar .text-amber-800,
+html[data-effective-theme="light"] .admin-shell #adminSidebar .text-orange-700 {
+    color: #9a3412 !important;
+}
+
+/* Cabecera tablas (oscuro): una sola tinta en tr y cada th — sin parches del --surface claro en sticky */
+html[data-effective-theme="dark"] .admin-shell .admin-main table.admin-products-table thead tr,
+html[data-effective-theme="dark"] .admin-shell .admin-main table thead.admin-products-thead tr {
+    background-color: #161616 !important;
+    background-image: none !important;
+}
+
+html[data-effective-theme="dark"] .admin-shell .admin-main table.admin-products-table thead th,
+html[data-effective-theme="dark"] .admin-shell .admin-main table thead.admin-products-thead th {
+    background-color: #161616 !important;
+    background-image: none !important;
 }

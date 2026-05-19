@@ -4,6 +4,9 @@ namespace App\Http\Livewire;
 
 use App\Models\Restaurant;
 use App\Models\Setting;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Scopes\RestaurantScope;
 use App\Services\PlanEntitlementService;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -15,8 +18,20 @@ class NavigationMenu extends Component
     public string $qrMenuUrl   = '';
     public string $qrFilename  = 'qr-carta.png';
     public string $currentPlan = '';
+    public bool $menuReady = false;
+
+    /**
+     * Otros componentes del panel (p. ej. productos tras cargar demo) actualizan datos sin recargar la página;
+     * este componente solo montaba una vez y dejaba menuReady obsoleto.
+     */
+    protected $listeners = ['navigationMenuRefresh' => 'syncNavigationState'];
 
     public function mount(): void
+    {
+        $this->syncNavigationState();
+    }
+
+    public function syncNavigationState(): void
     {
         // Preferimos sesión (selector del admin). Si por cualquier motivo no persiste,
         // caemos al cookie que ya setea el selector para evitar que el QR apunte al restaurante por defecto.
@@ -44,6 +59,7 @@ class NavigationMenu extends Component
         // Solo el restaurante del selector del admin (no app('restaurant') del middleware, que puede ser otro).
         // Si no hay restaurante resuelto y validado, $restaurant queda null (comportamiento vacío seguro).
         $restaurant = $restaurantId ? Restaurant::find($restaurantId) : null;
+        $this->menuReady = $this->restaurantHasMinimumMenu($restaurant);
 
         $this->qrFilename = $restaurant
             ? 'qr-' . Str::slug($restaurant->name) . '.png'
@@ -109,7 +125,21 @@ class NavigationMenu extends Component
             'qrMenuUrl'     => $this->qrMenuUrl,
             'qrFilename'    => $this->qrFilename,
             'currentPlan'   => $this->currentPlan,
+            'menuReady'     => $this->menuReady,
         ]);
     }
-}
 
+    private function restaurantHasMinimumMenu(?Restaurant $restaurant): bool
+    {
+        if (! $restaurant) {
+            return false;
+        }
+
+        return Category::withoutGlobalScope(RestaurantScope::class)
+            ->where('restaurant_id', $restaurant->id)
+            ->exists()
+            && Product::withoutGlobalScope(RestaurantScope::class)
+                ->where('restaurant_id', $restaurant->id)
+                ->exists();
+    }
+}

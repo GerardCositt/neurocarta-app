@@ -117,7 +117,7 @@ class BillingPortalTest extends TestCase
 
         $response = $this->actingAs($user)->post('/subscription/portal');
         // No Stripe secret → redirect home with error (not a 500 crash).
-        $response->assertRedirect(route('product.index'));
+        $response->assertRedirect(route('product'));
     }
 
     // ─── CheckoutController active guard ─────────────────────────────────────
@@ -153,7 +153,7 @@ class BillingPortalTest extends TestCase
             'interval' => 'monthly',
         ]);
 
-        $response->assertRedirect(route('product.index'));
+        $response->assertRedirect(route('product'));
     }
 
     // ─── Webhook plan resolver ────────────────────────────────────────────────

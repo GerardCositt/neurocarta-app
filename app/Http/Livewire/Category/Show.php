@@ -140,6 +140,7 @@ class Show extends Component
                 'active' => (bool) $this->active,
             ]);
             session()->flash('message', __('admin.category.flash_updated'));
+            $this->emit('navigationMenuRefresh');
         } else {
             $svc = app(PlanEntitlementService::class);
             $restaurant = $restaurantId ? \App\Models\Restaurant::find($restaurantId) : null;
@@ -159,6 +160,7 @@ class Show extends Component
                 'restaurant_id' => $restaurantId,
             ]);
             session()->flash('message', __('admin.category.flash_created'));
+            $this->emit('navigationMenuRefresh');
         }
     }
 
@@ -205,6 +207,7 @@ class Show extends Component
         if ($category->products()->count() === 0) {
             $category->delete();
             session()->flash('message', __('admin.category.flash_deleted'));
+            $this->emit('navigationMenuRefresh');
             if ((int) $this->category_id === (int) $id) {
                 $this->closeForm();
             }

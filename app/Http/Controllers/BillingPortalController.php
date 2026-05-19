@@ -46,7 +46,7 @@ class BillingPortalController extends Controller
         $stripeSecret = config('stripe.secret');
         if (! $stripeSecret) {
             Log::error('BillingPortal: STRIPE_SECRET is not configured.');
-            return redirect()->route('product.index')
+            return redirect()->route('product')
                 ->withErrors(['portal' => 'El sistema de pagos no está disponible. Contacta a soporte.']);
         }
 
@@ -54,14 +54,14 @@ class BillingPortalController extends Controller
             $stripe  = new StripeClient($stripeSecret);
             $session = $stripe->billingPortal->sessions->create([
                 'customer'   => $subscription->stripe_customer_id,
-                'return_url' => route('product.index'),
+                'return_url' => route('product'),
             ]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             Log::error('BillingPortal: failed to create session — ' . $e->getMessage(), [
                 'account_id'          => $account->id,
                 'stripe_customer_id'  => $subscription->stripe_customer_id,
             ]);
-            return redirect()->route('product.index')
+            return redirect()->route('product')
                 ->withErrors(['portal' => 'No se pudo abrir el portal de facturación. Inténtalo de nuevo.']);
         }
 

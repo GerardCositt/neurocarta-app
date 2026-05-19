@@ -43,7 +43,8 @@
         <title>{{ config('app.name', 'Laravel') }} · Admin</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
         @php
             // En este proyecto mix-manifest no tiene hashes; añadimos versionado para evitar caché agresiva del navegador.
             $adminCssV = @filemtime(public_path('css/app.css')) ?: time();
@@ -70,6 +71,14 @@
                    class="shrink-0 font-semibold underline underline-offset-2 hover:opacity-80 whitespace-nowrap">
                     Ver planes →
                 </a>
+            </div>
+        @endif
+
+        @if (session('admin_warning'))
+            <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 flex items-center gap-2"
+                 role="alert">
+                <span aria-hidden="true">⚠</span>
+                <span>{{ session('admin_warning') }}</span>
             </div>
         @endif
 

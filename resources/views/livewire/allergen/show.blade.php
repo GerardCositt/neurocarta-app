@@ -13,34 +13,30 @@
         <x-admin.banner variant="success">{{ session('message') }}</x-admin.banner>
     @endif
 
-    <div class="flex justify-between items-center mb-5">
-        <div>
+    <div class="flex flex-col gap-3 xl:flex-row xl:justify-between xl:items-start mb-5 min-w-0">
+        <div class="w-full min-w-0 xl:flex-1 xl:max-w-md">
             <input wire:model.debounce.400ms="q"
                    type="search"
-                   size="25"
                    placeholder="{{ __('admin.allergen_page.search_placeholder') }}"
-                   class="border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
+                   class="w-full border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap justify-end gap-2 w-full xl:w-auto shrink-0">
             @if($missingOfficialCount > 0)
-            <button wire:click="confirmLoadOfficialAllergens()"
-                    class="text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2"
-                    style="background-color:#f5a623;" onmouseover="this.style.backgroundColor='#d4891a'" onmouseout="this.style.backgroundColor='#f5a623'">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <x-admin.toolbar-primary wire:click="confirmLoadOfficialAllergens()">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.955 11.955 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
                 </svg>
                 {{ __('admin.allergen_page.load_official') }}
-            </button>
+            </x-admin.toolbar-primary>
             @endif
 
-            <button wire:click="openForm()"
-                    class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <x-admin.toolbar-primary wire:click="openForm()">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                 </svg>
                 {{ __('admin.allergen_page.add') }}
-            </button>
+            </x-admin.toolbar-primary>
         </div>
     </div>
 
@@ -134,7 +130,7 @@
                                 <ul class="space-y-1 max-h-60 overflow-y-auto pr-1">
                                     @foreach($expandedLinkedProducts as $p)
                                         <li class="flex items-center gap-3 py-1.5 border-b border-amber-100 last:border-0">
-                                            <img src="{{ $p->photo ? asset('storage/'.$p->photo) : asset('img/noimg.png') }}"
+                                            <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($p->photo) }}"
                                                  alt=""
                                                  class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
                                             <a href="{{ route('product', ['edit' => $p->id, 'from' => 'allergen']) }}"

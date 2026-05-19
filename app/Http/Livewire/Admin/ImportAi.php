@@ -233,6 +233,7 @@ class ImportAi extends Component
                         'order'         => ++$maxProdOrder,
                         'featured'      => false,
                         'recommended'   => false,
+                        'is_template'   => false,
                     ]);
 
                     if ($this->generateImages && $this->productImageAi()->isConfigured()) {
@@ -269,6 +270,7 @@ class ImportAi extends Component
             }
 
             $this->emit('aiCreditsUpdated');
+            $this->emit('navigationMenuRefresh');
 
             $this->savedProducts   = $savedProds;
             $this->savedCategories = $savedCats;

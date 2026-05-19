@@ -157,6 +157,7 @@ class ProductImport extends Component
                     'recommended'    => $this->toBool($row['recommended'] ?? false),
                     'category_id'    => $category ? $category->id : null,
                     'restaurant_id'  => $restaurantId,
+                    'is_template'    => false,
                 ];
 
                 // Order
@@ -177,7 +178,7 @@ class ProductImport extends Component
                 }
 
                 if ($product) {
-                    $product->update(Arr::except($payload, ['category_id']) + ['category_id' => $payload['category_id']]);
+                    $product->update(Arr::except($payload, ['category_id']) + ['category_id' => $payload['category_id'], 'is_template' => false]);
                     $updated++;
                 } else {
                     $product = Product::create($payload);
@@ -210,6 +211,7 @@ class ProductImport extends Component
             'linked' => $linkedAllergens,
             'unknown' => $unknownAllergens,
         ]));
+        $this->emit('navigationMenuRefresh');
         $this->reset(['file']);
         $this->resetPreview();
     }

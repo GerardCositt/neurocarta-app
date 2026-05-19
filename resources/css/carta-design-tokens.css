@@ -14,8 +14,8 @@
     --text: #f0ebe4;
     --text-muted: #a3a3a3;
     --red: #dc2626;
-    --font-title: 'Playfair Display', Georgia, serif;
-    --font-body: 'Montserrat', system-ui, sans-serif;
+    --font-title: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
     --radius: 12px;
     --nav-bg: rgba(10, 10, 10, 0.96);
     --nav-border: rgba(245, 166, 35, 0.14);

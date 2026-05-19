@@ -144,16 +144,25 @@ html[data-admin-sidebar="collapsed"] .admin-ai-credits-fixed {
     width: 14rem !important;
 }
 
-/* Tablas admin: columnas sticky (para que "Nombre" siempre se vea) */
+/* Tablas admin — productos: solo geometría en sticky; el fondo lo definen thead (overrides) y tbody aquí */
 .admin-sticky-col {
     position: sticky;
     z-index: 12;
-    background: var(--surface);
 }
-.admin-sticky-hdr { z-index: 18; }
-html[data-effective-theme="dark"] .admin-sticky-col {
-    background: var(--surface-el);
+/* Filas: columnas sticky del cuerpo */
+html[data-effective-theme="light"] .admin-shell .admin-main table tbody td.admin-sticky-col {
+    background-color: var(--surface);
 }
+html[data-effective-theme="light"] .admin-shell .admin-main table tbody tr:hover td.admin-sticky-col {
+    background-color: rgb(249 250 251);
+}
+html[data-effective-theme="dark"] .admin-shell .admin-main table tbody td.admin-sticky-col {
+    background-color: var(--surface);
+}
+html[data-effective-theme="dark"] .admin-shell .admin-main table tbody tr:hover td.admin-sticky-col {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
 /* Offsets (productos): checkbox + drag + imagen + nombre + categoría */
 /* checkbox: pl-2 pr-0 w-8 → ~2.5rem (40px) */
 /* drag:     px-1 w-4      → ~1.5rem (24px) */

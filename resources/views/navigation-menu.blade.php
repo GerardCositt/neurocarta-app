@@ -99,23 +99,37 @@
             }
             $menuHref = ($qrMenuUrl ?? null) ?: $fallbackMenuUrl;
         @endphp
-        <a href="{{ $menuHref }}" target="_blank" rel="noopener noreferrer"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-            <span class="admin-nav-label">{{ __('admin.nav.view_menu') }}</span>
-        </a>
+        @if($menuReady ?? false)
+            <a href="{{ $menuHref }}" target="_blank" rel="noopener noreferrer"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <span class="admin-nav-label">{{ __('admin.nav.view_menu') }}</span>
+            </a>
+        @else
+            <button type="button" onclick="openMenuNotReadyModal(); return false;"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                    title="{{ __('admin.nav.view_menu_requires_content') }}">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <span class="admin-nav-label">{{ __('admin.nav.view_menu') }}</span>
+            </button>
+        @endif
 
-        <button type="button" onclick="toggleSidebarQR()"
-                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+        <button type="button" @if($menuReady ?? false) onclick="toggleSidebarQR()" @else onclick="openMenuNotReadyModal(); return false;" @endif
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors {{ ($menuReady ?? false) ? 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700' }}"
+                title="{{ ($menuReady ?? false) ? '' : __('admin.nav.view_menu_requires_content') }}">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
             </svg>
             <span class="admin-nav-label">{{ __('admin.nav.qrs') }}</span>
         </button>
 
+        @if($menuReady ?? false)
         <div id="qr-panel" class="hidden px-1 pb-2">
             <div class="flex justify-center rounded-xl border border-gray-100 mt-1 p-2 bg-white">
                 <div id="sidebar-qr"></div>
@@ -125,6 +139,7 @@
                 {{ __('admin.actions.download_qr') }}
             </button>
         </div>
+        @endif
         <script>
             @php
                 // Fallback: si por lo que sea qrMenuUrl viene vacío, en admin siempre queremos ?restaurant=ID.
@@ -165,7 +180,7 @@
                           {{ request()->is('settings/import-products') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <span class="admin-nav-label">{{ __('admin.nav.import_products') }}</span>
                     @if($needsUpgrade)
-                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Pro</span>
                     @endif
                 </a>
                 <a href="{{ url('/settings/import-ai') }}"
@@ -173,7 +188,7 @@
                           {{ request()->is('settings/import-ai') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <span class="admin-nav-label">{{ __('admin.nav.import_ai') }}</span>
                     @if($needsUpgrade)
-                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Pro</span>
                     @endif
                 </a>
                 <a href="{{ url('/settings/ai-billing') }}"
@@ -181,7 +196,7 @@
                           {{ request()->is('settings/ai-billing') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <span class="admin-nav-label">{{ __('admin.nav.ai_billing') }}</span>
                     @if($needsUpgrade)
-                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Pro</span>
                     @endif
                 </a>
                 <a href="{{ url('/translations') }}"
@@ -189,7 +204,7 @@
                           {{ request()->is('translations*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     <span class="admin-nav-label">{{ __('admin.nav.translations') }}</span>
                     @if($needsUpgrade)
-                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Pro</span>
                     @endif
                 </a>
                 <a href="{{ url('/settings/orders') }}"
@@ -205,7 +220,7 @@
         @php
             $planMeta = match($currentPlan) {
                 'premium' => ['label' => 'Premium', 'bg' => 'bg-amber-100', 'text' => 'text-amber-800', 'dot' => 'bg-amber-500'],
-                'pro'     => ['label' => 'Pro',     'bg' => 'bg-indigo-100','text' => 'text-indigo-700','dot' => 'bg-indigo-500'],
+                'pro'     => ['label' => 'Pro',     'bg' => 'bg-orange-100','text' => 'text-orange-700','dot' => 'bg-orange-500'],
                 'basico'  => ['label' => 'Básico',  'bg' => 'bg-gray-100',  'text' => 'text-gray-600',  'dot' => 'bg-gray-400'],
                 default   => ['label' => 'Trial',   'bg' => 'bg-green-100', 'text' => 'text-green-700', 'dot' => 'bg-green-500'],
             };
@@ -222,7 +237,10 @@
             </a>
             @elseif(in_array($currentPlan, ['pro', 'premium']))
             <a href="{{ route('subscription.manage') }}"
-               class="admin-nav-label mt-2 flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl text-xs text-gray-400 hover:text-gray-600 transition-colors">
+               class="admin-nav-label mt-2 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-amber-950 bg-gradient-to-br from-amber-100 via-orange-50 to-amber-50 border border-amber-300/90 shadow-sm hover:shadow hover:border-amber-400 hover:from-amber-50 hover:via-orange-50 transition-all">
+                <svg class="w-4 h-4 shrink-0 text-amber-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                </svg>
                 Gestionar plan
             </a>
             @endif
@@ -237,6 +255,38 @@
     <livewire:admin.ai-credits-banner />
 
 </div>
+
+<div id="menu-not-ready-modal"
+     style="display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;"
+     onclick="if(event.target===this)closeMenuNotReadyModal()">
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);"></div>
+    <div style="position:relative;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:24px;max-width:448px;width:calc(100% - 32px);">
+        <h3 style="font-size:18px;font-weight:600;color:#1f2937;margin-bottom:8px;">{{ __('admin.nav.menu_not_ready_title') }}</h3>
+        <p style="font-size:14px;color:#4b5563;margin-bottom:20px;line-height:1.55;">
+            {{ __('admin.nav.menu_not_ready_body') }}
+        </p>
+        <div style="display:flex;justify-content:flex-end;">
+            <button type="button" onclick="closeMenuNotReadyModal()"
+                    style="padding:8px 16px;border-radius:8px;border:1px solid #d1d5db;font-size:14px;font-weight:500;color:#374151;background:#fff;cursor:pointer;">
+                {{ __('admin.actions.close') }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openMenuNotReadyModal() {
+    var modal = document.getElementById('menu-not-ready-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+}
+
+function closeMenuNotReadyModal() {
+    var modal = document.getElementById('menu-not-ready-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+}
+</script>
 
 {{-- ── Modal eliminar restaurante (fuera del sidebar para evitar stacking context) ── --}}
 <div id="del-rest-modal"

@@ -13,22 +13,23 @@
         <x-admin.banner variant="success">{{ session('message') }}</x-admin.banner>
     @endif
 
-    {{-- Barra de acciones --}}
-    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
-        @if(!$isOpen && $pairings->isEmpty())
-            <p class="text-sm text-gray-500 max-w-xl order-2 sm:order-1">{{ __('admin.pairing_page.empty_hint') }}</p>
-        @elseif(!$isOpen)
-            <p class="text-sm text-gray-500 max-w-xl order-2 sm:order-1">{{ __('admin.pairing_page.ai_location_hint') }}</p>
-        @else
-            <div class="order-2 sm:order-1"></div>
-        @endif
-        <button wire:click="create()"
-                class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2 shrink-0 self-start sm:self-auto">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            {{ __('admin.pairing_page.add') }}
-        </button>
+    {{-- Barra de acciones: texto con ancho legible (sin flex-1/min-w-0 que colapsaba la columna) + botón a la derecha --}}
+    <div class="mb-5 flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between xl:gap-6">
+        <div class="w-full max-w-3xl xl:pr-4">
+            @if(!$isOpen && $pairings->isEmpty())
+                <p class="text-sm text-gray-500">{{ __('admin.pairing_page.empty_hint') }}</p>
+            @elseif(!$isOpen)
+                <p class="text-sm text-gray-500">{{ __('admin.pairing_page.ai_location_hint') }}</p>
+            @endif
+        </div>
+        <div class="flex justify-end w-full xl:w-auto shrink-0">
+            <x-admin.toolbar-primary wire:click="create()">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                {{ __('admin.pairing_page.add') }}
+            </x-admin.toolbar-primary>
+        </div>
     </div>
 
     @if($isOpen)
@@ -105,7 +106,7 @@
                                     <ul class="space-y-1 max-h-60 overflow-y-auto pr-1">
                                         @foreach($expandedLinkedProducts as $p)
                                             <li class="flex items-center gap-3 py-1.5 border-b border-amber-100 last:border-0">
-                                                <img src="{{ $p->photo ? asset('storage/'.$p->photo) : asset('img/noimg.png') }}"
+                                                <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($p->photo) }}"
                                                      alt=""
                                                      class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
                                                 <a href="{{ route('product', ['edit' => $p->id, 'from' => 'pairing']) }}"

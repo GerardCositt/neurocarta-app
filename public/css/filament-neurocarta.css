@@ -1,9 +1,9 @@
 /* NeuroCarta.ai — Tema Filament */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* Fuente global */
 body, .filament-brand, .filament-sidebar, .filament-main {
-    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif !important;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif !important;
 }
 
 /* ── Inputs: solo borde dorado, sin fondo rojo ── */

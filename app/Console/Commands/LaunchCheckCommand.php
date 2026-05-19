@@ -130,6 +130,25 @@ class LaunchCheckCommand extends Command
                 $this->line("  ✓ {$label} = ".substr((string) $val, 0, 12).'…');
             }
         }
+
+        foreach ([
+            'STRIPE_PRICE_BASICO_MONTHLY',
+            'STRIPE_PRICE_BASICO_ANNUAL',
+            'STRIPE_PRICE_PRO_MONTHLY',
+            'STRIPE_PRICE_PRO_ANNUAL',
+            'STRIPE_PRICE_PREMIUM_MONTHLY',
+            'STRIPE_PRICE_PREMIUM_ANNUAL',
+        ] as $label) {
+            $val = env($label, '');
+            if (! $val) {
+                $this->error("  ✗ {$label} vacío — crea el Price en Stripe y pon el price_...");
+            } elseif (! str_starts_with((string) $val, 'price_')) {
+                $this->warn("  ⚠ {$label} no parece un Price ID de Stripe — valor: {$val}");
+            } else {
+                $this->line("  ✓ {$label} = ".substr((string) $val, 0, 16).'…');
+            }
+        }
+        $this->line('  → Impuestos: Prices sin IVA incluido. En Stripe Tax usa tax_behavior=exclusive.');
         $this->newLine();
 
         // --- Base de datos ---

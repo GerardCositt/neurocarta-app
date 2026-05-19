@@ -74,6 +74,24 @@
                 </a>
                 @endif
                 <div class="border-t border-gray-100 my-1"></div>
+                @if($hasNoProducts ?? false)
+                <button type="button" wire:click="confirmLoadDemo" onclick="document.getElementById('actions-menu-products').removeAttribute('open')"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left">
+                    <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 5.5A2.5 2.5 0 016.5 3h11A2.5 2.5 0 0120 5.5v13a1.5 1.5 0 01-2.25 1.3L12 16.5l-5.75 3.3A1.5 1.5 0 014 18.5v-13z"/>
+                    </svg>
+                    {{ __('admin.products.load_demo') }}
+                </button>
+                @endif
+                @if($hasOnlyDemoProducts ?? false)
+                <button type="button" wire:click="confirmDeleteDemo" onclick="document.getElementById('actions-menu-products').removeAttribute('open')"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left">
+                    <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m3 0V5a2 2 0 012-2h0a2 2 0 012 2v2"/>
+                    </svg>
+                    {{ __('admin.products.delete_demo') }}
+                </button>
+                @endif
                 <button type="button" wire:click="create()" onclick="document.getElementById('actions-menu-products').removeAttribute('open')"
                         class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left">
                     <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -212,7 +230,7 @@
 
                 {{-- Foto --}}
                 <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
-                    <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                    <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                          alt="{{ $product->name }}"
                          class="w-full h-full object-cover"
                          onerror="this.onerror=null;this.src={{ json_encode(asset('img/noimg.png')) }};">
@@ -290,24 +308,7 @@
                 <p class="mb-2">{{ __('admin.products.empty_filtered') }}</p>
             @else
                 <p class="mb-2">{{ __('admin.products.empty_none') }}</p>
-                <div class="mt-4 flex flex-col items-center gap-3">
-                    @if ($canUseCsvImport ?? false)
-                    <a href="{{ route('settings.import-products') }}"
-                       class="inline-flex items-center gap-2 bg-white border border-gray-200 hover:border-amber-300 text-gray-800 text-sm font-semibold py-2 px-4 rounded-xl shadow-sm">
-                        {{ __('admin.products.import_csv') }}
-                    </a>
-                    @endif
-                    @if ($canUseAi ?? false)
-                    <a href="{{ route('settings.import-ai') }}"
-                       class="inline-flex items-center gap-2 bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm">
-                        {{ __('admin.products.add_with_ai') }}
-                    </a>
-                    @endif
-                    <button type="button" wire:click="create()"
-                            class="inline-flex items-center gap-2 bg-green-500 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm">
-                        {{ __('admin.products.add_one_by_one') }}
-                    </button>
-                </div>
+                @include('livewire.partials.products-empty-actions')
             @endif
         </li>
     @endforelse
@@ -319,10 +320,10 @@
     <div class="hidden md:block">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 max-w-full min-w-0 overflow-hidden">
             <div class="overflow-x-auto overscroll-x-contain rounded-2xl">
-            <table class="w-full min-w-[640px] sm:min-w-[960px]">
-            <thead>
+            <table class="admin-products-table w-full min-w-[640px] sm:min-w-[960px]">
+            <thead class="admin-products-thead">
                 <tr class="border-b border-gray-100">
-                    <th class="pl-2 pr-0 py-3 w-8 text-center align-middle admin-sticky-col admin-sticky-hdr admin-sticky-left-0" title="{{ __('admin.products.th_select_all_title') }}">
+                    <th class="pl-2 pr-0 py-3 w-8 text-center align-middle" title="{{ __('admin.products.th_select_all_title') }}">
                         <span class="sr-only">{{ __('admin.products.th_select_all') }}</span>
                         <button type="button"
                                 wire:click.stop.prevent="toggleSelectCurrentPage"
@@ -343,9 +344,9 @@
                             @endif
                         </button>
                     </th>
-                    <th class="px-1 py-3 w-5 admin-sticky-col admin-sticky-hdr admin-sticky-left-4"></th>
-                    <th class="pl-1 pr-2 py-3 w-12 admin-sticky-col admin-sticky-hdr admin-sticky-left-7"></th>
-                    <th class="pl-4 pr-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider admin-sticky-col admin-sticky-hdr admin-sticky-left-125" style="min-width:200px">
+                    <th class="px-1 py-3 w-5" aria-hidden="true"></th>
+                    <th class="pl-1 pr-2 py-3 w-12" aria-hidden="true"></th>
+                    <th class="pl-4 pr-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:200px">
                         {{ __('admin.products.th_name') }}
                     </th>
                     <th class="px-2 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider" style="min-width:9rem">{{ __('admin.products.th_category') }}</th>
@@ -389,7 +390,7 @@
                     {{-- Imagen --}}
                     <td class="pl-1 pr-2 py-2 admin-sticky-col admin-sticky-left-7">
                         <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                            <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                            <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                                  alt="{{ $product->name }}"
                                  class="w-full h-full object-cover"
                                  onerror="this.onerror=null;this.src={{ json_encode(asset('img/noimg.png')) }};">
@@ -555,31 +556,9 @@
                         @else
                             <p class="mb-2">{{ __('admin.products.empty_none') }}</p>
                         @endif
-                        <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-                            @if ($canUseCsvImport ?? false)
-                            <a href="{{ route('settings.import-products') }}"
-                               class="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-amber-300 hover:bg-amber-100 text-gray-800 text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
-                                {{ __('admin.products.import_csv') }}
-                            </a>
-                            @endif
-                            @if ($canUseAi ?? false)
-                            <a href="{{ route('settings.import-ai') }}"
-                               class="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
-                                {{ __('admin.products.add_with_ai') }}
-                            </a>
-                            @endif
-                            <button type="button" wire:click="create()"
-                                    class="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
-                                {{ __('admin.products.add_one_by_one') }}
-                            </button>
-                            @if ($canUseAi ?? false)
-                            <button type="button" wire:click="generateMissingProductPhotos" wire:loading.attr="disabled" wire:target="generateMissingProductPhotos"
-                                    class="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-amber-300 hover:bg-amber-50 text-gray-800 text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors">
-                                <span wire:loading.remove wire:target="generateMissingProductPhotos">{{ __('admin.products.generate_photos_ai') }}</span>
-                                <span wire:loading wire:target="generateMissingProductPhotos">{{ __('admin.products.generating') }}</span>
-                            </button>
-                            @endif
-                        </div>
+                        @if(($commercialFilterNorm ?? '') === '')
+                            @include('livewire.partials.products-empty-actions')
+                        @endif
                     </td>
                 </tr>
             @endforelse
@@ -625,6 +604,48 @@
                 <button wire:click="removeProductPhotoConfirmed" wire:loading.attr="disabled"
                         class="px-4 py-2 text-sm text-white bg-red-500 hover:bg-red-600 rounded-xl transition-colors font-semibold cursor-pointer">
                     {{ __('admin.products.modal_photo_confirm') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- Modal confirmación cargar datos de prueba --}}
+    @if($confirmingLoadDemo)
+    <div class="fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelLoadDemo"></div>
+        <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.demo_modal_title') }}</h3>
+            <p class="text-sm text-gray-600 mb-6">{{ __('admin.products.demo_modal_body') }}</p>
+            <div class="flex justify-end gap-3">
+                <button wire:click="cancelLoadDemo" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+                    {{ __('admin.actions.cancel') }}
+                </button>
+                <button wire:click="loadDemoContent" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-white bg-amber-500 hover:bg-amber-600 rounded-xl transition-colors font-semibold cursor-pointer">
+                    {{ __('admin.products.demo_modal_confirm') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- Modal confirmación borrar datos de prueba --}}
+    @if($confirmingDeleteDemo)
+    <div class="fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelDeleteDemo"></div>
+        <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.demo_delete_modal_title') }}</h3>
+            <p class="text-sm text-gray-600 mb-6">{{ __('admin.products.demo_delete_modal_body') }}</p>
+            <div class="flex justify-end gap-3">
+                <button wire:click="cancelDeleteDemo" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+                    {{ __('admin.actions.cancel') }}
+                </button>
+                <button wire:click="deleteDemoContent" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-white bg-amber-500 hover:bg-amber-600 rounded-xl transition-colors font-semibold cursor-pointer">
+                    {{ __('admin.products.demo_delete_modal_confirm') }}
                 </button>
             </div>
         </div>

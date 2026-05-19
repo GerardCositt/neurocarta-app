@@ -8,22 +8,22 @@
         <x-admin.banner variant="success">{{ session('message') }}</x-admin.banner>
     @endif
 
-    {{-- Barra de acciones --}}
-    <div class="flex justify-between items-center mb-5">
-        <div>
+    {{-- Barra de acciones (alineada como productos / categorías) --}}
+    <div class="flex flex-col gap-3 xl:flex-row xl:justify-between xl:items-start mb-5 min-w-0">
+        <div class="w-full min-w-0 xl:flex-1 xl:max-w-md">
             <input wire:model.debounce.500ms="q"
                    type="search"
-                   size="25"
                    placeholder="Buscar aviso..."
-                   class="border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
+                   class="w-full border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
         </div>
-        <button wire:click="confirmItemAdd"
-                class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            Añadir aviso
-        </button>
+        <div class="flex justify-end w-full xl:w-auto shrink-0">
+            <x-admin.toolbar-primary wire:click="confirmItemAdd">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Añadir aviso
+            </x-admin.toolbar-primary>
+        </div>
     </div>
 
     {{-- Tabla --}}

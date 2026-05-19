@@ -169,7 +169,7 @@
                                 <div class="flex items-start gap-3">
                                     @if($photo && !$filename)
                                         <div class="flex flex-col items-center gap-1">
-                                            <img src="{{ asset('storage/'.$photo) }}" alt=""
+                                            <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($photo) }}" alt=""
                                                  class="w-14 h-14 rounded-xl object-cover border border-gray-200 shadow-sm flex-shrink-0">
                                             @if($product_id)
                                                 <button type="button" wire:click="confirmRemoveProductPhoto"

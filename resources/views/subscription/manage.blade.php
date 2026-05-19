@@ -3,7 +3,7 @@
 
     {{-- Logo --}}
     <a href="{{ url('/') }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;margin-bottom:40px;">
-        <span style="font-family:'DM Sans',ui-sans-serif,system-ui,sans-serif;font-size:32px;font-weight:900;letter-spacing:-0.02em;line-height:1;">
+        <span style="font-family:'Inter',ui-sans-serif,system-ui,sans-serif;font-size:32px;font-weight:900;letter-spacing:0;line-height:1;">
             <span style="color:#ffffff;">NeuroCarta</span><span style="color:#FFC107;font-weight:900;">.ai</span><span style="vertical-align:super;font-size:10px;color:rgba(255,255,255,.70);">®</span>
         </span>
     </a>
@@ -68,6 +68,26 @@
         </div>
         @endif
 
+        @if($hasStripe)
+            <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;margin-bottom:24px;">
+                <div style="font-size:12px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Cambios de plan</div>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:13px;line-height:1.45;color:rgba(255,255,255,.66);">
+                    <li>✓ Las mejoras se aplican al momento y Stripe cobra solo la parte proporcional.</li>
+                    <li>✓ Las bajadas y cancelaciones se aplican al finalizar el periodo ya pagado.</li>
+                    <li>✓ Stripe calcula automáticamente importes, prorrateos e IVA antes de confirmar.</li>
+                </ul>
+            </div>
+        @else
+            <div style="background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;margin-bottom:24px;">
+                <div style="font-size:12px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Antes de empezar</div>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:13px;line-height:1.45;color:rgba(255,255,255,.66);">
+                    <li>✓ El pago se realiza en el checkout seguro de Stripe.</li>
+                    <li>✓ El IVA se calcula antes de confirmar el pago.</li>
+                    <li>✓ Tras el primer pago podrás gestionar plan, tarjeta y facturas.</li>
+                </ul>
+            </div>
+        @endif
+
         {{-- Portal button (only if stripe customer exists) --}}
         @if($hasStripe)
         <form method="POST" action="{{ route('subscription.portal') }}">
@@ -95,7 +115,7 @@
 
     {{-- Back link --}}
     <div style="margin-top:28px;text-align:center;font-size:13px;color:rgba(255,255,255,.35);">
-        <a href="{{ route('product.index') }}" style="color:rgba(255,255,255,.55);text-decoration:underline;">← Volver al panel</a>
+        <a href="{{ route('product') }}" style="color:rgba(255,255,255,.55);text-decoration:underline;">← Volver al panel</a>
     </div>
 
 </div>

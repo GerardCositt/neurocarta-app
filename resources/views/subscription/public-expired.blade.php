@@ -17,7 +17,7 @@
             padding: 48px 24px;
             background: #0f1117;
             color: #fff;
-            font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
         }
 
         .icon {

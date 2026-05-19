@@ -15,6 +15,16 @@ php artisan demo:prepare
 - Carga el menú de ejemplo si el primer restaurante **aún no tiene categorías** (`DemoMenuSeeder`).
 - Imprime la **URL pública** con `?restaurant=ID` (imprescindible al usar `127.0.0.1`, IP local o túnel).
 
+### Fotos más realistas para la demo comercial
+
+Las miniaturas por defecto viven en `public/demo/`. Para **ventas y demos en vivo**, coloca fotos propias con los nombres de la lista (`local/demo-product-images/README.md`) en **una** de estas rutas (orden de prioridad):
+
+1. `local/demo-product-images/`
+2. `img/demo-product-images/` (recomendado si ya tienes muchas cosas en `img/`)
+3. `img/` (raíz del proyecto)
+
+Los ficheros con nombre aleatorio tipo `0BbN8qMdsx….jpg` **no** se enlazan solos con cada plato: copia o renombra cada foto elegida al nombre del plato (`entrecot.jpg`, etc.).
+
 ### IA ilimitada en demo
 
 En este proyecto, en **entorno demo** (`APP_ENV=demo`) las acciones de IA se consideran **ilimitadas** por defecto (no descuentan créditos de plataforma).

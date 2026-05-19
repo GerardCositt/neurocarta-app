@@ -53,6 +53,7 @@ class DemoMenuSeeder extends Seeder
             'category_id'   => $category->id,
             'restaurant_id' => $restaurant->id,
             'order'         => 1,
+            'is_template'   => true,
         ]);
 
         Product::create([
@@ -66,6 +67,7 @@ class DemoMenuSeeder extends Seeder
             'category_id'   => $category->id,
             'restaurant_id' => $restaurant->id,
             'order'         => 2,
+            'is_template'   => true,
         ]);
 
         $this->command->info('Menú demo creado para «'.$restaurant->name.'».');

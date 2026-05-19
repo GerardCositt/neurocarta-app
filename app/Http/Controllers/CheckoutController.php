@@ -58,7 +58,7 @@ class CheckoutController extends Controller
                     ->with('status', 'Tu suscripción ya está activa. Desde aquí puedes cambiar de plan.');
             }
             // Active but no Stripe customer (e.g. manually activated by admin) — just go home.
-            return redirect()->route('product.index')
+            return redirect()->route('product')
                 ->with('status', 'Tu plan ya está activo.');
         }
 

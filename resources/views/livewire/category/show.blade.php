@@ -13,22 +13,23 @@
         <x-admin.banner variant="success">{{ session('message') }}</x-admin.banner>
     @endif
 
-    {{-- Barra de acciones --}}
-    <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-5">
-        <div class="w-full sm:flex-1 sm:max-w-md">
+    {{-- Barra de acciones (misma lógica que productos: filtros izquierda, primarios derecha) --}}
+    <div class="flex flex-col gap-3 xl:flex-row xl:justify-between xl:items-start mb-5 min-w-0">
+        <div class="w-full min-w-0 xl:flex-1 xl:max-w-md">
             <input wire:model.debounce.400ms="q"
                    type="search"
                    placeholder="{{ __('admin.category_page.search_placeholder') }}"
                    class="w-full border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
         </div>
 
-        <button wire:click="openForm()"
-                class="w-full sm:w-auto justify-center bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            {{ __('admin.category_page.add') }}
-        </button>
+        <div class="flex justify-end w-full xl:w-auto shrink-0">
+            <x-admin.toolbar-primary wire:click="openForm()">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                {{ __('admin.category_page.add') }}
+            </x-admin.toolbar-primary>
+        </div>
     </div>
 
     @if($isOpen)
@@ -100,7 +101,7 @@
                             <ul class="space-y-1 max-h-48 overflow-y-auto pr-1">
                                 @foreach($expandedProducts as $product)
                                     <li class="flex items-center gap-2 py-1.5 border-b border-amber-100 last:border-0 min-w-0">
-                                        <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                                        <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                                              alt=""
                                              class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
                                         <span class="text-sm flex-1 min-w-0 truncate {{ $product->active ? 'line-through text-gray-400' : 'text-gray-800' }}">
@@ -201,7 +202,7 @@
                             <ul class="space-y-1 max-h-60 overflow-y-auto pr-1">
                                 @foreach($expandedProducts as $product)
                                     <li class="flex items-center gap-3 py-1.5 border-b border-amber-100 last:border-0">
-                                        <img src="{{ $product->photo ? asset('storage/'.$product->photo) : asset('img/noimg.png') }}"
+                                        <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                                              alt=""
                                              class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
                                         <span class="text-sm {{ $product->active ? 'line-through text-gray-400' : 'text-gray-800' }}">
