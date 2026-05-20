@@ -143,7 +143,7 @@
     </div>
 
     @if($confirmingPairingDeletion)
-    <div class="fixed inset-0 z-50 flex items-center justify-center" wire:click.stop>
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('confirmingPairingDeletion', false)"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.pairing_ui.modal_delete_title') }}</h3>
@@ -163,7 +163,7 @@
     @endif
 
     @if($confirmingPairingAiDescription)
-    <div class="fixed inset-0 z-50 flex items-center justify-center"
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center"
          wire:click.stop
          wire:loading.remove
          wire:target="confirmPairingAiDescription">

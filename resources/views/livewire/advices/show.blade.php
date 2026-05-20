@@ -104,7 +104,7 @@
 
     {{-- Modal confirmación eliminar --}}
     @if($confirmingItemDeletion)
-    <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('confirmingItemDeletion', false)"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">Eliminar aviso</h3>
@@ -125,7 +125,7 @@
 
     {{-- Modal añadir / editar --}}
     @if($confirmingItemAdd)
-    <div class="fixed inset-0 z-[60] overflow-y-auto">
+    <div class="fixed inset-0 z-[60] admin-modal-overlay overflow-y-auto">
         <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
 
         <div class="flex min-h-full items-center justify-center p-4">

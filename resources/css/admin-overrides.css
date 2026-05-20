@@ -1103,3 +1103,10 @@ html[data-effective-theme="dark"] .admin-shell .admin-main table thead.admin-pro
     background-color: #161616 !important;
     background-image: none !important;
 }
+
+/* Modales fixed: siempre por encima de todo el stacking del shell (header z:9000, user-menu z:9200) */
+.admin-modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9500 !important;
+}

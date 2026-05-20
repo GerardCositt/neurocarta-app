@@ -570,7 +570,7 @@
 
     {{-- Modal confirmación eliminar producto --}}
     @if($confirmingProductDeletion)
-    <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('confirmingProductDeletion', false)"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.modal_delete_title') }}</h3>
@@ -591,7 +591,7 @@
 
     {{-- Modal confirmación quitar foto --}}
     @if($confirmingProductPhotoRemoval)
-    <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('confirmingProductPhotoRemoval', false)"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.modal_photo_title') }}</h3>
@@ -612,7 +612,7 @@
 
     {{-- Modal aviso: crear primer producto real mientras hay demo cargada --}}
     @if($showingDemoWarning)
-    <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('showingDemoWarning', false)"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <div class="text-3xl mb-3 text-center">🍽️</div>
@@ -635,7 +635,7 @@
 
     {{-- Modal confirmación cargar datos de prueba --}}
     @if($confirmingLoadDemo)
-    <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelLoadDemo"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.demo_modal_title') }}</h3>
@@ -656,7 +656,7 @@
 
     {{-- Modal confirmación borrar datos de prueba --}}
     @if($confirmingDeleteDemo)
-    <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelDeleteDemo"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.demo_delete_modal_title') }}</h3>
@@ -676,7 +676,7 @@
     @endif
 
     @if($confirmingAiAction)
-    <div class="fixed inset-0 z-50 flex items-center justify-center"
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center"
          wire:loading.remove
          wire:target="confirmAiAction">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelAiActionConfirmation"></div>

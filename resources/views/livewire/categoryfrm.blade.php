@@ -1,6 +1,6 @@
-<div class="fixed inset-0 z-50 overflow-y-auto" wire:click.self="closeForm()">
+<div class="fixed inset-0 z-50 admin-modal-overlay overflow-y-auto" wire:click.self="closeForm()">
 
-    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" wire:click="closeForm()"></div>
+    <div class="fixed inset-0 admin-modal-overlay bg-black bg-opacity-50 transition-opacity" wire:click="closeForm()"></div>
 
     <div class="flex min-h-full items-center justify-center p-4" wire:click="closeForm()">
         <div class="relative bg-white rounded-2xl shadow-xl ring-1 ring-gray-100 w-full max-w-4xl overflow-hidden"

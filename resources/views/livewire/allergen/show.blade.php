@@ -170,7 +170,7 @@
     </div>
 
     @if($confirmingLoadOfficial)
-    <div class="fixed inset-0 z-50 flex items-center justify-center" wire:click.stop>
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelLoadOfficialAllergens"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.allergen_page.load_official_modal_title') }}</h3>
@@ -191,7 +191,7 @@
     @endif
 
     @if($showRemoveAllergenImageModal)
-    <div class="fixed inset-0 z-50 flex items-center justify-center" wire:click.stop>
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelRemoveAllergenImage"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.allergen_page.modal_remove_image_title') }}</h3>
@@ -211,7 +211,7 @@
     @endif
 
     @if($confirmingAllergenDeletion)
-    <div class="fixed inset-0 z-50 flex items-center justify-center" wire:click.stop>
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('confirmingAllergenDeletion', false)"></div>
         <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.allergen_page.modal_delete') }}</h3>
