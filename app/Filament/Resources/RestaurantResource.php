@@ -51,6 +51,36 @@ class RestaurantResource extends Resource
                 Tables\Columns\TextColumn::make('subdomain')
                     ->label('Subdominio')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('usuarios')
+                    ->label('Usuarios')
+                    ->getStateUsing(fn (Restaurant $record): string =>
+                        $record->account
+                            ? $record->account->users->pluck('email')->implode(', ')
+                            : '—'
+                    )
+                    ->wrap()
+                    ->searchable(query: fn ($query, $search) =>
+                        $query->whereHas('account.users', fn ($q) =>
+                            $q->where('email', 'like', "%{$search}%")
+                        )
+                    ),
+                Tables\Columns\TextColumn::make('plan')
+                    ->label('Plan / Estado')
+                    ->getStateUsing(function (Restaurant $record): string {
+                        if (! $record->account) return '—';
+                        $sub = $record->account->subscriptions()
+                            ->orderByDesc('created_at')
+                            ->first();
+                        return $sub ? strtoupper($sub->plan_code) . ' · ' . $sub->status : '—';
+                    })
+                    ->badge()
+                    ->color(fn (string $state): string => match (true) {
+                        str_contains($state, 'PREMIUM') => 'success',
+                        str_contains($state, 'PRO')     => 'primary',
+                        str_contains($state, 'BASICO')  => 'warning',
+                        str_contains($state, 'TRIAL')   => 'secondary',
+                        default                          => 'secondary',
+                    }),
                 Tables\Columns\TextColumn::make('ai_credits')
                     ->label('Créditos IA')
                     ->sortable(),
@@ -63,6 +93,7 @@ class RestaurantResource extends Resource
                     ->sortable(),
             ])
             ->filters([])
+            ->query(fn () => Restaurant::with(['account.users', 'account.subscriptions']))
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('delete')
