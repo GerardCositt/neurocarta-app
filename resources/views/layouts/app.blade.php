@@ -109,7 +109,9 @@
 
                         @auth
                             <div class="flex flex-wrap items-center justify-end gap-3 flex-shrink-0 lg:ml-4 lg:pt-0.5">
-                                @livewire('admin.restaurant-switcher', ['mode' => 'header'])
+                                <div x-data="{ open: false }" @click.outside="open = false" class="relative flex-shrink-0" style="z-index:80">
+                                    @livewire('admin.restaurant-switcher', ['mode' => 'header'])
+                                </div>
                                 <details class="relative admin-user-menu text-left self-end lg:self-start">
                                     <summary
                                         class="admin-cta-trigger flex items-center gap-3 cursor-pointer rounded-xl border py-2 pl-3 pr-3 min-w-0 sm:min-w-[17rem] shadow-sm transition-colors select-none"

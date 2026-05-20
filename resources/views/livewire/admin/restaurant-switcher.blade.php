@@ -1,8 +1,8 @@
 @if($mode === 'header')
 
 {{-- ── Modo HEADER: píldora compacta en la barra superior ───────────────── --}}
-{{-- Alpine gestiona open/close; Livewire gestiona showForm sin cerrar el dropdown --}}
-<div class="relative" x-data="{ open: false }" @click.outside="open = false" id="restaurantHeaderPicker" style="position:relative;z-index:80">
+{{-- x-data vive en el div padre en app.blade.php — fuera del ciclo de re-render Livewire --}}
+<div id="restaurantHeaderPicker">
     <button type="button" @click="open = !open" class="admin-cta-trigger flex items-center gap-2 px-3 py-2 rounded-xl shadow-sm transition-colors">
         <span class="w-2 h-2 rounded-full bg-gray-600 flex-shrink-0"></span>
         <div class="hidden sm:block text-left min-w-0 max-w-[160px]">
