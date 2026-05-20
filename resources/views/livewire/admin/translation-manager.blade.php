@@ -124,7 +124,7 @@
             $summaryLabels[$loc] = ['flag' => $flag, 'label' => $label, 'stats' => $stats, 'active' => ($loc === $locale)];
         }
     @endphp
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="relative z-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <details class="group">
             <summary class="flex items-center justify-between px-6 py-4 cursor-pointer select-none hover:bg-gray-50 transition-colors">
                 <div class="flex items-center gap-3">
@@ -173,7 +173,7 @@
 
     @foreach($sections as $section)
         @if($section['items']->isNotEmpty())
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="relative z-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-800">{{ $section['label'] }}</h3>
                 <span class="text-xs text-gray-400">{{ $section['items']->count() }} registros</span>

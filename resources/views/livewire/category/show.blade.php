@@ -132,7 +132,7 @@
     </ul>
 
     {{-- Lista escritorio (≥ md): drag-and-drop --}}
-    <div class="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-lw-no-close-list wire:click.stop>
+    <div class="relative z-0 hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-lw-no-close-list wire:click.stop>
         <div class="overflow-x-auto overscroll-x-contain">
         @if($categories->isNotEmpty())
             <div class="border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 pr-10 sm:pr-12" role="row">

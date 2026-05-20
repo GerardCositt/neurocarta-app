@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden overflow-x-auto">
+    <div class="relative z-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden overflow-x-auto">
         <table class="w-full min-w-[720px]">
             <thead>
                 <tr class="border-b border-gray-100">

@@ -27,7 +27,7 @@
     </div>
 
     {{-- Tabla --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="relative z-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto overscroll-x-contain sm:overflow-visible">
         <table class="w-full min-w-full">
             <thead>
