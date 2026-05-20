@@ -496,7 +496,7 @@ class Products extends Component
     public function create()
     {
         $restaurantId = $this->getRestaurantId();
-        if ($restaurantId && $this->restaurantCanBulkDeleteTemplate((int) $restaurantId)) {
+        if ($restaurantId && ! \App\Models\Product::where('restaurant_id', $restaurantId)->exists()) {
             $this->showingDemoWarning = true;
             return;
         }
