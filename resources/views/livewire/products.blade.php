@@ -610,6 +610,29 @@
     </div>
     @endif
 
+    {{-- Modal aviso: crear primer producto real mientras hay demo cargada --}}
+    @if($showingDemoWarning)
+    <div class="fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="$set('showingDemoWarning', false)"></div>
+        <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
+            <div class="text-3xl mb-3 text-center">🍽️</div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">{{ __('admin.products.demo_warning_title') }}</h3>
+            <p class="text-sm text-gray-600 mb-3 leading-relaxed">{{ __('admin.products.demo_warning_body') }}</p>
+            <p class="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 mb-5 leading-relaxed">{{ __('admin.products.demo_warning_hint') }}</p>
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3">
+                <button wire:click="$set('showingDemoWarning', false)" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+                    {{ __('admin.products.demo_warning_cancel') }}
+                </button>
+                <button wire:click="proceedCreateDespiteDemo" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-600 rounded-xl transition-colors font-semibold cursor-pointer">
+                    {{ __('admin.products.demo_warning_proceed') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Modal confirmación cargar datos de prueba --}}
     @if($confirmingLoadDemo)
     <div class="fixed inset-0 z-50 flex items-center justify-center">

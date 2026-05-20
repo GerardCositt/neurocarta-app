@@ -65,6 +65,7 @@ class Products extends Component
 
     public $confirmingLoadDemo = false;
     public $confirmingDeleteDemo = false;
+    public $showingDemoWarning = false;
 
     public $confirmingProductDeletion = false;
     public $pendingProductDeletionId = null;
@@ -494,6 +495,20 @@ class Products extends Component
 
     public function create()
     {
+        $restaurantId = $this->getRestaurantId();
+        if ($restaurantId && $this->restaurantCanBulkDeleteTemplate((int) $restaurantId)) {
+            $this->showingDemoWarning = true;
+            return;
+        }
+        $this->returnAfterCloseUrl = null;
+        $this->offerFormOpenedForId = null;
+        $this->resetInputFields();
+        $this->openModal();
+    }
+
+    public function proceedCreateDespiteDemo(): void
+    {
+        $this->showingDemoWarning = false;
         $this->returnAfterCloseUrl = null;
         $this->offerFormOpenedForId = null;
         $this->resetInputFields();
