@@ -15,7 +15,8 @@ class RestaurantSwitcher extends Component
     public $restaurants;
     public $currentId;
 
-    public bool   $showForm      = false;
+    public bool   $showForm         = false;
+    public bool   $confirmingCreate = false;
     public string $newName = '';
     public ?int   $pendingDelete = null;   // fila en estado pre-confirmación
 
@@ -142,8 +143,9 @@ class RestaurantSwitcher extends Component
         session(['admin_restaurant_id' => $restaurant->id]);
         Cookie::queue('preview_restaurant_id', (string) $restaurant->id, 60 * 24 * 365);
         $this->currentId    = $restaurant->id;
-        $this->showForm     = false;
-        $this->newName = '';
+        $this->showForm         = false;
+        $this->confirmingCreate = false;
+        $this->newName          = '';
         $this->restaurants  = $this->userRestaurants();
 
         $this->redirect(request()->header('Referer') ?: route('dashboard'));

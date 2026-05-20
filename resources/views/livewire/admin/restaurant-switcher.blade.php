@@ -81,15 +81,32 @@
         <div>
             <input type="text" wire:model.defer="newName"
                    placeholder="{{ __('admin.restaurant_switcher.placeholder_name') }}"
-                   class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 bg-white"
+                   class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:ring-1 focus:ring-amber-400 focus:border-amber-400 bg-white"
                    autofocus>
             @error('newName') <p class="text-xs text-red-500 mt-0.5">{{ $message }}</p> @enderror
         </div>
-        <button type="button" wire:click="createRestaurant" wire:loading.attr="disabled"
-                class="w-full py-1.5 rounded-lg text-xs font-semibold bg-gray-800 hover:bg-gray-900 text-white transition-colors disabled:opacity-60">
-            <span wire:loading.remove wire:target="createRestaurant">{{ __('admin.restaurant_switcher.create') }}</span>
-            <span wire:loading wire:target="createRestaurant">Creando...</span>
+
+        @if($confirmingCreate)
+        <div class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 font-medium">
+            ¿Seguro que quieres crear un nuevo restaurante?
+        </div>
+        <div class="flex gap-2">
+            <button type="button" wire:click="$set('confirmingCreate', false)"
+                    class="flex-1 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors">
+                Cancelar
+            </button>
+            <button type="button" wire:click="createRestaurant" wire:loading.attr="disabled"
+                    class="flex-1 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white transition-colors disabled:opacity-60">
+                <span wire:loading.remove wire:target="createRestaurant">Sí, crear</span>
+                <span wire:loading wire:target="createRestaurant">Creando...</span>
+            </button>
+        </div>
+        @else
+        <button type="button" wire:click="$set('confirmingCreate', true)"
+                class="w-full py-1.5 rounded-lg text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white transition-colors">
+            {{ __('admin.restaurant_switcher.create') }}
         </button>
+        @endif
     </div>
     @endif
 
