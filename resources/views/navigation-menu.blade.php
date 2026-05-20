@@ -12,7 +12,7 @@
     <div class="admin-sidebar-header px-4 py-5 flex items-start justify-between gap-3">
         <a href="{{ route('dashboard') }}" class="admin-brand-cta admin-brand-filament flex items-center gap-3 min-w-0 rounded-2xl px-3 py-3 w-full" onclick="closeAdminSidebar()">
             <div class="admin-brand-mark-wrap w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0 border border-white/20 bg-black/20">
-                <img src="{{ asset('img/logo.png') }}" alt="NeuroCarta.ai"
+                <img src="{{ asset('img/butterfly.svg') }}" alt="NeuroCarta.ai"
                      class="w-full h-full object-contain p-1">
             </div>
             <div class="min-w-0">

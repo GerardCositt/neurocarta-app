@@ -34,6 +34,7 @@
         </script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=20260520">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}?v=20260420">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}?v=20260420">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}?v=20260420">
