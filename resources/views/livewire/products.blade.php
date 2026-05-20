@@ -620,7 +620,7 @@
             <p class="text-sm text-gray-600 mb-3 leading-relaxed">{{ __('admin.products.demo_warning_body') }}</p>
             <p class="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 mb-5 leading-relaxed">{{ __('admin.products.demo_warning_hint') }}</p>
             <div class="flex flex-col-reverse sm:flex-row justify-end gap-3">
-                <button wire:click="$set('showingDemoWarning', false)" wire:loading.attr="disabled"
+                <button wire:click="loadDemoFromWarning" wire:loading.attr="disabled"
                         class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
                     {{ __('admin.products.demo_warning_cancel') }}
                 </button>

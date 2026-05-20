@@ -515,6 +515,12 @@ class Products extends Component
         $this->openModal();
     }
 
+    public function loadDemoFromWarning(): void
+    {
+        $this->showingDemoWarning = false;
+        $this->loadDemoContent();
+    }
+
     public function openModal()
     {
         $this->isOpen = 1;
