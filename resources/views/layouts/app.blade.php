@@ -109,9 +109,27 @@
 
                         @auth
                             <div class="flex flex-wrap items-center justify-end gap-3 flex-shrink-0 lg:ml-4 lg:pt-0.5">
-                                <div x-data="{ open: false }" @click.outside="open = false" class="relative flex-shrink-0" style="z-index:80">
-                                    @livewire('admin.restaurant-switcher', ['mode' => 'header'])
-                                </div>
+                                @php
+                                    $_hRid = session('admin_restaurant_id');
+                                    $_hR   = $_hRid ? \App\Models\Restaurant::find($_hRid) : null;
+                                @endphp
+                                <details class="relative flex-shrink-0" id="restaurantHeaderPicker" style="z-index:80">
+                                    <summary class="list-none cursor-pointer select-none">
+                                        <div class="admin-cta-trigger flex items-center gap-2 px-3 py-2 rounded-xl shadow-sm transition-colors">
+                                            <span class="w-2 h-2 rounded-full bg-gray-600 flex-shrink-0"></span>
+                                            <div class="hidden sm:block text-left min-w-0 max-w-[160px]">
+                                                <p class="text-sm font-medium text-gray-800 truncate">{{ __('admin.restaurant_switcher.section_label') }}</p>
+                                                <p class="text-xs text-gray-400 truncate">{{ $_hR?->name ?? '—' }}</p>
+                                            </div>
+                                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                            </svg>
+                                        </div>
+                                    </summary>
+                                    <div class="absolute right-0 top-full mt-2" style="z-index:80">
+                                        @livewire('admin.restaurant-switcher', ['mode' => 'header'])
+                                    </div>
+                                </details>
                                 <details class="relative admin-user-menu text-left self-end lg:self-start">
                                     <summary
                                         class="admin-cta-trigger flex items-center gap-3 cursor-pointer rounded-xl border py-2 pl-3 pr-3 min-w-0 sm:min-w-[17rem] shadow-sm transition-colors select-none"
