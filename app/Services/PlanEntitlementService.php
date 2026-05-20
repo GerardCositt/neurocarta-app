@@ -28,7 +28,7 @@ class PlanEntitlementService
             'categories'  => 6,
         ],
         self::PLAN_PRO => [
-            'restaurants' => 2,
+            'restaurants' => 1,
             'products'    => 250,
             'categories'  => 15,
         ],
@@ -201,6 +201,14 @@ class PlanEntitlementService
         $planName = $plan === self::PLAN_BASIC ? 'Básico' : ($plan === self::PLAN_PRO ? 'Pro' : 'Premium');
         $label = $kind === 'restaurants' ? 'restaurantes'
             : ($kind === 'products' ? 'productos' : 'categorías');
+
+        if ($kind === 'restaurants' && $plan === self::PLAN_PREMIUM) {
+            return "Has alcanzado el límite de {$limit} restaurantes del plan Premium. ¿Necesitas más? Escríbenos a hola@neurocarta.ai y lo gestionamos.";
+        }
+
+        if ($kind === 'restaurants') {
+            return "El plan {$planName} incluye {$limit} restaurante. Mejora a Premium para gestionar hasta 3 restaurantes.";
+        }
 
         return "Has alcanzado el límite de {$label} del plan {$planName} ({$limit}). Mejora tu plan para continuar.";
     }
