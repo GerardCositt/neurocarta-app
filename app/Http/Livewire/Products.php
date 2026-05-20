@@ -66,6 +66,7 @@ class Products extends Component
     public $confirmingLoadDemo = false;
     public $confirmingDeleteDemo = false;
     public $showingDemoWarning = false;
+    public $demoWarningPendingAction = 'create'; // 'create' | 'csv' | 'ai' | 'photos'
 
     public $confirmingProductDeletion = false;
     public $pendingProductDeletionId = null;
@@ -497,6 +498,7 @@ class Products extends Component
     {
         $restaurantId = $this->getRestaurantId();
         if ($restaurantId && ! \App\Models\Product::where('restaurant_id', $restaurantId)->exists()) {
+            $this->demoWarningPendingAction = 'create';
             $this->showingDemoWarning = true;
             return;
         }
@@ -506,13 +508,36 @@ class Products extends Component
         $this->openModal();
     }
 
+    public function interceptIfEmpty(string $action): void
+    {
+        $restaurantId = $this->getRestaurantId();
+        if ($restaurantId && ! \App\Models\Product::where('restaurant_id', $restaurantId)->exists()) {
+            $this->demoWarningPendingAction = $action;
+            $this->showingDemoWarning = true;
+            return;
+        }
+        $this->proceedAction($action);
+    }
+
+    private function proceedAction(string $action): void
+    {
+        match ($action) {
+            'csv'    => $this->redirect(route('settings.import-products')),
+            'ai'     => $this->redirect(route('settings.import-ai')),
+            'photos' => $this->generateMissingProductPhotos(),
+            default  => (function () {
+                $this->returnAfterCloseUrl = null;
+                $this->offerFormOpenedForId = null;
+                $this->resetInputFields();
+                $this->openModal();
+            })(),
+        };
+    }
+
     public function proceedCreateDespiteDemo(): void
     {
         $this->showingDemoWarning = false;
-        $this->returnAfterCloseUrl = null;
-        $this->offerFormOpenedForId = null;
-        $this->resetInputFields();
-        $this->openModal();
+        $this->proceedAction($this->demoWarningPendingAction);
     }
 
     public function loadDemoFromWarning(): void
