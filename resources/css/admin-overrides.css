@@ -216,7 +216,7 @@ html[data-effective-theme="light"] .admin-shell .admin-main table thead th {
 }
 
 /* Inputs/selects: look de Filament con foco ámbar */
-html[data-effective-theme="dark"] .admin-shell .admin-main input,
+html[data-effective-theme="dark"] .admin-shell .admin-main input:not([type="checkbox"]):not([type="radio"]),
 html[data-effective-theme="dark"] .admin-shell .admin-main select,
 html[data-effective-theme="dark"] .admin-shell .admin-main textarea {
     background-color: rgba(255, 255, 255, 0.04) !important;
@@ -224,7 +224,7 @@ html[data-effective-theme="dark"] .admin-shell .admin-main textarea {
     color: #f3f4f6 !important;
 }
 
-html[data-effective-theme="light"] .admin-shell .admin-main input,
+html[data-effective-theme="light"] .admin-shell .admin-main input:not([type="checkbox"]):not([type="radio"]),
 html[data-effective-theme="light"] .admin-shell .admin-main select,
 html[data-effective-theme="light"] .admin-shell .admin-main textarea {
     background-color: #ffffff !important;
@@ -999,7 +999,7 @@ html[data-effective-theme="light"] .admin-shell .admin-footer {
 }
 
 /* Inputs y selects: blanco sobre blanco, borde suave */
-html[data-effective-theme="light"] .admin-shell .admin-main input,
+html[data-effective-theme="light"] .admin-shell .admin-main input:not([type="checkbox"]):not([type="radio"]),
 html[data-effective-theme="light"] .admin-shell .admin-main select,
 html[data-effective-theme="light"] .admin-shell .admin-main textarea,
 html[data-effective-theme="light"] .admin-shell #admin-panel-locale {
