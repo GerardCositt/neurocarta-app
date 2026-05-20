@@ -1,38 +1,69 @@
 #!/usr/bin/env bash
-# Descarga stock Pexels a public/demo/ para pruebas LOCALES (los JPG no van al repo; ver .gitignore).
-# Producción: usa local/demo-product-images/ o NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL.
-# Uso: bash scripts/download-demo-food-images.sh
+# Descarga fotos de Pexels buscando por nombre de plato.
+# Uso: bash scripts/download-demo-food-images.sh <PEXELS_API_KEY>
+# Los JPG no van al repo (ver .gitignore). Para producción sube con: bash scripts/upload-demo-images-prod.sh
 set -euo pipefail
+
+API_KEY="${1:-${PEXELS_API_KEY:-}}"
+if [[ -z "$API_KEY" ]]; then
+  echo "ERROR: pasa la API key como argumento o exporta PEXELS_API_KEY" >&2
+  exit 1
+fi
+
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/public/demo"
 mkdir -p "$OUT"
 
-pex() {
+search_and_download() {
   local file="$1"
-  local id="$2"
-  echo "→ $file (pexels $id)"
-  curl -fsSL "https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop" \
-    -o "$OUT/$file"
+  local query="$2"
+  local dest="$OUT/$file"
+
+  echo "→ $file  (buscando: $query)"
+
+  local encoded_query
+  encoded_query=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$query")
+
+  local response
+  response=$(curl -fsSL \
+    -H "Authorization: $API_KEY" \
+    "https://api.pexels.com/v1/search?query=${encoded_query}&per_page=5&orientation=landscape")
+
+  local url
+  url=$(echo "$response" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+photos = data.get('photos', [])
+if not photos:
+    sys.exit(1)
+print(photos[0]['src']['large2x'])
+") || {
+    echo "  ⚠ sin resultados para '$query'"
+    return 0
+  }
+
+  curl -fsSL "$url" -o "$dest"
+  echo "  ✓ $(du -h "$dest" | cut -f1)"
 }
 
-# Archivo DemoContent          | Pexels ID | Plato
-pex croquetas-jamon.jpg    14734398   # croquetas en plato
-pex pan-tomate.jpg         4491283    # pan / tostada con tomate
-pex ensalada-mixta.jpg     2233348    # ensalada
-pex tabla-embutidos.jpg    1267326    # tabla embutidos / charcutería
-pex entrecot.jpg           769289     # entrecot / steak a la parrilla
-pex pollo-ajillo.jpg       2338407    # pollo con ajo
-pex secreto-iberico.jpg    8523520    # carne a la parrilla
-pex carrilleras-vino.jpg   958545     # guiso / estofado
-pex merluza-romana.jpg     4116434    # pescado frito / rebozado
-pex gambas-ajillo.jpg      566566     # gambas / langostinos
-pex pulpo-gallega.jpg      1040685    # plato cocinado (marisco/restaurante)
-pex lubina-horno.jpg       696218     # pescado al horno en plato
-pex crema-catalana.jpg     2067400    # crema / postre caramelizado
-pex tarta-queso.jpg        291528     # tarta de queso
-pex brownie-helado.jpg     4106991    # brownie / chocolate
-pex agua-mineral.jpg       416528     # botella de agua
-pex vino-casa.jpg          460537     # copa de vino tinto
-pex cerveza.jpg            1552631    # cerveza en vaso
+search_and_download croquetas-jamon.jpg    "ham croquettes spanish tapas"
+search_and_download pan-tomate.jpg         "pan con tomate bread tomato spanish"
+search_and_download ensalada-mixta.jpg     "mixed salad plate restaurant"
+search_and_download tabla-embutidos.jpg    "charcuterie board iberian cured meats"
+search_and_download entrecot.jpg           "grilled entrecote beef steak plate"
+search_and_download pollo-ajillo.jpg       "chicken garlic sauce spanish"
+search_and_download secreto-iberico.jpg    "iberian pork grilled"
+search_and_download carrilleras-vino.jpg   "braised pork cheeks red wine stew"
+search_and_download merluza-romana.jpg     "battered hake fish fried"
+search_and_download gambas-ajillo.jpg      "gambas al ajillo shrimp garlic"
+search_and_download pulpo-gallega.jpg      "pulpo a la gallega octopus paprika"
+search_and_download lubina-horno.jpg       "baked sea bass fish oven"
+search_and_download crema-catalana.jpg     "crema catalana creme brulee"
+search_and_download tarta-queso.jpg        "cheesecake slice plate"
+search_and_download brownie-helado.jpg     "brownie ice cream chocolate"
+search_and_download agua-mineral.jpg       "mineral water glass bottle"
+search_and_download vino-casa.jpg          "red wine glass restaurant"
+search_and_download cerveza.jpg            "beer glass cold"
 
-echo "OK: $(ls -1 "$OUT"/*.jpg 2>/dev/null | wc -l | tr -d ' ') imágenes en public/demo/"
+echo ""
+echo "✓ $(ls -1 "$OUT"/*.jpg 2>/dev/null | wc -l | tr -d ' ') imágenes en public/demo/"

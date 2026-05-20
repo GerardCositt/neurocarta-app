@@ -147,6 +147,7 @@ return [
         'demo_delete_modal_title' => 'Delete sample data',
         'demo_delete_modal_body' => 'This bulk-deletes sample template products and categories. It is hidden once you have at least one product you created, or if template rows are mixed with your own.',
         'demo_delete_modal_confirm' => 'Delete demo',
+        'demo_loaded_flash' => 'Sample data loaded successfully.',
         'demo_deleted_flash' => 'Sample data deleted.',
         'modal_delete_title' => 'Delete product',
         'modal_delete_body' => 'Delete this product? It will be removed from the menu and its image deleted from storage. This cannot be undone.',

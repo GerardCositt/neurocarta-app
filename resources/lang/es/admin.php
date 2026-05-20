@@ -149,6 +149,7 @@ return [
         'demo_delete_modal_title' => 'Borrar datos de prueba',
         'demo_delete_modal_body' => 'Se borrarán de una vez los productos y categorías de plantilla de prueba. No está disponible si ya tienes al menos un producto propio ni si mezclas plantilla con productos creados por ti.',
         'demo_delete_modal_confirm' => 'Borrar demo',
+        'demo_loaded_flash' => 'Datos de prueba cargados correctamente.',
         'demo_deleted_flash' => 'Datos de prueba eliminados.',
         'modal_delete_title' => 'Eliminar producto',
         'modal_delete_body' => '¿Seguro que quieres eliminar este producto? Se borrará de la carta y se perderá su foto en el servidor. Esta acción no se puede deshacer.',
