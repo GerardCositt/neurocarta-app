@@ -5,7 +5,7 @@
         </x-slot>
 
         <div style="text-align:center;padding:8px 0;">
-            <div style="font-size:48px;margin-bottom:16px;">✅</div>
+            <img src="{{ asset('img/butterfly.svg') }}" alt="" width="64" height="64" style="display:block;margin:0 auto 16px;filter:drop-shadow(0 0 16px rgba(255,122,0,0.5));">
             <h2 style="margin:0 0 10px;font-size:22px;font-weight:800;letter-spacing:-0.02em;">
                 Suscripción en proceso
             </h2>
