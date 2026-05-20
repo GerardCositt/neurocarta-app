@@ -81,18 +81,14 @@
         <div>
             <input type="text" wire:model.defer="newName"
                    placeholder="{{ __('admin.restaurant_switcher.placeholder_name') }}"
-                   class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 bg-white">
+                   class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 bg-white"
+                   autofocus>
             @error('newName') <p class="text-xs text-red-500 mt-0.5">{{ $message }}</p> @enderror
         </div>
-        <div>
-            <input type="text" wire:model.defer="newSubdomain"
-                   placeholder="{{ __('admin.restaurant_switcher.placeholder_subdomain') }}"
-                   class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 bg-white">
-            @error('newSubdomain') <p class="text-xs text-red-500 mt-0.5">{{ $message }}</p> @enderror
-        </div>
-        <button type="button" wire:click="createRestaurant"
-                class="w-full py-1.5 rounded-lg text-xs font-semibold bg-gray-800 hover:bg-gray-900 text-white transition-colors">
-            {{ __('admin.restaurant_switcher.create') }}
+        <button type="button" wire:click="createRestaurant" wire:loading.attr="disabled"
+                class="w-full py-1.5 rounded-lg text-xs font-semibold bg-gray-800 hover:bg-gray-900 text-white transition-colors disabled:opacity-60">
+            <span wire:loading.remove wire:target="createRestaurant">{{ __('admin.restaurant_switcher.create') }}</span>
+            <span wire:loading wire:target="createRestaurant">Creando...</span>
         </button>
     </div>
     @endif

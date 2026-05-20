@@ -16,8 +16,7 @@ class RestaurantSwitcher extends Component
     public $currentId;
 
     public bool   $showForm      = false;
-    public string $newName       = '';
-    public string $newSubdomain  = '';
+    public string $newName = '';
     public ?int   $pendingDelete = null;   // fila en estado pre-confirmación
 
     protected $listeners = ['confirmDeleteRestaurant' => 'deleteRestaurant'];
@@ -125,22 +124,18 @@ class RestaurantSwitcher extends Component
         }
 
         $this->validate([
-            'newName'      => 'required|string|min:2|max:100',
-            'newSubdomain' => 'required|string|min:2|max:50|alpha_dash|unique:restaurants,subdomain',
+            'newName' => 'required|string|min:2|max:100',
         ], [
-            'newName.required'        => __('validation.restaurant_create.name_required'),
-            'newName.min'             => __('validation.restaurant_create.name_min', ['min' => 2]),
-            'newName.max'             => __('validation.restaurant_create.name_max', ['max' => 100]),
-            'newSubdomain.required'   => __('validation.restaurant_create.subdomain_required'),
-            'newSubdomain.min'        => __('validation.restaurant_create.subdomain_min', ['min' => 2]),
-            'newSubdomain.max'        => __('validation.restaurant_create.subdomain_max', ['max' => 50]),
-            'newSubdomain.alpha_dash' => __('validation.restaurant_create.subdomain_alpha_dash'),
-            'newSubdomain.unique'     => __('validation.restaurant_create.subdomain_unique'),
+            'newName.required' => __('validation.restaurant_create.name_required'),
+            'newName.min'      => __('validation.restaurant_create.name_min', ['min' => 2]),
+            'newName.max'      => __('validation.restaurant_create.name_max', ['max' => 100]),
         ]);
 
+        $subdomain = $this->generateUniqueSubdomain(trim($this->newName));
+
         $restaurant = Restaurant::create([
-            'name'      => trim($this->newName),
-            'subdomain' => strtolower(trim($this->newSubdomain)),
+            'name'       => trim($this->newName),
+            'subdomain'  => $subdomain,
             'account_id' => $account ? $account->id : null,
         ]);
 
@@ -148,8 +143,7 @@ class RestaurantSwitcher extends Component
         Cookie::queue('preview_restaurant_id', (string) $restaurant->id, 60 * 24 * 365);
         $this->currentId    = $restaurant->id;
         $this->showForm     = false;
-        $this->newName      = '';
-        $this->newSubdomain = '';
+        $this->newName = '';
         $this->restaurants  = $this->userRestaurants();
 
         $this->redirect(request()->header('Referer') ?: route('dashboard'));
@@ -158,6 +152,20 @@ class RestaurantSwitcher extends Component
     public function render()
     {
         return view('livewire.admin.restaurant-switcher');
+    }
+
+    private function generateUniqueSubdomain(string $name): string
+    {
+        $base = strtolower(preg_replace('/[^a-z0-9]+/i', '-', \Illuminate\Support\Str::ascii($name)));
+        $base = trim($base, '-');
+        $base = substr($base, 0, 48) ?: 'restaurante';
+
+        $slug = $base;
+        $i    = 2;
+        while (Restaurant::where('subdomain', $slug)->exists()) {
+            $slug = $base . '-' . $i++;
+        }
+        return $slug;
     }
 
     private function userRestaurants()
