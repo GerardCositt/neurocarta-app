@@ -64,7 +64,7 @@ class RestaurantResource extends Resource
                             $q->where('email', 'like', "%{$search}%")
                         )
                     ),
-                Tables\Columns\TextColumn::make('plan')
+                Tables\Columns\BadgeColumn::make('plan')
                     ->label('Plan / Estado')
                     ->getStateUsing(function (Restaurant $record): string {
                         if (! $record->account) return '—';
@@ -73,14 +73,12 @@ class RestaurantResource extends Resource
                             ->first();
                         return $sub ? strtoupper($sub->plan_code) . ' · ' . $sub->status : '—';
                     })
-                    ->badge()
-                    ->color(fn (string $state): string => match (true) {
-                        str_contains($state, 'PREMIUM') => 'success',
-                        str_contains($state, 'PRO')     => 'primary',
-                        str_contains($state, 'BASICO')  => 'warning',
-                        str_contains($state, 'TRIAL')   => 'secondary',
-                        default                          => 'secondary',
-                    }),
+                    ->colors([
+                        'success' => fn ($state) => str_contains((string)$state, 'PREMIUM'),
+                        'primary' => fn ($state) => str_contains((string)$state, 'PRO'),
+                        'warning' => fn ($state) => str_contains((string)$state, 'BASICO'),
+                        'secondary',
+                    ]),
                 Tables\Columns\TextColumn::make('ai_credits')
                     ->label('Créditos IA')
                     ->sortable(),
@@ -93,7 +91,6 @@ class RestaurantResource extends Resource
                     ->sortable(),
             ])
             ->filters([])
-            ->query(fn () => Restaurant::with(['account.users', 'account.subscriptions']))
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('delete')
@@ -115,6 +112,11 @@ class RestaurantResource extends Resource
                     }),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['account.users', 'account.subscriptions']);
     }
 
     public static function getRelations(): array
