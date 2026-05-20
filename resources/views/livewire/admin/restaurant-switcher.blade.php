@@ -1,31 +1,38 @@
 @if($mode === 'header')
 
 {{-- ── Modo HEADER: píldora compacta en la barra superior ───────────────── --}}
-<details class="relative" id="restaurantHeaderPicker" style="position:relative;z-index:80">
-    <summary class="list-none cursor-pointer select-none">
-        <div class="admin-cta-trigger flex items-center gap-2 px-3 py-2 rounded-xl shadow-sm transition-colors">
-            <span class="w-2 h-2 rounded-full bg-gray-600 flex-shrink-0"></span>
-            <div class="hidden sm:block text-left min-w-0 max-w-[160px]">
-                <p class="text-sm font-medium text-gray-800 truncate">{{ $restaurants->count() > 1 ? __('admin.restaurant_switcher.section_label_plural') : __('admin.restaurant_switcher.section_label') }}</p>
-                <p class="text-xs text-gray-400 truncate">{{ optional($restaurants->firstWhere('id', $currentId))->name ?? '—' }}</p>
-            </div>
-            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-            </svg>
+{{-- Alpine gestiona open/close; Livewire gestiona showForm sin cerrar el dropdown --}}
+<div class="relative" x-data="{ open: false }" @click.outside="open = false" id="restaurantHeaderPicker" style="position:relative;z-index:80">
+    <button type="button" @click="open = !open" class="admin-cta-trigger flex items-center gap-2 px-3 py-2 rounded-xl shadow-sm transition-colors">
+        <span class="w-2 h-2 rounded-full bg-gray-600 flex-shrink-0"></span>
+        <div class="hidden sm:block text-left min-w-0 max-w-[160px]">
+            <p class="text-sm font-medium text-gray-800 truncate">{{ $restaurants->count() > 1 ? __('admin.restaurant_switcher.section_label_plural') : __('admin.restaurant_switcher.section_label') }}</p>
+            <p class="text-xs text-gray-400 truncate">{{ optional($restaurants->firstWhere('id', $currentId))->name ?? '—' }}</p>
         </div>
-    </summary>
+        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
 
-    <div class="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-gray-100 bg-white shadow-xl overflow-hidden" style="z-index:80">
+    <div x-show="open" x-cloak
+         class="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-gray-100 bg-white shadow-xl overflow-hidden" style="z-index:80">
 
         {{-- Cabecera del desplegable --}}
-        <div class="px-3 py-2 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between">
+        <div class="px-3 py-2.5 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 {{ __('admin.restaurant_switcher.section_label') }}
             </p>
             <button type="button" wire:click="$toggle('showForm')"
-                    class="w-5 h-5 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-200 hover:text-gray-800 transition-colors text-sm font-bold leading-none"
+                    class="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold transition-colors
+                           {{ $showForm ? 'bg-gray-200 text-gray-700' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100' }}"
                     title="{{ __('admin.restaurant_switcher.add_tooltip') }}">
-                {{ $showForm ? '✕' : '+' }}
+                @if($showForm)
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                @else
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    Añadir restaurante
+                @endif
             </button>
         </div>
 
@@ -104,7 +111,7 @@
         @endif
 
     </div>
-</details>
+</div>
 
 @else
 
