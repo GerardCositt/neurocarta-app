@@ -32,12 +32,6 @@
         </div>
     </div>
 
-    @if($isOpen)
-        <div id="lw-pairing-edit-modal-root" wire:key="pairing-edit-modal-{{ $pairing_id ?: 'new' }}" wire:click.stop>
-            @include('livewire.pairingfrm')
-        </div>
-    @endif
-
     {{-- Tabla --}}
     <div class="relative z-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-lw-no-close-list wire:click.stop>
         <div class="overflow-x-auto overscroll-x-contain sm:overflow-visible">
@@ -141,6 +135,12 @@
     </div>
 
     </div>
+
+    @if($isOpen)
+        <div id="lw-pairing-edit-modal-root" wire:key="pairing-edit-modal-{{ $pairing_id ?: 'new' }}" wire:click.stop>
+            @include('livewire.pairingfrm')
+        </div>
+    @endif
 
     @if($confirmingPairingDeletion)
     <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>

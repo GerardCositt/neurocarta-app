@@ -32,12 +32,6 @@
         </div>
     </div>
 
-    @if($isOpen)
-        <div id="lw-category-edit-modal-root" wire:key="category-edit-modal-{{ $category_id ?: 'new' }}" wire:click.stop>
-            @include('livewire.categoryfrm')
-        </div>
-    @endif
-
     {{-- Mensaje error --}}
     @if($msgError)
         <div class="admin-banner admin-banner--danger mb-4" role="alert">
@@ -233,6 +227,12 @@
     </div>
 
     </div>
+
+    @if($isOpen)
+        <div id="lw-category-edit-modal-root" wire:key="category-edit-modal-{{ $category_id ?: 'new' }}" wire:click.stop>
+            @include('livewire.categoryfrm')
+        </div>
+    @endif
 
     @if($confirmingCategoryDeletion)
     <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>

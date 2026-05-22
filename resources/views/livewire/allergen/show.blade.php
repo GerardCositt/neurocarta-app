@@ -40,12 +40,6 @@
         </div>
     </div>
 
-    @if($isOpen)
-        <div id="lw-allergen-edit-modal-root" wire:key="allergen-edit-modal-{{ $allergen_id ?: 'new' }}" wire:click.stop>
-            @include('livewire.allergenfrm')
-        </div>
-    @endif
-
     @if($msgError)
         <div class="admin-banner admin-banner--danger mb-4" role="alert">
             <span class="admin-banner__icon" aria-hidden="true">❌</span>
@@ -168,6 +162,12 @@
     </div>
 
     </div>
+
+    @if($isOpen)
+        <div id="lw-allergen-edit-modal-root" wire:key="allergen-edit-modal-{{ $allergen_id ?: 'new' }}" wire:click.stop>
+            @include('livewire.allergenfrm')
+        </div>
+    @endif
 
     @if($confirmingLoadOfficial)
     <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center" wire:click.stop>
