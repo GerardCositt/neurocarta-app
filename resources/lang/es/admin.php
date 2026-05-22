@@ -426,6 +426,8 @@ return [
         'badge_offer' => 'Oferta',
         'cancel_title' => 'Cancelar',
         'delete_blocked_has_products' => 'La categoría «:name» tiene productos. Vacíala primero para poder eliminarla.',
+        'restaurant_required' => 'No se pudo detectar el restaurante activo. Selecciónalo de nuevo y vuelve a intentarlo.',
+        'account_required' => 'No se pudo resolver la cuenta del restaurante para validar el plan. Vuelve a cargar la página.',
         'edit_title' => 'Editar categoría',
         'name_open_sheet' => 'Abrir ficha de la categoría',
         'delete_category' => 'Eliminar categoría',

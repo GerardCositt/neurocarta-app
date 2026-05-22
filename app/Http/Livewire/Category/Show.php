@@ -75,6 +75,7 @@ class Show extends Component
 
     public function openForm(): void
     {
+        $this->msgError = null;
         $this->resetFormFields();
         $this->isOpen = true;
     }
@@ -113,12 +114,15 @@ class Show extends Component
 
     public function storeAndClose(): void
     {
-        $this->persistCategory();
-        $this->closeForm();
+        if ($this->persistCategory()) {
+            $this->closeForm();
+        }
     }
 
-    private function persistCategory(): void
+    private function persistCategory(): bool
     {
+        $this->msgError = null;
+
         $this->validate(
             ['name' => 'required|min:2'],
             [
@@ -128,12 +132,14 @@ class Show extends Component
         );
 
         $restaurantId = $this->getRestaurantId();
+        if (! $restaurantId) {
+            $this->msgError = __('admin.category_page.restaurant_required');
+            return false;
+        }
 
         if ($this->category_id) {
             $query = Category::query()->where('id', $this->category_id);
-            if ($restaurantId) {
-                $query->where('restaurant_id', $restaurantId);
-            }
+            $query->where('restaurant_id', $restaurantId);
             $category = $query->firstOrFail();
             $category->update([
                 'name' => $this->name,
@@ -141,17 +147,21 @@ class Show extends Component
             ]);
             session()->flash('message', __('admin.category.flash_updated'));
             $this->emit('navigationMenuRefresh');
+            return true;
         } else {
             $svc = app(PlanEntitlementService::class);
-            $restaurant = $restaurantId ? \App\Models\Restaurant::find($restaurantId) : null;
+            $restaurant = \App\Models\Restaurant::withoutGlobalScopes()->find($restaurantId);
             $account = $svc->accountForRestaurant($restaurant);
-            if ($account) {
-                try {
-                    $svc->assertCanCreateCategory($account);
-                } catch (\RuntimeException $e) {
-                    $this->msgError = $e->getMessage();
-                    return;
-                }
+            if (! $account) {
+                $this->msgError = __('admin.category_page.account_required');
+                return false;
+            }
+
+            try {
+                $svc->assertCanCreateCategory($account);
+            } catch (\RuntimeException $e) {
+                $this->msgError = $e->getMessage();
+                return false;
             }
 
             Category::create([
@@ -161,6 +171,7 @@ class Show extends Component
             ]);
             session()->flash('message', __('admin.category.flash_created'));
             $this->emit('navigationMenuRefresh');
+            return true;
         }
     }
 

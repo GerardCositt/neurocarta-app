@@ -419,6 +419,8 @@ return [
         'badge_offer' => 'Offer',
         'cancel_title' => 'Cancel',
         'delete_blocked_has_products' => 'The category “:name” has products. Empty it first before you can delete it.',
+        'restaurant_required' => 'The active restaurant could not be detected. Select it again and try once more.',
+        'account_required' => 'Could not resolve the restaurant account to validate the plan. Reload the page and try again.',
         'edit_title' => 'Edit category',
         'name_open_sheet' => 'Open category sheet',
         'delete_category' => 'Delete category',
