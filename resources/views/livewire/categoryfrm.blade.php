@@ -1,11 +1,9 @@
-<div class="fixed inset-0 z-[9999] admin-modal-overlay overflow-y-auto" wire:keydown.escape="closeForm()">
-
-    <div class="fixed inset-0 bg-black/40 pointer-events-none"></div>
+<div class="fixed inset-0 z-[9999] admin-modal-overlay bg-black/50 overflow-y-auto" wire:keydown.escape="closeForm()">
 
     <div class="flex min-h-full items-center justify-center p-4">
-        <div class="relative bg-white rounded-2xl shadow-2xl ring-1 ring-gray-200 w-full max-w-md overflow-hidden"
+        <div class="relative bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-md overflow-hidden"
              wire:click.stop
-             style="pointer-events:auto; position:relative; z-index:1;"
+             style="pointer-events:auto;"
              role="dialog" aria-modal="true">
 
             <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
@@ -86,3 +84,4 @@
         </div>
     </div>
 </div>
+
