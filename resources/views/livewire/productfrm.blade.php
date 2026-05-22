@@ -33,7 +33,7 @@
 
             {{-- Cabecera --}}
             <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 class="text-base font-semibold text-gray-800">
+                <h2 style="color:#111827;font-weight:600;font-size:1rem;margin:0;">
                     {{ $product_id ? __('admin.product_form.edit_title') : __('admin.product_form.new_title') }}
                 </h2>
                 <button type="button" wire:click="closeModal()"
