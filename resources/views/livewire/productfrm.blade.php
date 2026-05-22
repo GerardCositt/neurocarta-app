@@ -26,7 +26,7 @@
     {{-- Contenedor centrado --}}
     <div class="flex min-h-full items-center justify-center p-4" wire:click="closeModal()">
 
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl"
+        <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl"
              wire:click.stop
              role="dialog" aria-modal="true">
 
