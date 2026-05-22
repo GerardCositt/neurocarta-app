@@ -389,10 +389,10 @@ html[data-effective-theme="light"] .admin-cta-trigger svg {
     z-index: 520 !important;
 }
 
-/* Jerarquía global de capas: cabecera SIEMPRE por encima del contenido */
+/* Jerarquía global de capas: cabecera por encima del contenido, bajo los modales */
 .admin-shell .admin-page-header {
     position: relative !important;
-    z-index: 260 !important;
+    z-index: 50 !important;
     isolation: isolate;
 }
 
@@ -475,10 +475,10 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
     color: #4b5563 !important;
 }
 
-/* Stacking definitivo: cabecera muy por encima del main */
+/* Stacking: cabecera por encima del contenido (max z-index:28), bajo los modales (z-index:20000) */
 .admin-shell .admin-page-header {
     position: relative !important;
-    z-index: 9000 !important;
+    z-index: 50 !important;
     isolation: isolate;
 }
 
@@ -512,13 +512,13 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
  * ===================================================================== */
 .admin-shell .admin-page-header {
     position: relative !important;
-    z-index: 10000 !important;
+    z-index: 50 !important;
     isolation: isolate;
 }
 
 .admin-shell .admin-page-header > * {
     position: relative;
-    z-index: 10001;
+    z-index: 55;
 }
 
 .admin-shell details.admin-user-menu,
