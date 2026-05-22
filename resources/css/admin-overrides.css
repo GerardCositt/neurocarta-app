@@ -485,7 +485,7 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
 
 .admin-shell .admin-main {
     position: relative !important;
-    z-index: 1 !important;
+    /* z-index eliminado: creaba stacking context que atrapaba los modales por debajo del page-header */
 }
 
 /* Dropdown del usuario al tope absoluto del stacking */

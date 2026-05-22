@@ -1,4 +1,4 @@
-<div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeForm()">
+<div style="position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeForm()">
 
     {{-- Mismo ancho y comportamiento que maridaje / producto (max-w-4xl) --}}
     <div class="flex min-h-full items-start justify-center p-4 pt-8" wire:click="closeForm()">

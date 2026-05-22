@@ -1,4 +1,4 @@
-<div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:keydown.escape="closeForm()">
+<div style="position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:keydown.escape="closeForm()">
 
     <div class="flex min-h-full items-start justify-center p-4 pt-8">
         <div class="relative bg-white rounded-2xl w-full max-w-md overflow-hidden"

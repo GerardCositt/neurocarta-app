@@ -1,4 +1,4 @@
-<div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeModal()">
+<div style="position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeModal()">
 
     {{-- Mismo contenedor y ancho que la ficha de producto (productfrm: max-w-4xl, p-4) --}}
     <div class="flex min-h-full items-start justify-center p-4 pt-8" wire:click="closeModal()">

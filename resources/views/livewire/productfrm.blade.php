@@ -1,4 +1,4 @@
-<div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeModal()">
+<div style="position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeModal()">
 
     <style>
         @keyframes product-ai-progress-slide {

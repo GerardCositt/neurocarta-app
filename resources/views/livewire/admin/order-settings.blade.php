@@ -3,7 +3,7 @@
         @if(session('order_settings_v3_overlay'))
         {{-- Overlay diagonal para el mensaje V3 --}}
         <div id="v3Overlay" style="
-            position:fixed;inset:0;z-index:9999;
+            position:fixed;inset:0;z-index:20000;
             display:flex;align-items:center;justify-content:center;
             pointer-events:none;">
             <div style="
