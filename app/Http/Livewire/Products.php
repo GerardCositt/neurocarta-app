@@ -74,6 +74,7 @@ class Products extends Component
     public $confirmingProductPhotoRemoval = false;
     public $confirmingAiAction = false;
     public $pendingAiAction = null;
+    public $confirmingMissingCategory = false;
 
     /** @var string|null URL interna a la que volver al cerrar la ficha (p. ej. tras abrirla desde alérgenos). */
     public $returnAfterCloseUrl = null;
@@ -497,6 +498,12 @@ class Products extends Component
     public function create()
     {
         $restaurantId = $this->getRestaurantId();
+        if ($restaurantId && ! \App\Models\Category::where('restaurant_id', $restaurantId)->exists()) {
+            $this->confirmingMissingCategory = true;
+            return;
+        }
+
+        $restaurantId = $this->getRestaurantId();
         if ($restaurantId && ! \App\Models\Product::where('restaurant_id', $restaurantId)->exists()) {
             $this->demoWarningPendingAction = 'create';
             $this->showingDemoWarning = true;
@@ -506,6 +513,18 @@ class Products extends Component
         $this->offerFormOpenedForId = null;
         $this->resetInputFields();
         $this->openModal();
+    }
+
+    public function cancelMissingCategoryWarning(): void
+    {
+        $this->confirmingMissingCategory = false;
+    }
+
+    public function goToCategoriesFromWarning()
+    {
+        $this->confirmingMissingCategory = false;
+
+        return redirect()->route('category_list');
     }
 
     public function interceptIfEmpty(string $action): void
@@ -644,6 +663,7 @@ class Products extends Component
             'filename.image' => 'La foto debe ser una imagen.',
             'filename.mimes' => 'La foto debe ser JPG, PNG o WebP. No se admiten SVG ni GIF.',
             'filename.max'   => 'La foto no puede superar 8 MB.',
+            'category_id.required' => __('admin.product_form.category_required_create_first'),
         ]);
 
         if ($data['filename'] != null) {

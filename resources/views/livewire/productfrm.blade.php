@@ -65,6 +65,16 @@
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('admin.product_form.label_category') }}</label>
+                                    @if($categories->isEmpty())
+                                        <div class="mb-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                                            <p class="font-semibold">{{ __('admin.product_form.no_categories_title') }}</p>
+                                            <p class="mt-0.5">{{ __('admin.product_form.no_categories_body') }}</p>
+                                            <a href="{{ route('category_list') }}"
+                                               class="mt-2 inline-flex items-center rounded-lg border border-amber-300 bg-white px-2.5 py-1 font-semibold text-amber-900 hover:bg-amber-100 transition-colors">
+                                                {{ __('admin.product_form.go_to_categories') }}
+                                            </a>
+                                        </div>
+                                    @endif
                                     <select wire:model="category_id"
                                             class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm">
                                         <option value="">{{ __('admin.product_form.select_category') }}</option>

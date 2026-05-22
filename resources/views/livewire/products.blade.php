@@ -675,6 +675,27 @@
     </div>
     @endif
 
+    {{-- Modal: crear producto sin categorías --}}
+    @if($confirmingMissingCategory)
+    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelMissingCategoryWarning"></div>
+        <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ __('admin.products.missing_category_modal_title') }}</h3>
+            <p class="text-sm text-gray-600 mb-6">{{ __('admin.products.missing_category_modal_body') }}</p>
+            <div class="flex justify-end gap-3">
+                <button wire:click="cancelMissingCategoryWarning" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
+                    {{ __('admin.actions.cancel') }}
+                </button>
+                <button wire:click="goToCategoriesFromWarning" wire:loading.attr="disabled"
+                        class="px-4 py-2 text-sm text-white bg-amber-500 hover:bg-amber-600 rounded-xl transition-colors font-semibold cursor-pointer">
+                    {{ __('admin.products.missing_category_modal_confirm') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if($confirmingAiAction)
     <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center"
          wire:loading.remove
