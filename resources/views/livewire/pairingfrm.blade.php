@@ -1,7 +1,4 @@
-<div class="fixed inset-0 z-50 admin-modal-overlay overflow-y-auto" wire:click.self="closeModal()">
-
-    {{-- Fondo oscuro --}}
-    <div class="fixed inset-0 admin-modal-overlay bg-black bg-opacity-50 transition-opacity" wire:click="closeModal()"></div>
+<div class="fixed inset-0 z-50 admin-modal-overlay bg-black/50 overflow-y-auto" wire:click.self="closeModal()">
 
     {{-- Mismo contenedor y ancho que la ficha de producto (productfrm: max-w-4xl, p-4) --}}
     <div class="flex min-h-full items-center justify-center p-4" wire:click="closeModal()">

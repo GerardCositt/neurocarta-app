@@ -1,6 +1,4 @@
-<div class="fixed inset-0 z-50 admin-modal-overlay overflow-y-auto" wire:click.self="closeForm()">
-
-    <div class="fixed inset-0 admin-modal-overlay bg-black bg-opacity-50 transition-opacity" wire:click="closeForm()"></div>
+<div class="fixed inset-0 z-50 admin-modal-overlay bg-black/50 overflow-y-auto" wire:click.self="closeForm()">
 
     {{-- Mismo ancho y comportamiento que maridaje / producto (max-w-4xl) --}}
     <div class="flex min-h-full items-center justify-center p-4" wire:click="closeForm()">

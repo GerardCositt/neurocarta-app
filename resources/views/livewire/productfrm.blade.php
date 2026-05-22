@@ -1,4 +1,4 @@
-<div class="fixed inset-0 z-50 admin-modal-overlay overflow-y-auto" wire:click.self="closeModal()">
+<div class="fixed inset-0 z-50 admin-modal-overlay bg-black/50 overflow-y-auto" wire:click.self="closeModal()">
 
     <style>
         @keyframes product-ai-progress-slide {
@@ -22,9 +22,6 @@
             animation: product-ai-progress-slide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
     </style>
-
-    {{-- Fondo oscuro --}}
-    <div class="fixed inset-0 admin-modal-overlay bg-black bg-opacity-50 transition-opacity" wire:click="closeModal()"></div>
 
     {{-- Contenedor centrado --}}
     <div class="flex min-h-full items-center justify-center p-4" wire:click="closeModal()">
