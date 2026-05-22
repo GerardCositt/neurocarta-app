@@ -22,6 +22,20 @@
 
             <form onsubmit="return false">
                 <div class="px-4 sm:px-6 py-5 space-y-4">
+
+                    @if($msgError)
+                        <div class="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 flex items-start justify-between gap-3">
+                            <span>
+                                {{ $msgError }}
+                                <a href="{{ route('subscription.expired') }}"
+                                   class="ml-1 font-semibold underline underline-offset-2 hover:opacity-80 whitespace-nowrap">
+                                    Ver planes →
+                                </a>
+                            </span>
+                            <button type="button" wire:click="$set('msgError', null)" class="opacity-60 hover:opacity-100 flex-shrink-0 font-bold text-base leading-none">✕</button>
+                        </div>
+                    @endif
+
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('admin.category_page.field_name') }}</label>
                         <input type="text" wire:model="name" placeholder="{{ __('admin.category_page.name_placeholder') }}"
