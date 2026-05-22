@@ -31,7 +31,30 @@ class Show extends Component
 
     private function getRestaurantId(): ?int
     {
-        return session('admin_restaurant_id');
+        $restaurantId = session('admin_restaurant_id');
+        if ($restaurantId) {
+            return (int) $restaurantId;
+        }
+
+        $cookieId = (int) request()->cookie('preview_restaurant_id');
+        if ($cookieId <= 0) {
+            return null;
+        }
+
+        $user = auth()->user();
+        $account = $user ? $user->accounts()->first() : null;
+        if (! $account) {
+            return null;
+        }
+
+        if (! $account->restaurants()->where('id', $cookieId)->exists()) {
+            return null;
+        }
+
+        session(['admin_restaurant_id' => $cookieId]);
+        session()->save();
+
+        return $cookieId;
     }
 
     public function render()
