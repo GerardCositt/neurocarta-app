@@ -398,7 +398,6 @@ html[data-effective-theme="light"] .admin-cta-trigger svg {
 
 .admin-shell .admin-main {
     position: relative !important;
-    z-index: 20 !important;
 }
 
 /* Asegurar que tablas/sticky jamás superen la cabecera */
@@ -542,8 +541,7 @@ html[data-effective-theme="light"] .admin-shell details.admin-user-menu .admin-u
 /* El contenido principal nunca puede superar al header/dropdowns */
 .admin-shell .admin-main {
     position: relative !important;
-    z-index: 1 !important;
-    isolation: isolate;
+    /* z-index e isolation eliminados: atrapaban modales fixed por debajo del page-header */
 }
 
 .admin-shell .admin-main .-mx-4,
