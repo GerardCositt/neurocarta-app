@@ -1,7 +1,7 @@
 <div style="position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeModal()">
 
     {{-- Mismo contenedor y ancho que la ficha de producto (productfrm: max-w-4xl, p-4) --}}
-    <div class="flex min-h-full items-start justify-center p-4 pt-8" wire:click="closeModal()">
+    <div class="flex min-h-full items-center justify-center p-4" wire:click="closeModal()">
         <div class="relative bg-white rounded-2xl w-full max-w-4xl overflow-hidden"
              wire:click.stop
              style="box-shadow:0 25px 50px rgba(0,0,0,0.4);border:2px solid #d1d5db;"

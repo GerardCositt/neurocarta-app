@@ -127,7 +127,7 @@
     @if($confirmingItemAdd)
     <div style="position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);overflow-y:auto;">
 
-        <div class="flex min-h-full items-start justify-center p-4 pt-8">
+        <div class="flex min-h-full items-center justify-center p-4">
             <div class="relative bg-white rounded-2xl w-full max-w-4xl overflow-hidden"
                  style="box-shadow:0 25px 50px rgba(0,0,0,0.4);border:2px solid #d1d5db;"
                  role="dialog" aria-modal="true">
