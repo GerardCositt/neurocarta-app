@@ -1,7 +1,9 @@
 <div class="fixed inset-0 z-[9999] admin-modal-overlay overflow-y-auto" wire:keydown.escape="closeForm()">
 
+    <div class="fixed inset-0 bg-black/20 pointer-events-none"></div>
+
     <div class="flex min-h-full items-center justify-center p-4">
-        <div class="relative bg-white rounded-2xl shadow-xl ring-1 ring-gray-100 w-full max-w-4xl overflow-hidden"
+        <div class="relative bg-white rounded-2xl shadow-2xl ring-1 ring-gray-200 w-full max-w-md overflow-hidden"
              wire:click.stop
              style="pointer-events:auto; position:relative; z-index:1;"
              role="dialog" aria-modal="true">
