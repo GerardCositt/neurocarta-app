@@ -125,14 +125,15 @@
 
     {{-- Modal añadir / editar --}}
     @if($confirmingItemAdd)
-    <div class="fixed inset-0 z-[60] admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto">
+    <div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;">
 
         <div class="flex min-h-full items-start justify-center p-4 pt-8">
-            <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl overflow-hidden"
+            <div class="relative bg-white rounded-2xl w-full max-w-4xl overflow-hidden"
+                 style="box-shadow:0 25px 50px rgba(0,0,0,0.4);border:2px solid #d1d5db;"
                  role="dialog" aria-modal="true">
 
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                    <h2 class="text-base font-semibold text-gray-800">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h2 style="color:#111827;font-weight:600;font-size:1rem;margin:0;">
                         {{ $editingItemId ? __('admin.advice_page.dialog_edit') : __('admin.advice_page.dialog_new') }}
                     </h2>
                     <button type="button" wire:click="$set('confirmingItemAdd', false)"

@@ -1,4 +1,4 @@
-<div class="fixed inset-0 z-50 admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto" wire:click.self="closeModal()">
+<div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeModal()">
 
     <style>
         @keyframes product-ai-progress-slide {
@@ -26,12 +26,13 @@
     {{-- Contenedor centrado --}}
     <div class="flex min-h-full items-start justify-center p-4 pt-8" wire:click="closeModal()">
 
-        <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl"
+        <div class="relative bg-white rounded-2xl w-full max-w-4xl overflow-hidden"
              wire:click.stop
+             style="box-shadow:0 25px 50px rgba(0,0,0,0.4);border:2px solid #d1d5db;"
              role="dialog" aria-modal="true">
 
             {{-- Cabecera --}}
-            <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
+            <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
                 <h2 class="text-base font-semibold text-gray-800">
                     {{ $product_id ? __('admin.product_form.edit_title') : __('admin.product_form.new_title') }}
                 </h2>

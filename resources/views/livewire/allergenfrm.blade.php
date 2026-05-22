@@ -1,13 +1,14 @@
-<div class="fixed inset-0 z-50 admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto" wire:click.self="closeForm()">
+<div style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);overflow-y:auto;" wire:click.self="closeForm()">
 
     {{-- Mismo ancho y comportamiento que maridaje / producto (max-w-4xl) --}}
     <div class="flex min-h-full items-start justify-center p-4 pt-8" wire:click="closeForm()">
-        <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl overflow-hidden"
+        <div class="relative bg-white rounded-2xl w-full max-w-4xl overflow-hidden"
              wire:click.stop
+             style="box-shadow:0 25px 50px rgba(0,0,0,0.4);border:2px solid #d1d5db;"
              role="dialog" aria-modal="true">
 
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h2 class="text-base font-semibold text-gray-800">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 style="color:#111827;font-weight:600;font-size:1rem;margin:0;">
                     {{ $allergen_id ? __('admin.allergen_page.edit_title') : __('admin.allergen_page.new_title') }}
                 </h2>
                 <button type="button" wire:click="closeForm()"
