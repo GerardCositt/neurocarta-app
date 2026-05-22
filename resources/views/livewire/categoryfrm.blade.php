@@ -1,11 +1,11 @@
 <div class="fixed inset-0 z-[9999] admin-modal-overlay overflow-y-auto" wire:keydown.escape="closeForm()">
 
-    <div class="fixed inset-0 admin-modal-overlay bg-black bg-opacity-50 transition-opacity pointer-events-none"></div>
+    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity pointer-events-none"></div>
 
     <div class="flex min-h-full items-center justify-center p-4">
         <div class="relative bg-white rounded-2xl shadow-xl ring-1 ring-gray-100 w-full max-w-4xl overflow-hidden"
              wire:click.stop
-             style="pointer-events:auto;"
+             style="pointer-events:auto; position:relative; z-index:1;"
              role="dialog" aria-modal="true">
 
             <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
