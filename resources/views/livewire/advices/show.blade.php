@@ -125,11 +125,10 @@
 
     {{-- Modal añadir / editar --}}
     @if($confirmingItemAdd)
-    <div class="fixed inset-0 z-[60] admin-modal-overlay overflow-y-auto">
-        <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+    <div class="fixed inset-0 z-[60] admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto">
 
         <div class="flex min-h-full items-center justify-center p-4">
-            <div class="relative bg-white rounded-2xl shadow-xl ring-1 ring-gray-100 w-full max-w-4xl overflow-hidden"
+            <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl overflow-hidden"
                  role="dialog" aria-modal="true">
 
                 <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
