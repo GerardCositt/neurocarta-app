@@ -127,7 +127,7 @@
     @if($confirmingItemAdd)
     <div class="fixed inset-0 z-[60] admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto">
 
-        <div class="flex min-h-full items-center justify-center p-4">
+        <div class="flex min-h-full items-start justify-center p-4 pt-8">
             <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl overflow-hidden"
                  role="dialog" aria-modal="true">
 

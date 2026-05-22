@@ -1,7 +1,7 @@
 <div class="fixed inset-0 z-50 admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto" wire:click.self="closeForm()">
 
     {{-- Mismo ancho y comportamiento que maridaje / producto (max-w-4xl) --}}
-    <div class="flex min-h-full items-center justify-center p-4" wire:click="closeForm()">
+    <div class="flex min-h-full items-start justify-center p-4 pt-8" wire:click="closeForm()">
         <div class="relative bg-white rounded-2xl shadow-2xl ring-2 ring-gray-300 w-full max-w-4xl overflow-hidden"
              wire:click.stop
              role="dialog" aria-modal="true">
