@@ -1,4 +1,4 @@
-<div class="fixed inset-0 z-50 admin-modal-overlay bg-black/50 overflow-y-auto" wire:click.self="closeModal()">
+<div class="fixed inset-0 z-50 admin-modal-overlay bg-black bg-opacity-75 overflow-y-auto" wire:click.self="closeModal()">
 
     <style>
         @keyframes product-ai-progress-slide {
