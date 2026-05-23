@@ -51,12 +51,12 @@
                         <button type="button"
                                 wire:click="edit({{ $pairing->id }})"
                                 title="{{ __('admin.pairing_page.name_open_sheet') }}"
-                                class="text-sm font-medium text-left text-gray-800 {{ $pairing->active ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0 max-w-full">
+                                class="text-sm font-medium text-left text-gray-800 {{ $pairing->hidden ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0 max-w-full">
                             {{ $pairing->name }}
                         </button>
                     </td>
                     <td class="px-4 py-3">
-                        <span class="text-sm text-gray-500 {{ $pairing->active ? 'line-through' : '' }}">
+                        <span class="text-sm text-gray-500 {{ $pairing->hidden ? 'line-through' : '' }}">
                             {{ \Illuminate\Support\Str::limit((string) ($pairing->description ?? ''), 120) }}
                         </span>
                     </td>
@@ -73,14 +73,14 @@
                     </td>
                     <td class="w-24 px-4 py-3 text-center">
                         <button type="button"
-                                wire:key="pairing-active-{{ $pairing->id }}-{{ $pairing->active ? '1' : '0' }}"
+                                wire:key="pairing-active-{{ $pairing->id }}-{{ $pairing->hidden ? '1' : '0' }}"
                                 wire:click.stop.prevent="toggleState({{ $pairing->id }})"
-                                aria-checked="{{ $pairing->active ? 'true' : 'false' }}"
+                                aria-checked="{{ $pairing->hidden ? 'true' : 'false' }}"
                                 role="checkbox"
                                 title="{{ __('admin.pairing_page.th_hide') }}"
                                 class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer
-                                    {{ $pairing->active ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}">
-                            @if($pairing->active)
+                                    {{ $pairing->hidden ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}">
+                            @if($pairing->hidden)
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                             @endif
                         </button>
@@ -104,7 +104,7 @@
                                                      alt=""
                                                      class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
                                                 <a href="{{ route('product', ['edit' => $p->id, 'from' => 'pairing']) }}"
-                                                   class="text-sm text-gray-800 hover:text-amber-700 hover:underline {{ $p->active ? 'line-through text-gray-400' : '' }}">
+                                                   class="text-sm text-gray-800 hover:text-amber-700 hover:underline {{ $p->hidden ? 'line-through text-gray-400' : '' }}">
                                                     {{ $p->name }}
                                                 </a>
                                                 <span class="text-xs text-gray-400">- {{ optional($p->category)->name ?? __('admin.pairing_page.uncategorized') }}</span>

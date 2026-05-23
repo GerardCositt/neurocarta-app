@@ -243,7 +243,7 @@
                         <button type="button"
                                 wire:click.stop="edit({{ $product->id }})"
                                 title="{{ __('admin.products.name_open_sheet') }}"
-                                class="text-sm font-semibold text-left text-gray-800 {{ $product->active ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm bg-transparent border-0 p-0 break-words">
+                                class="text-sm font-semibold text-left text-gray-800 {{ $product->hidden ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm bg-transparent border-0 p-0 break-words">
                             {{ $product->name }}
                         </button>
                         @if($product->offer)
@@ -278,7 +278,7 @@
                             @foreach($product->allergens->sortBy(fn ($a) => sprintf('%05d-%s', $a->sort_order ?? 0, $a->name)) as $al)
                                 @if($al->image)
                                     <span role="listitem"
-                                          class="inline-flex shrink-0 rounded overflow-hidden border border-gray-200 bg-white {{ $al->active ? 'opacity-45' : '' }}"
+                                          class="inline-flex shrink-0 rounded overflow-hidden border border-gray-200 bg-white {{ $al->hidden ? 'opacity-45' : '' }}"
                                           title="{{ $al->name }}">
                                         <img src="{{ $al->image_url }}" alt="" class="w-5 h-5 object-cover" loading="lazy">
                                     </span>
@@ -291,12 +291,12 @@
                 {{-- Toggle ocultar (derecha) --}}
                 <div class="flex-shrink-0 flex items-start pt-1">
                     <label class="inline-flex items-center cursor-pointer"
-                           title="{{ $product->active ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
+                           title="{{ $product->hidden ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
                         <input type="checkbox"
-                               wire:key="card-active-{{ $product->id }}-{{ $product->active ? '1' : '0' }}"
+                               wire:key="card-active-{{ $product->id }}-{{ $product->hidden ? '1' : '0' }}"
                                class="form-checkbox w-4 h-4 rounded text-gray-400 border-gray-300 focus:ring-gray-300 cursor-pointer"
                                wire:click.prevent="toggleState({{ $product->id }})"
-                               @if($product->active) checked @endif>
+                               @if($product->hidden) checked @endif>
                     </label>
                 </div>
 
@@ -404,7 +404,7 @@
                                 <button type="button"
                                         wire:click.stop="edit({{ $product->id }})"
                                         title="{{ __('admin.products.name_open_sheet') }}"
-                                        class="text-sm font-medium text-left text-gray-800 truncate {{ $product->active ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0 max-w-full"
+                                        class="text-sm font-medium text-left text-gray-800 truncate {{ $product->hidden ? 'line-through text-gray-400' : '' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0 max-w-full"
                                         title="{{ $product->name }}">
                                     {{ $product->name }}
                                 </button>
@@ -430,16 +430,16 @@
                                     @foreach($product->allergens->sortBy(fn ($a) => sprintf('%05d-%s', $a->sort_order ?? 0, $a->name)) as $al)
                                         @if($al->image)
                                             <span role="listitem"
-                                                  class="inline-flex shrink-0 rounded overflow-hidden border border-gray-200 bg-white {{ $al->active ? 'opacity-45 ring-1 ring-amber-200' : '' }}"
-                                                  title="{{ $al->name }}{{ $al->active ? ' — ' . __('admin.products.allergen_row_hidden_public') : '' }}">
+                                                  class="inline-flex shrink-0 rounded overflow-hidden border border-gray-200 bg-white {{ $al->hidden ? 'opacity-45 ring-1 ring-amber-200' : '' }}"
+                                                  title="{{ $al->name }}{{ $al->hidden ? ' — ' . __('admin.products.allergen_row_hidden_public') : '' }}">
                                                 <img src="{{ $al->image_url }}" alt="" class="w-6 h-6 object-cover"
                                                      loading="lazy"
                                                      onerror="this.onerror=null;this.src={{ json_encode(asset('img/noimg.png')) }}">
                                             </span>
                                         @else
                                             <span role="listitem"
-                                                  class="inline-flex text-[10px] font-bold leading-tight px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200 max-w-[4.25rem] truncate shrink-0 {{ $al->active ? 'opacity-45 ring-1 ring-amber-200' : '' }}"
-                                                  title="{{ $al->name }}{{ $al->active ? ' — ' . __('admin.products.allergen_row_hidden_public') : '' }}">
+                                                  class="inline-flex text-[10px] font-bold leading-tight px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200 max-w-[4.25rem] truncate shrink-0 {{ $al->hidden ? 'opacity-45 ring-1 ring-amber-200' : '' }}"
+                                                  title="{{ $al->name }}{{ $al->hidden ? ' — ' . __('admin.products.allergen_row_hidden_public') : '' }}">
                                                 {{ \Illuminate\Support\Str::limit($al->name, 10, '…') }}
                                             </span>
                                         @endif
@@ -451,7 +451,7 @@
 
                     {{-- Categoría --}}
                     <td class="px-2 py-3" style="min-width:9rem">
-                        <span class="text-sm text-gray-500 {{ $product->active ? 'line-through' : '' }}">
+                        <span class="text-sm text-gray-500 {{ $product->hidden ? 'line-through' : '' }}">
                             {{ $product->category->name }}
                         </span>
                     </td>
@@ -534,14 +534,14 @@
                     {{-- Toggle ocultar --}}
                     <td class="px-2 py-3 text-center">
                         <button type="button"
-                                wire:key="active-toggle-{{ $product->id }}-{{ $product->active ? '1' : '0' }}"
+                                wire:key="active-toggle-{{ $product->id }}-{{ $product->hidden ? '1' : '0' }}"
                                 class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer
-                                    {{ $product->active ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}"
+                                    {{ $product->hidden ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}"
                                 wire:click.stop.prevent="toggleState({{ $product->id }})"
-                                aria-checked="{{ $product->active ? 'true' : 'false' }}"
+                                aria-checked="{{ $product->hidden ? 'true' : 'false' }}"
                                 role="checkbox"
-                                title="{{ $product->active ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
-                            @if($product->active)
+                                title="{{ $product->hidden ? __('admin.products.active_toggle_on') : __('admin.products.active_toggle_off') }}">
+                            @if($product->hidden)
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                             @endif
                         </button>

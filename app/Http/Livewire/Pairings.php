@@ -21,7 +21,7 @@ class Pairings extends Component
     public $pairing_id;
 
     /** @var bool Ocultar en carta (columna active en BD). */
-    public $active = false;
+    public $hidden = false;
 
     public $isOpen = 0;
 
@@ -147,7 +147,7 @@ class Pairings extends Component
         if ($restaurantId && (int) $pairing->restaurant_id !== (int) $restaurantId) {
             return;
         }
-        $pairing->active = ! $pairing->active;
+        $pairing->hidden = ! $pairing->hidden;
         $pairing->save();
     }
 
@@ -172,7 +172,7 @@ class Pairings extends Component
         $this->name = '';
         $this->description = '';
         $this->pairing_id = '';
-        $this->active = false;
+        $this->hidden = false;
     }
 
     public function confirmGeneratePairingDescriptionWithAi(): void
@@ -271,7 +271,7 @@ class Pairings extends Component
             'name' => $this->name,
             'description' => $this->description,
             'restaurant_id' => $restaurantId,
-            'active' => (bool) $this->active,
+            'hidden' => (bool) $this->hidden,
         ];
 
         $wasNew = ! $this->pairing_id;
@@ -297,7 +297,7 @@ class Pairings extends Component
         $this->pairing_id = $id;
         $this->name = $pairing->name;
         $this->description = $pairing->description;
-        $this->active = (bool) $pairing->active;
+        $this->hidden = (bool) $pairing->hidden;
         $this->openModal();
     }
 

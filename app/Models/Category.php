@@ -20,14 +20,14 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'active',
+        'hidden',
         'order',
         'icon',
         'restaurant_id',
     ];
 
     protected $casts = [
-        'active' => 'boolean',
+        'hidden' => 'boolean',
     ];
 
     public function restaurant()
@@ -40,9 +40,8 @@ class Category extends Model
         return $this->hasMany(Product::class)->orderBy('order');
     }
 
-    // categorías visibles (active=0 en la lógica actual)
     public function scopeVisible($query)
     {
-        return $query->where('active', false)->orderBy('order');
+        return $query->where('hidden', false)->orderBy('order');
     }
 }

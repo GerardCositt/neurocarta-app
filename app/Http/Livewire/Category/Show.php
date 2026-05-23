@@ -21,8 +21,7 @@ class Show extends Component
 
     public $name = '';
 
-    /** @var bool Ocultar en carta (active=true en BD según la vista actual). */
-    public $active = false;
+    public $hidden = false;
 
     public $confirmingCategoryDeletion = false;
 
@@ -113,7 +112,7 @@ class Show extends Component
         $category = $query->firstOrFail();
         $this->category_id = $category->id;
         $this->name = $category->name;
-        $this->active = (bool) $category->active;
+        $this->hidden = (bool) $category->hidden;
         $this->isOpen = true;
     }
 
@@ -127,7 +126,7 @@ class Show extends Component
     {
         $this->category_id = '';
         $this->name = '';
-        $this->active = false;
+        $this->hidden = false;
     }
 
     public function save(): void
@@ -166,7 +165,7 @@ class Show extends Component
             $category = $query->firstOrFail();
             $category->update([
                 'name' => $this->name,
-                'active' => (bool) $this->active,
+                'hidden' => (bool) $this->hidden,
             ]);
             session()->flash('message', __('admin.category.flash_updated'));
             $this->emit('navigationMenuRefresh');
@@ -189,7 +188,7 @@ class Show extends Component
 
             Category::create([
                 'name' => $this->name,
-                'active' => (bool) $this->active,
+                'hidden' => (bool) $this->hidden,
                 'restaurant_id' => $restaurantId,
             ]);
             session()->flash('message', __('admin.category.flash_created'));
@@ -206,7 +205,7 @@ class Show extends Component
             $query->where('restaurant_id', $restaurantId);
         }
         $category = $query->firstOrFail();
-        $category->active = ! $category->active;
+        $category->hidden = ! $category->hidden;
         $category->save();
     }
 

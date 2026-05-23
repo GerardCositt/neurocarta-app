@@ -118,7 +118,7 @@ class ImportRemoteMenu extends Command
                     'price' => $item['price'],
                     'aller' => $allerFreeText,
                     'offer' => false,
-                    'active' => 0,
+                    'hidden' => false,
                     'order' => ($i + 1) * 10,
                 ];
 

@@ -59,7 +59,7 @@
                         <button type="button"
                                 wire:click="edit({{ $category->id }})"
                                 title="{{ __('admin.category_page.name_open_sheet') }}"
-                                class="text-sm font-semibold text-left w-full truncate {{ $category->active ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm bg-transparent border-0 p-0">
+                                class="text-sm font-semibold text-left w-full truncate {{ $category->hidden ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm bg-transparent border-0 p-0">
                             {{ $category->name }}
                         </button>
                         <button type="button"
@@ -72,14 +72,14 @@
                         </button>
                     </div>
                     <button type="button"
-                            wire:key="cat-card-active-{{ $category->id }}-{{ $category->active ? '1' : '0' }}"
+                            wire:key="cat-card-active-{{ $category->id }}-{{ $category->hidden ? '1' : '0' }}"
                             wire:click.stop.prevent="toggleState({{ $category->id }})"
-                            aria-checked="{{ $category->active ? 'true' : 'false' }}"
+                            aria-checked="{{ $category->hidden ? 'true' : 'false' }}"
                             role="checkbox"
                             title="{{ __('admin.category_page.hide') }}"
                             class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer shrink-0
-                                {{ $category->active ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}">
-                        @if($category->active)
+                                {{ $category->hidden ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}">
+                        @if($category->hidden)
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                         @endif
                     </button>
@@ -98,7 +98,7 @@
                                         <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                                              alt=""
                                              class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
-                                        <span class="text-sm flex-1 min-w-0 truncate {{ $product->active ? 'line-through text-gray-400' : 'text-gray-800' }}">
+                                        <span class="text-sm flex-1 min-w-0 truncate {{ $product->hidden ? 'line-through text-gray-400' : 'text-gray-800' }}">
                                             {{ $product->name }}
                                         </span>
                                         @if($product->offer)
@@ -157,7 +157,7 @@
                         <button type="button"
                                 wire:click="edit({{ $category->id }})"
                                 title="{{ __('admin.category_page.name_open_sheet') }}"
-                                class="text-sm font-medium text-left min-w-0 flex-1 truncate {{ $category->active ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0">
+                                class="text-sm font-medium text-left min-w-0 flex-1 truncate {{ $category->hidden ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0">
                             {{ $category->name }}
                         </button>
                         <button type="button" wire:click.stop="toggleProductList({{ $category->id }})"
@@ -171,14 +171,14 @@
 
                     <div class="category-col-hide w-20 sm:w-24 shrink-0 flex items-center justify-center border-l border-gray-100 pl-3">
                         <button type="button"
-                                wire:key="category-active-{{ $category->id }}-{{ $category->active ? '1' : '0' }}"
+                                wire:key="category-active-{{ $category->id }}-{{ $category->hidden ? '1' : '0' }}"
                                 wire:click.stop.prevent="toggleState({{ $category->id }})"
-                                aria-checked="{{ $category->active ? 'true' : 'false' }}"
+                                aria-checked="{{ $category->hidden ? 'true' : 'false' }}"
                                 role="checkbox"
                                 title="{{ __('admin.category_page.hide') }}"
                                 class="inline-flex items-center justify-center w-4 h-4 rounded border focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer
-                                    {{ $category->active ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}">
-                            @if($category->active)
+                                    {{ $category->hidden ? 'bg-gray-500 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-500' }}">
+                            @if($category->hidden)
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                             @endif
                         </button>
@@ -199,7 +199,7 @@
                                         <img src="{{ \App\Support\ProductPhotoUrl::publicUrl($product->photo) }}"
                                              alt=""
                                              class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
-                                        <span class="text-sm {{ $product->active ? 'line-through text-gray-400' : 'text-gray-800' }}">
+                                        <span class="text-sm {{ $product->hidden ? 'line-through text-gray-400' : 'text-gray-800' }}">
                                             {{ $product->name }}
                                         </span>
                                         @if($product->offer)

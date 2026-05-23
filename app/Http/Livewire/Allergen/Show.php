@@ -26,8 +26,7 @@ class Show extends Component
 
     public $name = '';
 
-    /** @var bool Ocultar en carta (active=true en BD según la vista actual). */
-    public $active = false;
+    public $hidden = false;
 
     public $image;
 
@@ -161,7 +160,7 @@ class Show extends Component
         $allergen = Allergen::findOrFail($id);
         $this->allergen_id = $allergen->id;
         $this->name = $allergen->name;
-        $this->active = (bool) $allergen->active;
+        $this->hidden = (bool) $allergen->hidden;
         $this->image = null;
         $restaurantId = $this->getRestaurantId();
         $linkedQuery = $allergen->products();
@@ -186,7 +185,7 @@ class Show extends Component
     {
         $this->allergen_id = '';
         $this->name = '';
-        $this->active = false;
+        $this->hidden = false;
         $this->image = null;
         $this->linkedProductIds = [];
         $this->linkProductQ = '';
@@ -254,7 +253,7 @@ class Show extends Component
 
             $data = [
                 'name' => $this->name,
-                'active' => (bool) $this->active,
+                'hidden' => (bool) $this->hidden,
             ];
 
             if ($this->image) {
@@ -274,7 +273,7 @@ class Show extends Component
         } else {
             $data = [
                 'name' => $this->name,
-                'active' => (bool) $this->active,
+                'hidden' => (bool) $this->hidden,
             ];
 
             if ($this->image) {
@@ -323,7 +322,7 @@ class Show extends Component
                 'image'       => 'allergens/official/' . $row['file'],
                 'is_official' => true,
                 'sort_order'  => $row['sort'],
-                'active'      => false,
+                'hidden'      => false,
             ]);
             $created++;
         }
@@ -337,7 +336,7 @@ class Show extends Component
 
     public function toggleState(Allergen $allergen): void
     {
-        $allergen->active = ! $allergen->active;
+        $allergen->hidden = ! $allergen->hidden;
         $allergen->save();
     }
 

@@ -32,11 +32,11 @@ class Pairing extends Model
         'name',
         'description',
         'restaurant_id',
-        'active',
+        'hidden',
     ];
 
     protected $casts = [
-        'active' => 'boolean',
+        'hidden' => 'boolean',
     ];
 
     public function restaurant()

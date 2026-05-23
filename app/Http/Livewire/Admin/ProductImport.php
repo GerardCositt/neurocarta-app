@@ -55,7 +55,7 @@ class ProductImport extends Component
             'offer_badge',
             'offer_start',
             'offer_end',
-            'active',
+            'hidden',
             'featured',
             'recommended',
             'order',
@@ -139,7 +139,7 @@ class ProductImport extends Component
                 if ($catName !== '') {
                     $category = Category::firstOrCreate(
                         ['name' => $catName, 'restaurant_id' => $restaurantId],
-                        ['active' => false, 'order' => ++$maxCategoryOrder, 'restaurant_id' => $restaurantId]
+                        ['hidden' => false, 'order' => ++$maxCategoryOrder, 'restaurant_id' => $restaurantId]
                     );
                 }
 
@@ -152,7 +152,7 @@ class ProductImport extends Component
                     'offer_badge'    => ($row['offer_badge'] ?? null) !== '' ? (string) $row['offer_badge'] : null,
                     'offer_start'    => ($row['offer_start'] ?? null) !== '' ? (string) $row['offer_start'] : null,
                     'offer_end'      => ($row['offer_end'] ?? null) !== '' ? (string) $row['offer_end'] : null,
-                    'active'         => $this->toBool($row['active'] ?? false),
+                    'hidden'         => $this->toBool($row['hidden'] ?? false),
                     'featured'       => $this->toBool($row['featured'] ?? false),
                     'recommended'    => $this->toBool($row['recommended'] ?? false),
                     'category_id'    => $category ? $category->id : null,
@@ -294,8 +294,8 @@ class ProductImport extends Component
             'offer_start'    => 'offer_start',
             'fin_oferta'     => 'offer_end',
             'offer_end'      => 'offer_end',
-            'oculto'         => 'active',
-            'active'         => 'active',
+            'oculto'         => 'hidden',
+            'active'         => 'hidden',
             'destacado'      => 'featured',
             'featured'       => 'featured',
             'recomendado'    => 'recommended',

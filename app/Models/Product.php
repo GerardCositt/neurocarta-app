@@ -21,7 +21,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'active',
+        'hidden',
         'category_id',
         'pairing_id',
         'price',
@@ -41,7 +41,7 @@ class Product extends Model
 
     protected $casts = [
         'offer'        => 'boolean',
-        'active'       => 'boolean',
+        'hidden'       => 'boolean',
         'featured'     => 'boolean',
         'recommended'  => 'boolean',
         'is_template'  => 'boolean',
@@ -64,10 +64,9 @@ class Product extends Model
         return $this->belongsTo(Pairing::class);
     }
 
-    // productos visibles (active=false en la lógica actual)
     public function scopeVisible($query)
     {
-        return $query->where('active', false);
+        return $query->where('hidden', false);
     }
 
     // productos con oferta activa ahora
@@ -113,11 +112,11 @@ class Product extends Model
     }
 
     /**
-     * Alérgenos que deben mostrarse en la carta pública (admin: columna «Ocultar» desmarcada → allergens.active = false).
+     * Alérgenos que deben mostrarse en la carta pública (admin: columna «Ocultar» desmarcada → allergens.hidden = false).
      */
     public function visibleAllergens()
     {
         return $this->belongsToMany(Allergen::class)
-            ->where('allergens.active', false);
+            ->where('allergens.hidden', false);
     }
 }

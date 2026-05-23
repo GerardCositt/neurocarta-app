@@ -1,5 +1,5 @@
 {{-- Iconos pequeños de alérgenos en la carta pública (sin abrir el producto)
-     Nota: no filtramos por allergens.active (en BD el default es false); si está asignado al plato, se muestra. --}}
+     Nota: no filtramos por allergens.hidden (en BD el default es false); si está asignado al plato, se muestra. --}}
 @php
     $localeA = $locale ?? 'es';
     $items = collect($product->visibleAllergens ?? [])->sortBy(function ($a) {

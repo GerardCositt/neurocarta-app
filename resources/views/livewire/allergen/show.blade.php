@@ -87,7 +87,7 @@
                         <button type="button"
                                 wire:click="edit({{ $allergen->id }})"
                                 title="{{ __('admin.allergen_page.name_open_sheet') }}"
-                                class="text-sm font-medium text-left {{ $allergen->active ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0 max-w-full">
+                                class="text-sm font-medium text-left {{ $allergen->hidden ? 'line-through text-gray-400' : 'text-gray-800' }} cursor-pointer hover:text-amber-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 rounded-sm bg-transparent border-0 p-0 max-w-full">
                             {{ $allergen->name }}
                         </button>
                     </td>
@@ -106,7 +106,7 @@
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox"
                                    wire:click.stop="toggleState({{ $allergen->id }})"
-                                   {{ $allergen->active ? 'checked' : '' }}
+                                   {{ $allergen->hidden ? 'checked' : '' }}
                                    class="form-checkbox w-4 h-4 rounded text-gray-400 border-gray-300 focus:ring-gray-300 cursor-pointer">
                         </label>
                     </td>
@@ -128,7 +128,7 @@
                                                  alt=""
                                                  class="w-8 h-8 rounded-lg object-cover bg-gray-100 flex-shrink-0">
                                             <a href="{{ route('product', ['edit' => $p->id, 'from' => 'allergen']) }}"
-                                               class="text-sm text-gray-800 hover:text-amber-700 hover:underline {{ $p->active ? 'line-through text-gray-400' : '' }}">
+                                               class="text-sm text-gray-800 hover:text-amber-700 hover:underline {{ $p->hidden ? 'line-through text-gray-400' : '' }}">
                                                 {{ $p->name }}
                                             </a>
                                             <span class="text-xs text-gray-400">— {{ optional($p->category)->name ?? __('admin.allergen_page.uncategorized') }}</span>

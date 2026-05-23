@@ -16,14 +16,14 @@ class Allergen extends Model
     protected $fillable = [
         'name',
         'slug',
-        'active',
+        'hidden',
         'image',
         'is_official',
         'sort_order',
     ];
 
     protected $casts = [
-        'active'      => 'boolean',
+        'hidden'      => 'boolean',
         'is_official' => 'boolean',
     ];
 

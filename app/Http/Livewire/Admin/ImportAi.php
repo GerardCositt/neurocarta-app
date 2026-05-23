@@ -212,7 +212,7 @@ class ImportAi extends Component
 
                 $category = Category::firstOrCreate(
                     ['name' => $catName, 'restaurant_id' => $rid],
-                    ['active' => false, 'order' => ++$maxCatOrder]
+                    ['hidden' => false, 'order' => ++$maxCatOrder]
                 );
                 if ($category->wasRecentlyCreated) $savedCats++;
 
@@ -229,7 +229,7 @@ class ImportAi extends Component
                         'name'          => trim($prodData['name'] ?? 'Producto'),
                         'description'   => trim($prodData['description'] ?? ''),
                         'price'         => $price,
-                        'active'        => false,
+                        'hidden'        => false,
                         'order'         => ++$maxProdOrder,
                         'featured'      => false,
                         'recommended'   => false,

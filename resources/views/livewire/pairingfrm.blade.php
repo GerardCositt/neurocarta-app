@@ -78,7 +78,7 @@
                         </div>
 
                         <label class="flex items-center gap-2.5 cursor-pointer">
-                            <input type="checkbox" wire:model="active"
+                            <input type="checkbox" wire:model="hidden"
                                    class="form-checkbox w-4 h-4 rounded text-gray-400 border-gray-300 focus:ring-gray-300 cursor-pointer">
                             <span class="text-sm font-medium text-gray-700">{{ __('admin.pairing_page.label_hide_in_menu') }}</span>
                         </label>

@@ -220,7 +220,7 @@ class Products extends Component
         } elseif ($commercialFilter === 'offer_flag') {
             $query->where('offer', true);
         } elseif ($commercialFilter === 'hidden') {
-            $query->where('active', true);
+            $query->where('hidden', true);
         }
 
         return $query;
@@ -331,7 +331,7 @@ class Products extends Component
         if ($rid = $this->getRestaurantId()) {
             $q->where('restaurant_id', $rid);
         }
-        $q->update(['active' => false]);
+        $q->update(['hidden' => false]);
 
         $this->selectedProducts = [];
         session()->flash('message', __('admin.products.flash_bulk_visible'));
@@ -348,7 +348,7 @@ class Products extends Component
         if ($rid = $this->getRestaurantId()) {
             $q->where('restaurant_id', $rid);
         }
-        $q->update(['active' => true]);
+        $q->update(['hidden' => true]);
 
         $this->selectedProducts = [];
         session()->flash('message', __('admin.products.flash_bulk_hidden'));
@@ -437,7 +437,7 @@ class Products extends Component
 
     public function toggleState(Product $product): void
     {
-        $product->active = !$product->active;
+        $product->hidden = !$product->hidden;
         $product->save();
     }
 
@@ -1365,7 +1365,7 @@ class Products extends Component
                 'image'       => 'allergens/official/' . $row['file'],
                 'is_official' => true,
                 'sort_order'  => $row['sort'],
-                'active'      => false,
+                'hidden'      => false,
             ]);
         }
 
@@ -1378,7 +1378,7 @@ class Products extends Component
         foreach (DemoContent::categories() as $cat) {
             $category = \App\Models\Category::create([
                 'name'          => $cat['name'],
-                'active'        => false,
+                'hidden'        => false,
                 'order'         => $cat['order'],
                 'restaurant_id' => $restaurantId,
             ]);
@@ -1395,7 +1395,7 @@ class Products extends Component
                 'photo'         => DemoProductPhotoResolver::resolveForTemplateProduct($data['photo']),
                 'featured'      => $data['featured'],
                 'recommended'   => $data['recommended'],
-                'active'        => false,
+                'hidden'        => false,
                 'offer'         => false,
                 'order'         => $data['order'],
                 'is_template'   => true,
