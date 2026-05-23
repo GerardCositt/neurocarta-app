@@ -115,7 +115,7 @@
                     </button>
                 </form>
             @else
-                <a href="{{ route('checkout.start', ['plan' => $planKey]) }}?interval=monthly"
+                <a href="{{ route('checkout.start', ['plan' => $planKey, 'interval' => 'monthly']) }}"
                    style="padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;text-decoration:none;margin-bottom:8px;">
                     <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.60);">Mensual</span>
                     <span style="font-size:13px;font-weight:800;color:#fff;">{{ $plan['monthly'] }}</span>
@@ -139,7 +139,7 @@
                     </button>
                 </form>
             @else
-                <a href="{{ route('checkout.start', ['plan' => $planKey]) }}?interval=annual"
+                <a href="{{ route('checkout.start', ['plan' => $planKey, 'interval' => 'annual']) }}"
                    style="padding:10px 14px;border-radius:10px;background:{{ $plan['btn'] }};display:flex;justify-content:space-between;align-items:center;text-decoration:none;">
                     <span style="font-size:12px;font-weight:700;color:{{ $plan['btnText'] }};">Anual &nbsp;<span style="font-size:10px;opacity:.7;background:rgba(0,0,0,.15);padding:1px 5px;border-radius:8px;">1 mes gratis</span></span>
                     <span style="font-size:13px;font-weight:800;color:{{ $plan['btnText'] }};">{{ $plan['annual'] }}</span>
