@@ -79,9 +79,16 @@ class Show extends Component
                 ->get();
         }
 
+        $navIds = ($this->isOpen && $this->category_id)
+            ? \App\Models\Category::where('restaurant_id', $restaurantId)->orderBy('order')->orderBy('id')->pluck('id')->toArray()
+            : [];
+        $navIdx = $navIds ? array_search((int) $this->category_id, $navIds, true) : false;
+
         return view('livewire.category.show', [
-            'categories' => $query->get(),
+            'categories'  => $query->get(),
             'expandedProducts' => $expandedProducts,
+            'navPosition' => ($navIdx !== false) ? $navIdx + 1 : null,
+            'navTotal'    => count($navIds),
         ]);
     }
 
@@ -139,6 +146,32 @@ class Show extends Component
         if ($this->persistCategory()) {
             $this->closeForm();
         }
+    }
+
+    public function saveAndNext(): void
+    {
+        if ($this->persistCategory()) {
+            $next = $this->adjacentCategoryId(1);
+            if ($next) $this->edit($next);
+        }
+    }
+
+    public function saveAndPrev(): void
+    {
+        if ($this->persistCategory()) {
+            $prev = $this->adjacentCategoryId(-1);
+            if ($prev) $this->edit($prev);
+        }
+    }
+
+    private function adjacentCategoryId(int $dir): ?int
+    {
+        $rid = $this->getRestaurantId();
+        $ids = \App\Models\Category::where('restaurant_id', $rid)
+            ->orderBy('order')->orderBy('id')->pluck('id')->toArray();
+        $pos = array_search((int) $this->category_id, $ids, true);
+        if ($pos === false) return null;
+        return $ids[$pos + $dir] ?? null;
     }
 
     private function persistCategory(): bool

@@ -234,6 +234,13 @@ class Products extends Component
 
         $restaurantId = $this->getRestaurantId();
 
+        $navIds = ($this->isOpen && $this->product_id)
+            ? \App\Models\Product::where('restaurant_id', $restaurantId)->orderBy('order')->orderBy('id')->pluck('id')->toArray()
+            : [];
+        $navIdx = $navIds ? array_search((int) $this->product_id, $navIds, true) : false;
+        $navPosition = ($navIdx !== false) ? $navIdx + 1 : null;
+        $navTotal = count($navIds);
+
         $categoriesQuery = Category::orderBy('order');
         if ($restaurantId) {
             $categoriesQuery->where('restaurant_id', $restaurantId);
@@ -275,6 +282,8 @@ class Products extends Component
             'canUseCsvImport'       => PlanFeatureGate::allows('csv_import'),
             'canUseOffers'          => PlanFeatureGate::allows('offers'),
             'currencySymbol'        => \App\Models\Restaurant::find($restaurantId)?->currencySymbol() ?? '€',
+            'navPosition'           => $navPosition,
+            'navTotal'              => $navTotal,
         ]);
     }
 
@@ -480,6 +489,30 @@ class Products extends Component
         $url = route('product');
         $this->dispatchBrowserEvent('product-stored-navigate', ['url' => $url]);
         $this->redirectRoute('product');
+    }
+
+    public function saveAndNext(): void
+    {
+        $this->persistProduct();
+        $next = $this->adjacentProductId(1);
+        if ($next) $this->edit($next);
+    }
+
+    public function saveAndPrev(): void
+    {
+        $this->persistProduct();
+        $prev = $this->adjacentProductId(-1);
+        if ($prev) $this->edit($prev);
+    }
+
+    private function adjacentProductId(int $dir): ?int
+    {
+        $rid = $this->getRestaurantId();
+        $ids = \App\Models\Product::where('restaurant_id', $rid)
+            ->orderBy('order')->orderBy('id')->pluck('id')->toArray();
+        $pos = array_search((int) $this->product_id, $ids, true);
+        if ($pos === false) return null;
+        return $ids[$pos + $dir] ?? null;
     }
 
     private function persistProduct()

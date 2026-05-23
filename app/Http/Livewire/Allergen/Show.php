@@ -124,6 +124,11 @@ class Show extends Component
 
         $missingSlugs = array_diff(OfficialAllergens::slugs(), $existingSlugs);
 
+        $navIds = ($this->isOpen && $this->allergen_id)
+            ? \App\Models\Allergen::orderByDesc('is_official')->orderBy('sort_order')->orderBy('name')->pluck('id')->toArray()
+            : [];
+        $navIdx = $navIds ? array_search((int) $this->allergen_id, $navIds, true) : false;
+
         return view('livewire.allergen.show', [
             'allergens'               => $query->get(),
             'productsForLink'         => $productsForLinkQuery->get(),
@@ -131,6 +136,8 @@ class Show extends Component
             'expandedAllergenName'    => $expandedAllergenName,
             'editingAllergenImageUrl' => $editingAllergenImageUrl,
             'missingOfficialCount'    => count($missingSlugs),
+            'navPosition'             => ($navIdx !== false) ? $navIdx + 1 : null,
+            'navTotal'                => count($navIds),
         ]);
     }
 
@@ -229,6 +236,29 @@ class Show extends Component
     {
         $this->persistAllergen();
         $this->closeForm();
+    }
+
+    public function saveAndNext(): void
+    {
+        $this->persistAllergen();
+        $next = $this->adjacentAllergenId(1);
+        if ($next) $this->edit($next);
+    }
+
+    public function saveAndPrev(): void
+    {
+        $this->persistAllergen();
+        $prev = $this->adjacentAllergenId(-1);
+        if ($prev) $this->edit($prev);
+    }
+
+    private function adjacentAllergenId(int $dir): ?int
+    {
+        $ids = \App\Models\Allergen::orderByDesc('is_official')
+            ->orderBy('sort_order')->orderBy('name')->pluck('id')->toArray();
+        $pos = array_search((int) $this->allergen_id, $ids, true);
+        if ($pos === false) return null;
+        return $ids[$pos + $dir] ?? null;
     }
 
     private function persistAllergen(): void

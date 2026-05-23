@@ -61,8 +61,15 @@ class Show extends Component
 
         $items = $items->paginate(10);
 
+        $navIds = ($this->confirmingItemAdd && $this->editingItemId)
+            ? \App\Models\Advice::where('restaurant_id', $this->restaurantId())->orderBy('id')->pluck('id')->toArray()
+            : [];
+        $navIdx = $navIds ? array_search((int) $this->editingItemId, $navIds, true) : false;
+
         return view('livewire.advices.show', [
-            'items' => $items,
+            'items'       => $items,
+            'navPosition' => ($navIdx !== false) ? $navIdx + 1 : null,
+            'navTotal'    => count($navIds),
         ]);
     }
 
@@ -163,7 +170,7 @@ class Show extends Component
         if (filled($starts) && filled($ends) && Carbon::parse($ends)->lt(Carbon::parse($starts))) {
             $this->addError('item.ends_at', __('admin.advice_page.validation_end_after_start'));
 
-            return;
+            return false;
         }
         $startsCarbon = filled($starts) ? Carbon::parse($starts) : null;
         $endsCarbon = filled($ends) ? Carbon::parse($ends) : null;
@@ -203,6 +210,8 @@ class Show extends Component
             $this->confirmingItemAdd = false;
             $this->editingItemId = null;
         }
+
+        return true;
     }
 
     public function saveItemAndClose(): void
@@ -213,6 +222,31 @@ class Show extends Component
     public function saveItemKeepOpen(): void
     {
         $this->saveItem(false);
+    }
+
+    public function saveAndNext(): void
+    {
+        if ($this->saveItem(false)) {
+            $next = $this->adjacentAdviceId(1);
+            if ($next) $this->confirmItemEdit($next);
+        }
+    }
+
+    public function saveAndPrev(): void
+    {
+        if ($this->saveItem(false)) {
+            $prev = $this->adjacentAdviceId(-1);
+            if ($prev) $this->confirmItemEdit($prev);
+        }
+    }
+
+    private function adjacentAdviceId(int $dir): ?int
+    {
+        $ids = \App\Models\Advice::where('restaurant_id', $this->restaurantId())
+            ->orderBy('id')->pluck('id')->toArray();
+        $pos = array_search((int) $this->editingItemId, $ids, true);
+        if ($pos === false) return null;
+        return $ids[$pos + $dir] ?? null;
     }
 
     public function toggleState(int $id): void
