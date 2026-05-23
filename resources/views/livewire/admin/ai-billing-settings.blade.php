@@ -61,6 +61,7 @@
                 Sube la API de tu IA
             </button>
 
+            @if($canBuyCredits)
             <div class="admin-bulk-tooltip admin-bulk-tooltip--below">
                 <button type="button"
                         wire:click="buyCredits"
@@ -73,19 +74,19 @@
                     Comprar créditos
                 </button>
                 <div id="buy-credits-tooltip" class="admin-bulk-tooltip__bubble" role="tooltip">
-                    <p class="admin-bulk-tooltip__line font-semibold text-gray-700">Recargas</p>
+                    <p class="admin-bulk-tooltip__line font-semibold text-gray-700">Recargas de créditos IA</p>
                     @foreach($creditPackages as $package)
                         <p class="admin-bulk-tooltip__line flex items-center justify-between gap-3">
                             <span>{{ $package['label'] }}</span>
-                            <span class="font-semibold whitespace-nowrap">{{ $package['credits'] }} cr · {{ $package['euros'] }}</span>
+                            <span class="font-semibold whitespace-nowrap">{{ number_format($package['credits'], 0, ',', '.') }} cr · {{ $package['euros'] }}</span>
                         </p>
                     @endforeach
                     <div class="mt-2 pt-2 border-t border-slate-200 relative"
                          onmouseenter="this.querySelector('[data-consumos-panel]').classList.remove('hidden')"
                          onmouseleave="this.querySelector('[data-consumos-panel]').classList.add('hidden')">
                         <div class="flex items-center justify-between gap-3 text-[11px] font-semibold text-gray-700 cursor-default">
-                            <span>Consumos</span>
-                            <span class="text-gray-400">></span>
+                            <span>Consumos por acción</span>
+                            <span class="text-gray-400">›</span>
                         </div>
                         <div class="hidden pt-2" data-consumos-panel>
                             @foreach($priceTariff as $item)
@@ -96,11 +97,16 @@
                             @endforeach
                         </div>
                     </div>
-                    <p class="admin-bulk-tooltip__line admin-bulk-tooltip__line--fine">
-                        Aquí conectaremos Stripe para comprar estos paquetes.
-                    </p>
                 </div>
             </div>
+            @else
+            <div class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-400 cursor-not-allowed" title="Disponible en planes Pro y Premium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Comprar créditos · <span class="font-semibold text-indigo-500">Pro</span>
+            </div>
+            @endif
         </div>
 
         <div class="mt-4 w-full rounded-xl border border-gray-200 bg-white px-4 py-3" style="max-width: 860px;">

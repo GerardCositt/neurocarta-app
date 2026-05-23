@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin;
 use App\Models\AiUsageLog;
 use App\Models\Setting;
 use App\Services\AiCreditService;
+use App\Support\PlanFeatureGate;
 use Livewire\Component;
 
 class AiBillingSettings extends Component
@@ -108,9 +109,9 @@ class AiBillingSettings extends Component
         }, $priceTariff);
 
         $creditPackages = [
-            ['label' => 'Recarga básica', 'credits' => 100, 'euros' => '5,00 €'],
-            ['label' => 'Recarga media', 'credits' => 250, 'euros' => '10,00 €'],
-            ['label' => 'Recarga amplia', 'credits' => 700, 'euros' => '25,00 €'],
+            ['key' => 'starter', 'label' => 'Pack Starter',  'credits' => 300,   'euros' => '5,00 €',  'price_eur_cents' => 500],
+            ['key' => 'pro',     'label' => 'Pack Pro',      'credits' => 1000,  'euros' => '15,00 €', 'price_eur_cents' => 1500],
+            ['key' => 'max',     'label' => 'Pack Max',      'credits' => 3000,  'euros' => '39,00 €', 'price_eur_cents' => 3900],
         ];
 
         $logs = AiUsageLog::query()
@@ -128,12 +129,13 @@ class AiBillingSettings extends Component
         $displayEurosUsed = $this->aiCredits()->formatEurosFromCredits($displayCreditsUsed);
 
         return view('livewire.admin.ai-billing-settings', [
-            'aiCredits' => $this->aiCredits()->summary(),
-            'creditPackages' => $creditPackages,
-            'priceTariff' => $priceTariff,
-            'usageLogs' => $logs,
+            'aiCredits'          => $this->aiCredits()->summary(),
+            'creditPackages'     => $creditPackages,
+            'priceTariff'        => $priceTariff,
+            'usageLogs'          => $logs,
             'displayCreditsUsed' => $displayCreditsUsed,
-            'displayEurosUsed' => $displayEurosUsed,
+            'displayEurosUsed'   => $displayEurosUsed,
+            'canBuyCredits'      => PlanFeatureGate::allows('ai'),
         ]);
     }
 }

@@ -12,8 +12,9 @@ class RefillMonthlyAiCreditsCommand extends Command
     protected $description = 'Set AI credits to the monthly allowance for each active plan (runs on the 1st of each month)';
 
     private const MONTHLY_CREDITS = [
-        'pro'     => 300,
-        'premium' => 300,
+        'basico'  => 0,
+        'pro'     => 200,
+        'premium' => 400,
     ];
 
     public function handle(PlanEntitlementService $plans): int

@@ -159,6 +159,19 @@ class StripeWebhookController extends Controller
             'period_end'             => $periodEnd->toDateTimeString(),
         ]);
 
+        // Welcome bonus: 500 credits for Pro/Premium annual subscriptions (one-time, on first activation).
+        if ($billingInterval === 'annual' && in_array($planCode, ['pro', 'premium'], true)) {
+            $account = $subscription->account()->with('restaurants')->first();
+            if ($account) {
+                $account->restaurants->each(fn ($r) => $r->increment('ai_credits', 500));
+                Log::info('StripeWebhook: annual welcome bonus applied.', [
+                    'subscription_id' => $subscription->id,
+                    'plan_code'       => $planCode,
+                    'bonus_credits'   => 500,
+                ]);
+            }
+        }
+
         $this->mailAccountUsers($subscription, fn ($user) => new SubscriptionActivated($user, $subscription));
 
         return response('OK', 200);
