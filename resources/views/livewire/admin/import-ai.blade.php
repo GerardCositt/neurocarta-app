@@ -1,14 +1,4 @@
-<div
-    x-data="{
-        processing: false,
-        step: @entangle('step'),
-        flashMessage: @entangle('flashMessage'),
-        init() {
-            this.$watch('step', val => { if (val !== 'upload') this.processing = false; });
-            this.$watch('flashMessage', val => { if (val && this.step === 'upload') this.processing = false; });
-        }
-    }"
-    class="space-y-6 relative">
+<div class="space-y-6 relative">
 
     <style>
         @keyframes import-ai-progress-slide {
@@ -44,8 +34,8 @@
         }
     </style>
 
-    {{-- Overlay durante análisis IA — controlado por Alpine para no parpadear con peticiones cortas --}}
-    <div x-show="processing"
+    {{-- Overlay durante análisis IA — controlado por JS puro para no depender de Alpine --}}
+    <div id="import-ai-overlay"
          style="display: none;"
          class="fixed inset-0 z-[100] flex items-center justify-center bg-white/75 backdrop-blur-[1px] px-4"
          aria-live="polite" aria-busy="true">
@@ -227,7 +217,7 @@
             @else
                 <span></span>
             @endif
-            <button type="button" @click="processing = true" wire:click="process" wire:loading.attr="disabled" wire:target="process,file"
+            <button type="button" onclick="document.getElementById('import-ai-overlay').style.display='flex'" wire:click="process" wire:loading.attr="disabled" wire:target="process,file"
                     @if(!$file || !$configured) disabled @endif
                     style="padding-left: 3rem; padding-right: 3rem; min-width: 26rem;"
                     class="py-4 rounded-2xl text-base font-bold bg-green-600 hover:bg-green-700 border-2 border-green-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 w-auto max-w-full whitespace-nowrap">
@@ -353,3 +343,10 @@
     @endif
 
 </div>
+
+<script>
+window.addEventListener('import-ai-done', function () {
+    var el = document.getElementById('import-ai-overlay');
+    if (el) el.style.display = 'none';
+});
+</script>
