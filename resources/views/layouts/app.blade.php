@@ -438,6 +438,20 @@
         </script>
         @stack('scripts')
 
+        <script>
+        (function () {
+            var MODAL_KEY = 'nc_credits_modal_shown';
+            // Livewire v2 dispara dispatchBrowserEvent sobre document (burbujea desde el nodo del componente)
+            document.addEventListener('insufficient-ai-credits', function () {
+                if (!localStorage.getItem(MODAL_KEY)) {
+                    localStorage.setItem(MODAL_KEY, '1');
+                    var el = document.getElementById('creditsIaModal');
+                    if (el) el.style.display = 'flex';
+                }
+            });
+        })();
+        </script>
+
         {{-- Modal centrado: Comprar créditos IA --}}
         @auth
         @if(session('admin_restaurant_id'))

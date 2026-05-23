@@ -79,7 +79,6 @@ class Products extends Component
     public $pendingAiAction = null;
     public $missingPhotosCount = 0;
     public $confirmingMissingCategory = false;
-    public $showCreditsModal = false;
 
     /** @var string|null URL interna a la que volver al cerrar la ficha (p. ej. tras abrirla desde alérgenos). */
     public $returnAfterCloseUrl = null;

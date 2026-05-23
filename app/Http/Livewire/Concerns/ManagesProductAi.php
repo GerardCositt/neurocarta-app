@@ -166,14 +166,9 @@ trait ManagesProductAi
         $this->pendingAiAction = null;
     }
 
-    public function closeCreditsModal(): void
-    {
-        $this->showCreditsModal = false;
-    }
-
     protected function handleInsufficientCredits(): void
     {
-        $this->showCreditsModal = true;
+        $this->dispatchBrowserEvent('insufficient-ai-credits');
         $this->dispatchBrowserEvent('bulk-gen-photos-done');
     }
 

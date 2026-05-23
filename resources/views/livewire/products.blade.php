@@ -803,55 +803,6 @@
     });
     </script>
 
-    @if($showCreditsModal)
-    <div class="fixed inset-0 flex items-center justify-center" style="z-index:40000">
-        <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="closeCreditsModal"></div>
-        <div class="relative bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
-            <button wire:click="closeCreditsModal"
-                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-                    aria-label="Cerrar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-            <div class="flex flex-col items-center text-center mb-5">
-                <img src="{{ asset('img/butterfly.svg') }}" alt="" class="w-12 h-12 mb-3">
-                <h3 class="text-lg font-semibold text-gray-800">Sin créditos IA</h3>
-                <p class="text-sm text-gray-500 mt-1">No tienes saldo suficiente para esta acción. Recarga créditos para continuar.</p>
-            </div>
-            <div class="flex flex-col gap-2">
-                <a href="{{ route('checkout.credits.get', ['package' => 'starter']) }}"
-                   target="_blank" rel="noopener noreferrer"
-                   class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 hover:bg-amber-50 hover:border-amber-200 transition-colors no-underline group">
-                    <div class="text-left">
-                        <p class="text-sm font-semibold text-gray-800 group-hover:text-amber-800">Pack Starter</p>
-                        <p class="text-xs text-gray-500">300 créditos</p>
-                    </div>
-                    <span class="text-sm font-bold text-gray-700 group-hover:text-amber-700 whitespace-nowrap">5,00 € <span class="font-normal text-gray-400 text-xs">+ IVA</span></span>
-                </a>
-                <a href="{{ route('checkout.credits.get', ['package' => 'pro']) }}"
-                   target="_blank" rel="noopener noreferrer"
-                   class="flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 hover:bg-amber-100 transition-colors no-underline group">
-                    <div class="text-left">
-                        <p class="text-sm font-semibold text-amber-800">Pack Pro</p>
-                        <p class="text-xs text-amber-600">1.000 créditos</p>
-                    </div>
-                    <span class="text-sm font-bold text-amber-700 whitespace-nowrap">15,00 € <span class="font-normal text-amber-400 text-xs">+ IVA</span></span>
-                </a>
-                <a href="{{ route('checkout.credits.get', ['package' => 'max']) }}"
-                   target="_blank" rel="noopener noreferrer"
-                   class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 hover:bg-amber-50 hover:border-amber-200 transition-colors no-underline group">
-                    <div class="text-left">
-                        <p class="text-sm font-semibold text-gray-800 group-hover:text-amber-800">Pack Max</p>
-                        <p class="text-xs text-gray-500">3.000 créditos</p>
-                    </div>
-                    <span class="text-sm font-bold text-gray-700 group-hover:text-amber-700 whitespace-nowrap">39,00 € <span class="font-normal text-gray-400 text-xs">+ IVA</span></span>
-                </a>
-            </div>
-            <p class="text-center text-xs text-gray-400 mt-4">El pago se abre en una pestaña nueva. Los créditos se añaden automáticamente tras el pago.</p>
-        </div>
-    </div>
-    @endif
 
 </div>
 
