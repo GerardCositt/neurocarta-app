@@ -425,13 +425,14 @@ trait ManagesProductAi
     public function generateMissingProductPhotos(): void
     {
         if (! $this->guardAiExecution()) {
+            $this->dispatchBrowserEvent('bulk-gen-photos-done');
             return;
         }
 
         try {
             if (! $this->productImageAi()->isConfigured()) {
                 session()->flash('message', __('admin.products.flash_bulk_gen_no_key'));
-
+                $this->dispatchBrowserEvent('bulk-gen-photos-done');
                 return;
             }
 
@@ -476,13 +477,16 @@ trait ManagesProductAi
             session()->flash('message', $generated > 0
                 ? __('admin.products.flash_bulk_gen_done', ['count' => $generated])
                 : __('admin.products.flash_bulk_gen_none'));
+            $this->dispatchBrowserEvent('bulk-gen-photos-done');
         } catch (InsufficientAiCreditsException $e) {
             session()->flash('message', $e->getMessage());
+            $this->dispatchBrowserEvent('bulk-gen-photos-done');
         } catch (\Throwable $e) {
             Log::error('No se pudo generar imágenes IA en lote', [
                 'message' => $e->getMessage(),
             ]);
             session()->flash('message', __('admin.products.flash_bulk_gen_fail'));
+            $this->dispatchBrowserEvent('bulk-gen-photos-done');
         }
     }
 }

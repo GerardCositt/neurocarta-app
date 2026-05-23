@@ -753,6 +753,9 @@
                     {{ __('admin.actions.cancel') }}
                 </button>
                 <button wire:click="confirmAiAction" wire:loading.attr="disabled"
+                        @if($pendingAiAction === 'generate_missing_product_photos')
+                        onclick="document.getElementById('bulk-gen-photos-overlay').style.display='flex'"
+                        @endif
                         class="px-4 py-2 text-sm text-white bg-amber-500 hover:bg-amber-600 rounded-xl transition-colors font-semibold cursor-pointer">
                     <span wire:loading.remove wire:target="confirmAiAction">Continuar</span>
                     <span wire:loading wire:target="confirmAiAction">Procesando…</span>
@@ -761,6 +764,45 @@
         </div>
     </div>
     @endif
+
+    {{-- Overlay generación masiva de imágenes IA — JS puro igual que import-ai --}}
+    <div id="bulk-gen-photos-overlay"
+         style="display:none;"
+         class="fixed inset-0 z-[100] flex items-center justify-center bg-white/75 backdrop-blur-[1px] px-4"
+         aria-live="polite" aria-busy="true">
+        <div class="max-w-md w-full rounded-2xl border border-gray-200 bg-white shadow-lg p-6 text-center">
+            <p class="text-5xl mb-3" aria-hidden="true">
+                <span style="display:inline-block;animation:butterfly-float 2.4s ease-in-out infinite">🦋</span>
+            </p>
+            <p class="text-base font-semibold text-gray-800">Generando imágenes con IA…</p>
+            <p class="text-sm text-gray-500 mt-2">Creando una imagen por cada producto sin foto. Puede tardar varios minutos.</p>
+            <div class="import-ai-progress-track mt-5" role="progressbar" aria-valuetext="Trabajando">
+                <div class="import-ai-progress-fill"></div>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">No cierres esta pestaña.</p>
+        </div>
+    </div>
+    <style>
+        @keyframes butterfly-float {
+            0%   { transform: translateY(0px) rotate(-10deg) scale(1); }
+            25%  { transform: translateY(-18px) rotate(8deg) scale(1.08); }
+            50%  { transform: translateY(-6px) rotate(-4deg) scale(0.95); }
+            75%  { transform: translateY(-22px) rotate(12deg) scale(1.05); }
+            100% { transform: translateY(0px) rotate(-10deg) scale(1); }
+        }
+        .import-ai-progress-track { background:#e5e7eb; border-radius:9999px; height:6px; overflow:hidden; }
+        .import-ai-progress-fill  { height:100%; width:40%; border-radius:9999px; background:linear-gradient(90deg,#6b7280,#111827); animation:import-ai-progress-slide 1.35s cubic-bezier(0.4,0,0.2,1) infinite; }
+        @keyframes import-ai-progress-slide {
+            0%   { transform: translateX(-100%); }
+            100% { transform: translateX(350%); }
+        }
+    </style>
+    <script>
+    window.addEventListener('bulk-gen-photos-done', function () {
+        var el = document.getElementById('bulk-gen-photos-overlay');
+        if (el) el.style.display = 'none';
+    });
+    </script>
 
 </div>
 
