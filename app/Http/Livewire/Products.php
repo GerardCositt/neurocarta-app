@@ -77,6 +77,7 @@ class Products extends Component
     public $confirmingProductPhotoRemoval = false;
     public $confirmingAiAction = false;
     public $pendingAiAction = null;
+    public $missingPhotosCount = 0;
     public $confirmingMissingCategory = false;
 
     /** @var string|null URL interna a la que volver al cerrar la ficha (p. ej. tras abrirla desde alérgenos). */

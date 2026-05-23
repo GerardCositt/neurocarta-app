@@ -130,6 +130,12 @@ trait ManagesProductAi
             return;
         }
 
+        $rid = $this->getRestaurantId();
+        $this->missingPhotosCount = \App\Models\Product::query()
+            ->where(function ($q) { $q->whereNull('photo')->orWhere('photo', ''); })
+            ->when($rid, fn ($q) => $q->where('restaurant_id', $rid))
+            ->count();
+
         $this->pendingAiAction = 'generate_missing_product_photos';
         $this->confirmingAiAction = true;
     }

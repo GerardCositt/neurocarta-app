@@ -726,7 +726,7 @@
                 @elseif($pendingAiAction === 'generate_allergen_text')
                     Vas a generar un texto alternativo de alérgenos con IA para este producto.
                 @else
-                    Vas a generar imágenes con IA para los productos que no tienen foto.
+                    Vas a generar imágenes con IA para los <strong>{{ $missingPhotosCount }} productos</strong> que no tienen foto (de 10 en 10).
                 @endif
             </p>
             <p class="text-sm font-semibold text-amber-700 mb-6">
@@ -739,7 +739,7 @@
                 @elseif($pendingAiAction === 'generate_allergen_text')
                     Coste: {{ $aiAllergenTextCost }} créditos.
                 @else
-                    Coste: {{ $aiBulkGenerateCost }} créditos por cada imagen generada.
+                    Coste: {{ $aiBulkGenerateCost }} créditos por imagen · {{ $aiBulkGenerateCost * $missingPhotosCount }} créditos en total.
                 @endif
                 @if($aiCredits['uses_client_key'])
                     Se usará la API key del cliente. No se descontarán créditos de la plataforma.
