@@ -42,8 +42,7 @@
     </div>
 
     {{-- Navegación: Productos → Categorías → Alérgenos → Maridaje → Avisos → Ver carta → QRs --}}
-    {{-- pb-44: hueco para el banner fijo (más alto tras subir tamaños de fuente) --}}
-    <nav class="flex-1 px-3 pt-5 pb-44 space-y-0.5" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
+    <nav class="flex-1 px-3 pt-5 pb-6 space-y-0.5" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
 
         <a href="{{ url('/product') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
@@ -251,8 +250,6 @@
 
 </aside>
 
-    {{-- Fuera de <aside>: evita que el flex lo coloque arriba; el banner usa position:fixed al pie del viewport --}}
-    <livewire:admin.ai-credits-banner />
 
 </div>
 
