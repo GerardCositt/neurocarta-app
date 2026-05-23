@@ -973,8 +973,8 @@ class Products extends Component
             $this->aiCredits()->ensureCanAfford(AiCreditService::ACTION_GENERATE_PRODUCT_DESCRIPTION);
 
             $allergens = $this->selectedAllergenNames();
-            $categoryName = Category::find($this->category_id)?->name ?? '';
-            $pairingName = Pairing::find($this->pairing_id)?->name ?? '';
+            $categoryName = $this->category_id ? (Category::find($this->category_id)?->name ?? '') : '';
+            $pairingName = $this->pairing_id ? (Pairing::find($this->pairing_id)?->name ?? '') : '';
 
             $this->description = $this->openAi()->generateProductDescription([
                 'name' => $this->name,
