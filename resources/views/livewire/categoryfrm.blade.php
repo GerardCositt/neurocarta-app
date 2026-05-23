@@ -13,12 +13,12 @@
                 <div style="display:flex;align-items:center;gap:6px;">
                     @if(($navPosition ?? null) !== null && ($navTotal ?? 0) > 1)
                     <div style="display:flex;align-items:center;gap:4px;background:#f3f4f6;border-radius:10px;padding:3px 6px;">
-                        <button type="button" wire:click="saveAndPrev" wire:loading.attr="disabled" wire:target="saveAndPrev,saveAndNext" @disabled($navPosition <= 1)
+                        <button type="button" wire:click="saveAndPrev" wire:loading.attr="disabled" wire:target="saveAndPrev,saveAndNext" @if($navPosition <= 1) disabled @endif
                                 style="display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;color:#374151;cursor:pointer;" title="Guardar y anterior">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                         </button>
                         <span style="font-size:0.78rem;color:#6b7280;padding:0 3px;white-space:nowrap;font-variant-numeric:tabular-nums;">{{ $navPosition }} / {{ $navTotal }}</span>
-                        <button type="button" wire:click="saveAndNext" wire:loading.attr="disabled" wire:target="saveAndPrev,saveAndNext" @disabled($navPosition >= $navTotal)
+                        <button type="button" wire:click="saveAndNext" wire:loading.attr="disabled" wire:target="saveAndPrev,saveAndNext" @if($navPosition >= $navTotal) disabled @endif
                                 style="display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;color:#374151;cursor:pointer;" title="Guardar y siguiente">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                         </button>
