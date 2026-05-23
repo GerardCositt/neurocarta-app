@@ -131,16 +131,63 @@
                                     </div>
                                 </details>
                                 @if($_hR)
-                                <a href="{{ route('checkout.credits.get', ['package' => 'pro']) }}"
-                                   target="_blank" rel="noopener noreferrer"
-                                   class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white transition-colors flex-shrink-0"
-                                   style="background:#FF7A00;"
-                                   onmouseover="this.style.background='#e06900'" onmouseout="this.style.background='#FF7A00'">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-2.21 0-4 .895-4 2s1.79 2 4 2 4 .895 4 2-1.79 2-4 2m0-10c1.714 0 3.175.537 3.732 1.286M12 8V6m0 12v-2"/>
-                                    </svg>
-                                    Créditos IA
-                                </a>
+                                <details class="relative hidden sm:block flex-shrink-0" id="creditsHeaderPicker" style="z-index:80">
+                                    <summary class="list-none cursor-pointer select-none">
+                                        <div class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors"
+                                             style="background:#FF7A00;color:#fff;"
+                                             onmouseover="this.style.background='#e06900'" onmouseout="this.style.background='#FF7A00'">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-2.21 0-4 .895-4 2s1.79 2 4 2 4 .895 4 2-1.79 2-4 2m0-10c1.714 0 3.175.537 3.732 1.286M12 8V6m0 12v-2"/>
+                                            </svg>
+                                            <span style="color:#fff;">Créditos IA</span>
+                                        </div>
+                                    </summary>
+                                    <div class="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-gray-100 bg-white shadow-xl overflow-hidden" style="z-index:80">
+                                        <div class="px-4 pt-3 pb-2 border-b border-gray-100 bg-gray-50">
+                                            <p class="text-xs font-semibold text-gray-700">Recargas de créditos IA</p>
+                                        </div>
+                                        <div class="p-2 flex flex-col gap-1">
+                                            <a href="{{ route('checkout.credits.get', ['package' => 'starter']) }}"
+                                               target="_blank" rel="noopener noreferrer"
+                                               class="flex items-center justify-between gap-3 rounded-xl px-3 py-2 hover:bg-gray-50 transition-colors no-underline group">
+                                                <div>
+                                                    <p class="text-xs font-semibold text-gray-800">Pack Starter</p>
+                                                    <p class="text-[11px] text-gray-400">300 créditos</p>
+                                                </div>
+                                                <span class="text-xs font-bold text-gray-700 whitespace-nowrap">5,00 € <span class="font-normal text-gray-400">+IVA</span></span>
+                                            </a>
+                                            <a href="{{ route('checkout.credits.get', ['package' => 'pro']) }}"
+                                               target="_blank" rel="noopener noreferrer"
+                                               class="flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors no-underline group"
+                                               style="background:#fff7ed;">
+                                                <div>
+                                                    <p class="text-xs font-semibold text-amber-800">Pack Pro <span class="text-[10px] font-normal text-amber-500">★ Popular</span></p>
+                                                    <p class="text-[11px] text-amber-500">1.000 créditos</p>
+                                                </div>
+                                                <span class="text-xs font-bold text-amber-700 whitespace-nowrap">15,00 € <span class="font-normal text-amber-400">+IVA</span></span>
+                                            </a>
+                                            <a href="{{ route('checkout.credits.get', ['package' => 'max']) }}"
+                                               target="_blank" rel="noopener noreferrer"
+                                               class="flex items-center justify-between gap-3 rounded-xl px-3 py-2 hover:bg-gray-50 transition-colors no-underline group">
+                                                <div>
+                                                    <p class="text-xs font-semibold text-gray-800">Pack Max</p>
+                                                    <p class="text-[11px] text-gray-400">3.000 créditos</p>
+                                                </div>
+                                                <span class="text-xs font-bold text-gray-700 whitespace-nowrap">39,00 € <span class="font-normal text-gray-400">+IVA</span></span>
+                                            </a>
+                                        </div>
+                                        <div class="px-4 py-3 border-t border-gray-100 bg-gray-50">
+                                            <p class="text-[11px] font-semibold text-gray-500 mb-1.5">Consumos por acción</p>
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex justify-between text-[11px] text-gray-500"><span>Generar imagen</span><span class="font-semibold">10 cr · 0,50 €</span></div>
+                                                <div class="flex justify-between text-[11px] text-gray-500"><span>Arreglar imagen</span><span class="font-semibold">5 cr · 0,25 €</span></div>
+                                                <div class="flex justify-between text-[11px] text-gray-500"><span>Generar descripción</span><span class="font-semibold">3 cr · 0,15 €</span></div>
+                                                <div class="flex justify-between text-[11px] text-gray-500"><span>Texto alérgenos</span><span class="font-semibold">2 cr · 0,10 €</span></div>
+                                                <div class="flex justify-between text-[11px] text-gray-500"><span>Importar carta</span><span class="font-semibold">15 cr · 0,75 €</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </details>
                                 @endif
                                 <details class="relative admin-user-menu text-left self-end lg:self-start">
                                     <summary
@@ -292,6 +339,16 @@
                             if (!restaurantPicker.open) return;
                             if (!restaurantPicker.contains(e.target)) {
                                 restaurantPicker.open = false;
+                            }
+                        });
+                    }
+
+                    var creditsPicker = document.getElementById('creditsHeaderPicker');
+                    if (creditsPicker) {
+                        document.addEventListener('click', function (e) {
+                            if (!creditsPicker.open) return;
+                            if (!creditsPicker.contains(e.target)) {
+                                creditsPicker.open = false;
                             }
                         });
                     }
