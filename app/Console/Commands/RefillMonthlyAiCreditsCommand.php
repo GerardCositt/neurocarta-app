@@ -21,7 +21,7 @@ class RefillMonthlyAiCreditsCommand extends Command
         $dry = $this->option('dry-run');
         $updated = 0;
 
-        Account::with(['subscription', 'restaurants'])->get()->each(function (Account $account) use ($plans, $dry, &$updated) {
+        Account::with(['subscriptions', 'restaurants'])->get()->each(function (Account $account) use ($plans, $dry, &$updated) {
             $plan = $plans->effectivePlanForAccount($account);
             $allowance = self::MONTHLY_CREDITS[$plan] ?? null;
 
