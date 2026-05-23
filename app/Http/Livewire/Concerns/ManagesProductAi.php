@@ -449,7 +449,9 @@ trait ManagesProductAi
                 $query->where('restaurant_id', $rid);
             }
 
-            $products = $query->orderBy('id')->get();
+            $batchSize = 10;
+            $products = $query->orderBy('id')->limit($batchSize)->get();
+            $remaining = $query->count() - $products->count();
             $this->aiCredits()->ensureCanAfford(AiCreditService::ACTION_BULK_GENERATE_PRODUCT_IMAGES, $products->count());
 
             $generated = 0;
@@ -474,9 +476,13 @@ trait ManagesProductAi
                 $this->notifyAiCreditsChanged();
             }
 
-            session()->flash('message', $generated > 0
-                ? __('admin.products.flash_bulk_gen_done', ['count' => $generated])
-                : __('admin.products.flash_bulk_gen_none'));
+            if ($generated > 0 && $remaining > 0) {
+                session()->flash('message', __('admin.products.flash_bulk_gen_done', ['count' => $generated]) . ' ' . __('admin.products.flash_bulk_gen_remaining', ['count' => $remaining]));
+            } else {
+                session()->flash('message', $generated > 0
+                    ? __('admin.products.flash_bulk_gen_done', ['count' => $generated])
+                    : __('admin.products.flash_bulk_gen_none'));
+            }
             $this->dispatchBrowserEvent('bulk-gen-photos-done');
         } catch (InsufficientAiCreditsException $e) {
             session()->flash('message', $e->getMessage());

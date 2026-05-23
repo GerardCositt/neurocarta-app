@@ -190,6 +190,7 @@ return [
         'flash_bulk_gen_done' => 'Se generaron :count imágenes con IA.',
         'flash_bulk_gen_none' => 'No se pudo generar ninguna imagen o no había productos sin foto.',
         'flash_bulk_gen_fail' => 'No se pudieron generar las imágenes con IA. Revisa la API key, el saldo o inténtalo de nuevo.',
+        'flash_bulk_gen_remaining' => 'Quedan :count productos sin foto — vuelve a pulsar para continuar.',
         'flash_improve_fail' => 'No se pudo mejorar la imagen con IA. Revisa la API key o inténtalo de nuevo.',
         'flash_gen_fail' => 'No se pudo generar la imagen con IA. Revisa la API key o inténtalo de nuevo.',
     ],
