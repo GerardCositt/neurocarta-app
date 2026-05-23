@@ -51,6 +51,11 @@ class Pairings extends Component
     {
         $restaurantId = $this->getRestaurantId();
 
+        $navIds = ($this->isOpen && $this->pairing_id)
+            ? Pairing::where('restaurant_id', $restaurantId)->orderBy('name')->orderBy('id')->pluck('id')->toArray()
+            : [];
+        $navIdx = $navIds ? array_search((int) $this->pairing_id, $navIds, true) : false;
+
         $query = Pairing::query()->withCount('products');
         if ($restaurantId) {
             $query->where('restaurant_id', $restaurantId);
@@ -80,6 +85,8 @@ class Pairings extends Component
             'aiPairingDescriptionCost' => $this->aiCredits()->cost(AiCreditService::ACTION_GENERATE_PAIRING_DESCRIPTION),
             'aiWritingGuideConnected' => $this->hasAiWritingGuide(),
             'canUseAi'                => PlanFeatureGate::allows('ai'),
+            'navPosition'             => ($navIdx !== false) ? $navIdx + 1 : null,
+            'navTotal'                => count($navIds),
         ]);
     }
 
@@ -256,6 +263,30 @@ class Pairings extends Component
         $this->persistPairing();
         $this->closeModal();
         $this->resetInputFields();
+    }
+
+    public function saveAndNext(): void
+    {
+        $this->persistPairing();
+        $next = $this->adjacentPairingId(1);
+        if ($next) $this->edit($next);
+    }
+
+    public function saveAndPrev(): void
+    {
+        $this->persistPairing();
+        $prev = $this->adjacentPairingId(-1);
+        if ($prev) $this->edit($prev);
+    }
+
+    private function adjacentPairingId(int $dir): ?int
+    {
+        $rid = $this->getRestaurantId();
+        $ids = \App\Models\Pairing::where('restaurant_id', $rid)
+            ->orderBy('name')->orderBy('id')->pluck('id')->toArray();
+        $pos = array_search((int) $this->pairing_id, $ids, true);
+        if ($pos === false) return null;
+        return $ids[$pos + $dir] ?? null;
     }
 
     private function persistPairing(): void
