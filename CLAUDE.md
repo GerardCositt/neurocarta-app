@@ -106,6 +106,15 @@ Variables clave:
 | `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL` | opcional — CDN sin barra final; vacío = `public/demo/` → storage |
 | `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_FLAT` | `false` por defecto — `true` si en el CDN los JPG están en la raíz del bucket (sin carpeta `demo/`) |
 | `OPENAI_API_KEY` | clave de plataforma para modo IA billing `platform` (activa desde 2026-05-23) |
+| `STRIPE_KEY` | `pk_live_...` clave pública (solo usada por `launch:check`) |
+| `STRIPE_SECRET` | `sk_live_...` clave secreta — configurada en producción 2026-05-23 |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_...` — endpoint `https://app.neurocarta.ai/stripe/webhook` |
+| `STRIPE_PRICE_BASICO_MONTHLY` | `price_1TYpwNLTcxPSuIkc88ukk5Z4` (live) |
+| `STRIPE_PRICE_BASICO_ANNUAL` | `price_1TYpwNLTcxPSuIkcEO0z4uQu` (live) |
+| `STRIPE_PRICE_PRO_MONTHLY` | `price_1TYq1nLTcxPSuIkckXqcwt0p` (live) |
+| `STRIPE_PRICE_PRO_ANNUAL` | `price_1TYpyVLTcxPSuIkcurPi73Y8` (live) |
+| `STRIPE_PRICE_PREMIUM_MONTHLY` | `price_1TYq1QLTcxPSuIkchK0vb4J6` (live) |
+| `STRIPE_PRICE_PREMIUM_ANNUAL` | `price_1TYq00LTcxPSuIkcJ845SmB6` (live) |
 
 ---
 
@@ -142,20 +151,20 @@ Variables clave:
 - **Split `Products.php` en 3 traits (2026-05-23)**: El componente Livewire `Products.php` pasó de 1515 a 705 líneas extrayendo 3 traits en `app/Http/Livewire/Concerns/`: `ManagesProductBulkActions` (selección + acciones masivas), `ManagesProductAi` (IA descripción/imagen/alérgenos), `ManagesProductDemoContent` (carga/borrado plantilla demo). Los métodos que los traits llaman en el componente padre se cambiaron de `private` a `protected`: `getRestaurantId()`, `notifyNavigationMenuRefresh()`, `buildFilteredProductQuery()`, `aiCredits()`. Los traits no pueden acceder a miembros `private` del componente — usar `protected`. Commit: `4f42589`.
 - **Tests para servicios críticos (2026-05-23)**: 54 tests nuevos en total — `tests/Unit/AiCreditServiceTest.php` (11: costes, créditos, spend, billing modes), `tests/Unit/OpenAiServiceTest.php` (9: detección key, generación texto/imagen con `Http::fake`, errores), `tests/Feature/StripeWebhookTest.php` (15: guards, payment_succeeded/failed, sub_deleted/updated, checkout validaciones), `tests/Unit/ColorMathTest.php` (19: HSL↔RGB, hex, WCAG contraste). Commits: `4219d6b`, `a96bda9`.
 - **Split `MenuBrandPaletteService` en 3 clases (2026-05-23)**: El servicio de 668 líneas se dividió en: `App\Support\ColorMath` (155 líneas, matemática pura estática — HSL↔RGB, hex, WCAG luminancia/contraste), `App\Support\LogoColorSampler` (270 líneas, operaciones GD — carga, reescalado, color dominante por hue-buckets, swatches distintos), y `MenuBrandPaletteService` (263 líneas, API pública + construcción de vars CSS, inyecta `LogoColorSampler`). La API pública no cambió — ningún caller actualizado. `LogoColorSampler` se inyecta por constructor, lo que lo hace testable de forma independiente. Commit: `a96bda9`.
-- **Overlay importación IA sin parpadeo con Alpine.js (2026-05-23)**: `wire:loading.delay.shortest wire:target="process"` parpadeaba durante la petición larga de IA porque cualquier interacción del usuario (checkboxes, inputs) dispara peticiones Livewire cortas que activan/desactivan el loading. Fix en `resources/views/livewire/admin/import-ai.blade.php`: el div raíz usa `x-data` con `processing` (bool Alpine), `step` y `flashMessage` vinculados via `@entangle`. El botón añade `@click="processing = true"`. El overlay usa `x-show="processing"` — inmune a peticiones Livewire ajenas. `init()` observa `step` (cuando cambia de 'upload' → ocultar) y `flashMessage` (error mientras step='upload' → ocultar). Emoji 🤖 reemplazado por 🦋 con animación CSS `butterfly-float` (ondulación + rotación, 2,4s). Commit: `143658c`. **Regla general**: para overlays que deben mantenerse durante peticiones Livewire largas, usar Alpine.js + `@entangle` en lugar de `wire:loading`.
+- **Overlay importación IA — solución definitiva JS puro (2026-05-23)**: El enfoque `wire:loading wire:target="process"` parpadeaba con peticiones cortas. El enfoque Alpine.js + `@entangle` en el elemento raíz tampoco funcionaba: Livewire pierde el estado Alpine al re-renderizar el componente. Solución definitiva en commit `45b58a4`: overlay con `id="import-ai-overlay"` y `style="display:none"`, botón con `onclick` puro que lo muestra, servidor lanza `dispatchBrowserEvent('import-ai-done')` en TODOS los caminos de retorno de `process()` (early returns + catch + éxito), listener JS lo oculta. Emoji 🦋 con animación CSS `butterfly-float` (ondulación + rotación, 2,4s). **Regla general**: para overlays durante peticiones Livewire largas usar JS puro + `dispatchBrowserEvent` desde el servidor. No usar `x-data` en el elemento raíz de un componente Livewire para estado que deba sobrevivir re-renders.
 
 ---
 
-## Estado Git (2026-05-23, último commit 143658c)
+## Estado Git (2026-05-23, último commit 45b58a4)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
 - **QA manual**: `docs/LAUNCH-QA.md` (bloques 1–11) — pendiente en oficina.
-- **Stripe / Legal**: cerrados por el equipo (código + documentos); verificar live en Fase 10.
-- **Tests**: 54 tests nuevos en esta sesión (total ~81 incluyendo Launch suite). `./scripts/launch-test.sh` + `PublicMenuPerformanceTest`.
+- **Stripe live activo**: claves y price IDs configurados en `.env` producción. Pendiente: prueba de pago real completa.
+- **Tests**: ~81 tests. `./scripts/launch-test.sh` + `PublicMenuPerformanceTest`.
 - **IA activa en producción**: `OPENAI_API_KEY` configurada; plan Pro con 300 créditos/mes (refill automático día 1 a las 02:00).
-- **Auditoría de código (pasos 4–7 completados)**: rename active→hidden, split Products.php en traits, tests para AiCreditService/OpenAiService/StripeWebhook, split MenuBrandPaletteService. Pendientes: paso 8+ (si aplica).
-- **Fix overlay importación IA**: parpadeo resuelto con Alpine.js. 🦋 animada en lugar de 🤖.
+- **Overlay importación IA**: fix definitivo con JS puro + `dispatchBrowserEvent`. Commit `45b58a4`.: El overlay Alpine.js no aparecía porque `x-data` en el elemento raíz de Livewire pierde estado al re-renderizar. Reemplazado por JS puro: `onclick` muestra el overlay (`id="import-ai-overlay"`, `style="display:none"`); el servidor dispara `dispatchBrowserEvent('import-ai-done')` en TODOS los caminos de retorno de `process()` (incluyendo `ValidationException` capturada y re-lanzada); un listener JS lo oculta. Commit: `45b58a4`. **Regla general**: no poner `x-data` en el elemento raíz de un componente Livewire si el estado Alpine debe sobrevivir re-renders durante peticiones largas; usar JS puro + browser events del servidor.
+- **Stripe en producción configurado (2026-05-23)**: Claves live (`sk_live_`, `whsec_`) y 6 price IDs live añadidos al `.env` de Jotelulu. El contenedor lee el `.env` vía `env_file` en `docker-compose.prod.yml` — para actualizar variables hay que recrear el contenedor (`docker compose -f docker-compose.prod.yml up -d --force-recreate app`), no solo copiarlo con `docker cp` + `config:clear`. Los price IDs de test (`price_1TYkS7...`) no funcionan en live mode. Webhook apunta a `https://app.neurocarta.ai/stripe/webhook`.
 
 ---
 
