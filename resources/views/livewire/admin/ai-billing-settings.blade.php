@@ -83,6 +83,7 @@ window.addEventListener('redirect-to', function(e) { window.location.href = e.de
                     @foreach($creditPackages as $package)
                         <a href="{{ route('checkout.credits.get', ['package' => $package['key']]) }}"
                            wire:ignore
+                           target="_blank" rel="noopener noreferrer"
                            class="w-full flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-amber-50 transition-colors group no-underline">
                             <span class="text-[12px] text-gray-700 group-hover:text-amber-800">{{ $package['label'] }}</span>
                             <span class="text-[12px] font-semibold whitespace-nowrap text-gray-800 group-hover:text-amber-800">

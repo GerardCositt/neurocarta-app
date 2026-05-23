@@ -84,6 +84,7 @@ class CreditCheckoutController extends Controller
                     'price_data' => [
                         'currency'     => 'eur',
                         'unit_amount'  => $package['amount_cents'],
+                        'tax_behavior' => 'exclusive',
                         'product_data' => [
                             'name'        => $package['label'],
                             'description' => 'Créditos IA para NeuroCarta.ai®',
