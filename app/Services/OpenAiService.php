@@ -58,9 +58,9 @@ class OpenAiService
     {
         $prompt = $this->buildPrompt();
 
-        $response = Http::withToken($this->apiKey)
-            ->timeout(60)
-            ->post('https://api.openai.com/v1/chat/completions', [
+        $response = $this->postWithRetry(
+            'https://api.openai.com/v1/chat/completions',
+            [
                 'model'           => $this->model,
                 'max_tokens'      => 4096,
                 'response_format' => ['type' => 'json_object'],
@@ -68,10 +68,7 @@ class OpenAiService
                     [
                         'role'    => 'user',
                         'content' => [
-                            [
-                                'type' => 'text',
-                                'text' => $prompt,
-                            ],
+                            ['type' => 'text', 'text' => $prompt],
                             [
                                 'type'      => 'image_url',
                                 'image_url' => [
@@ -82,9 +79,11 @@ class OpenAiService
                         ],
                     ],
                 ],
-            ]);
+            ],
+            60
+        );
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             Log::error('OpenAI error', ['body' => $response->body()]);
             throw new \RuntimeException('Error en la API de OpenAI: ' . $this->httpErrorMessage($response));
         }
@@ -256,22 +255,24 @@ class OpenAiService
 
     private function completeText(string $prompt): string
     {
-        $response = Http::withToken($this->apiKey)
-            ->timeout(60)
-            ->post('https://api.openai.com/v1/chat/completions', [
-                'model' => $this->model,
+        $response = $this->postWithRetry(
+            'https://api.openai.com/v1/chat/completions',
+            [
+                'model'      => $this->model,
                 'max_tokens' => 300,
-                'messages' => [
+                'messages'   => [
                     [
-                        'role' => 'system',
+                        'role'    => 'system',
                         'content' => 'Eres un redactor profesional de cartas de restaurante. Responde siempre en espanol y devuelve solo el texto final solicitado.',
                     ],
                     [
-                        'role' => 'user',
+                        'role'    => 'user',
                         'content' => $prompt,
                     ],
                 ],
-            ]);
+            ],
+            60
+        );
 
         if (! $response->successful()) {
             Log::error('OpenAI text error', ['body' => $response->body()]);
@@ -284,6 +285,55 @@ class OpenAiService
         }
 
         return trim(preg_replace('/\s+/', ' ', $content));
+    }
+
+    /**
+     * POST con reintentos automáticos para errores de red, rate-limit (429) y errores de servidor (5xx).
+     * No reintenta errores de cliente (4xx) salvo 429, para no consumir créditos en llamadas inválidas.
+     */
+    private function postWithRetry(string $url, array $data, int $timeout = 60, int $maxAttempts = 3): Response
+    {
+        $attempt       = 0;
+        $lastException = null;
+
+        while ($attempt < $maxAttempts) {
+            $attempt++;
+
+            try {
+                $response = Http::withToken($this->apiKey)
+                    ->timeout($timeout)
+                    ->post($url, $data);
+
+                // Client errors (except rate-limit) are definitive — no retry.
+                if ($response->clientError() && $response->status() !== 429) {
+                    return $response;
+                }
+
+                // Rate-limit or transient server error — back off and retry.
+                if ($response->status() === 429 || $response->serverError()) {
+                    if ($attempt < $maxAttempts) {
+                        usleep($attempt * 800_000); // 800 ms, 1 600 ms
+                        continue;
+                    }
+                }
+
+                return $response;
+
+            } catch (\Illuminate\Http\Client\ConnectionException $e) {
+                $lastException = $e;
+                if ($attempt < $maxAttempts) {
+                    usleep($attempt * 800_000);
+                }
+            }
+        }
+
+        Log::warning('OpenAI: todos los reintentos agotados', ['url' => $url, 'attempts' => $maxAttempts]);
+
+        throw new \RuntimeException(
+            $lastException
+                ? 'Error de conexión con OpenAI: ' . $lastException->getMessage()
+                : 'OpenAI no respondió tras ' . $maxAttempts . ' intentos.'
+        );
     }
 
     private function restaurantWritingGuide(): string
