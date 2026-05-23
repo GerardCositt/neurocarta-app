@@ -29,6 +29,24 @@ class Restaurant extends Model
         return self::CURRENCY_SYMBOLS[$this->currency ?? 'EUR'] ?? ($this->currency ?? '€');
     }
 
+    public static function priceContainsSymbol(string $price): bool
+    {
+        foreach (array_unique(array_values(self::CURRENCY_SYMBOLS)) as $symbol) {
+            if (str_contains($price, $symbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function formatPrice(string $price): string
+    {
+        if (self::priceContainsSymbol($price)) {
+            return $price;
+        }
+        return trim($price) . ' ' . $this->currencySymbol();
+    }
+
     protected $casts = [
         'ai_demo_unlimited' => 'boolean',
     ];

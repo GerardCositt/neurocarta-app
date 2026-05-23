@@ -1232,8 +1232,8 @@
                         @include('partials.menu-commercial-pills', ['featured' => $product->featured, 'recommended' => $product->recommended])
                         <div class="offer-card-name">{{ $product->translate($locale ?? 'es', 'name') }}</div>
                         <div>
-                            <span class="offer-card-old">{{ $product->price }} {{ $restaurant->currencySymbol() }}</span>
-                            <span class="offer-card-new">{{ $product->offer_price }} {{ $restaurant->currencySymbol() }}</span>
+                            <span class="offer-card-old">{{ $restaurant->formatPrice((string) $product->price) }}</span>
+                            <span class="offer-card-new">{{ $restaurant->formatPrice((string) $product->offer_price) }}</span>
                         </div>
                         <div style="font-size:11px;color:var(--text-muted);margin-top:5px;font-style:italic;">
                             {{ __('public_menu.offer_limited') }}
@@ -1282,10 +1282,10 @@
                         <div class="prod-desc">{{ $product->translate($locale ?? 'es', 'description') }}</div>
                         <div>
                             @if($product->isOfferActive())
-                                <span class="prod-price-old">{{ $product->price }} {{ $restaurant->currencySymbol() }}</span>
-                                <span class="prod-price prod-price-offer">{{ $product->offer_price }} {{ $restaurant->currencySymbol() }}</span>
+                                <span class="prod-price-old">{{ $restaurant->formatPrice((string) $product->price) }}</span>
+                                <span class="prod-price prod-price-offer">{{ $restaurant->formatPrice((string) $product->offer_price) }}</span>
                             @else
-                                <span class="prod-price">{{ $product->price }} {{ $restaurant->currencySymbol() }}</span>
+                                <span class="prod-price">{{ $restaurant->formatPrice((string) $product->price) }}</span>
                             @endif
                         </div>
                         @if(!empty($ordersMode) || $product->visibleAllergens->isNotEmpty())

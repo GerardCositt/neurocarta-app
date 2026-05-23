@@ -124,7 +124,9 @@
                                     <div class="flex items-center border border-gray-200 rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-amber-300 focus-within:border-transparent">
                                         <input type="text" wire:model="price" placeholder="0.00"
                                                class="flex-1 py-2 px-3 text-sm text-gray-800 bg-transparent focus:outline-none rounded-l-xl">
+                                        @if(!\App\Models\Restaurant::priceContainsSymbol((string)($price ?? '')))
                                         <span class="pr-3 text-sm text-gray-400 select-none">{{ $currencySymbol ?? '€' }}</span>
+                                        @endif
                                     </div>
                                     @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
@@ -133,7 +135,9 @@
                                     <div class="flex items-center border border-gray-200 rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-amber-300 focus-within:border-transparent">
                                         <input type="text" wire:model="offer_price" placeholder="0.00"
                                                class="flex-1 py-2 px-3 text-sm text-gray-800 bg-transparent focus:outline-none rounded-l-xl">
+                                        @if(!\App\Models\Restaurant::priceContainsSymbol((string)($offer_price ?? '')))
                                         <span class="pr-3 text-sm text-gray-400 select-none">{{ $currencySymbol ?? '€' }}</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
