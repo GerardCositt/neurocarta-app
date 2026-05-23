@@ -166,6 +166,17 @@ trait ManagesProductAi
         $this->pendingAiAction = null;
     }
 
+    public function closeCreditsModal(): void
+    {
+        $this->showCreditsModal = false;
+    }
+
+    protected function handleInsufficientCredits(): void
+    {
+        $this->showCreditsModal = true;
+        $this->dispatchBrowserEvent('bulk-gen-photos-done');
+    }
+
     public function confirmAiAction(): void
     {
         if (! $this->guardAiExecution()) {
@@ -245,7 +256,7 @@ trait ManagesProductAi
 
             session()->flash('message', 'Descripcion generada con IA.');
         } catch (InsufficientAiCreditsException $e) {
-            session()->flash('message', $e->getMessage());
+            $this->handleInsufficientCredits();
         } catch (\Throwable $e) {
             Log::error('No se pudo generar la descripcion con IA', [
                 'product_id' => $this->product_id,
@@ -296,7 +307,7 @@ trait ManagesProductAi
 
             session()->flash('message', 'Texto de alergenos generado con IA.');
         } catch (InsufficientAiCreditsException $e) {
-            session()->flash('message', $e->getMessage());
+            $this->handleInsufficientCredits();
         } catch (\Throwable $e) {
             Log::error('No se pudo generar el texto de alergenos con IA', [
                 'product_id' => $this->product_id,
@@ -356,7 +367,7 @@ trait ManagesProductAi
 
             session()->flash('message', __('admin.products.flash_improved'));
         } catch (InsufficientAiCreditsException $e) {
-            session()->flash('message', $e->getMessage());
+            $this->handleInsufficientCredits();
         } catch (\Throwable $e) {
             Log::error('No se pudo mejorar la imagen con IA', [
                 'product_id' => $this->product_id,
@@ -418,7 +429,7 @@ trait ManagesProductAi
 
             session()->flash('message', __('admin.products.flash_generated'));
         } catch (InsufficientAiCreditsException $e) {
-            session()->flash('message', $e->getMessage());
+            $this->handleInsufficientCredits();
         } catch (\Throwable $e) {
             Log::error('No se pudo generar la imagen con IA', [
                 'product_id' => $this->product_id,
@@ -491,8 +502,7 @@ trait ManagesProductAi
             }
             $this->dispatchBrowserEvent('bulk-gen-photos-done');
         } catch (InsufficientAiCreditsException $e) {
-            session()->flash('message', $e->getMessage());
-            $this->dispatchBrowserEvent('bulk-gen-photos-done');
+            $this->handleInsufficientCredits();
         } catch (\Throwable $e) {
             Log::error('No se pudo generar imágenes IA en lote', [
                 'message' => $e->getMessage(),
