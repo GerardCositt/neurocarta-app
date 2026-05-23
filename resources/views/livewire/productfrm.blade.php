@@ -121,14 +121,20 @@
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('admin.product_form.label_price') }}</label>
-                                    <input type="text" wire:model="price" placeholder="0.00"
-                                           class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm">
+                                    <div class="flex items-center border border-gray-200 rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-amber-300 focus-within:border-transparent">
+                                        <input type="text" wire:model="price" placeholder="0.00"
+                                               class="flex-1 py-2 px-3 text-sm text-gray-800 bg-transparent focus:outline-none rounded-l-xl">
+                                        <span class="pr-3 text-sm text-gray-400 select-none">{{ $currencySymbol ?? '€' }}</span>
+                                    </div>
                                     @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('admin.product_form.label_offer_price') }}</label>
-                                    <input type="text" wire:model="offer_price" placeholder="0.00"
-                                           class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm">
+                                    <div class="flex items-center border border-gray-200 rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-amber-300 focus-within:border-transparent">
+                                        <input type="text" wire:model="offer_price" placeholder="0.00"
+                                               class="flex-1 py-2 px-3 text-sm text-gray-800 bg-transparent focus:outline-none rounded-l-xl">
+                                        <span class="pr-3 text-sm text-gray-400 select-none">{{ $currencySymbol ?? '€' }}</span>
+                                    </div>
                                 </div>
                             </div>
 

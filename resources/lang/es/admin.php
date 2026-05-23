@@ -303,6 +303,7 @@ return [
         'palette_footer' => 'En la carta, el cliente puede seguir eligiendo tema claro, oscuro o sistema; los tonos siempre respetan esta paleta.',
         'palette_extract_failed' => 'Hay un logo guardado pero no se generó la paleta. Comprueba que sea JPG, PNG o WebP y que PHP tenga la extensión GD habilitada. Vuelve a guardar el logo si cambiaste el servidor.',
         'palette_no_logo' => 'Cuando subas y guardes un logo en formato imagen, aquí verás la escala de colores que se usará en la carta pública.',
+        'currency_saved' => 'Moneda actualizada.',
         'palette_var_gold' => 'Acento',
         'palette_var_gold_light' => 'Acento claro',
         'palette_var_gold_dim' => 'Acento oscuro',

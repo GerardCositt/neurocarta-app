@@ -1232,8 +1232,8 @@
                         @include('partials.menu-commercial-pills', ['featured' => $product->featured, 'recommended' => $product->recommended])
                         <div class="offer-card-name">{{ $product->translate($locale ?? 'es', 'name') }}</div>
                         <div>
-                            <span class="offer-card-old">{{ $product->price }}</span>
-                            <span class="offer-card-new">{{ $product->offer_price }}</span>
+                            <span class="offer-card-old">{{ $product->price }} {{ $restaurant->currencySymbol() }}</span>
+                            <span class="offer-card-new">{{ $product->offer_price }} {{ $restaurant->currencySymbol() }}</span>
                         </div>
                         <div style="font-size:11px;color:var(--text-muted);margin-top:5px;font-style:italic;">
                             {{ __('public_menu.offer_limited') }}
@@ -1282,10 +1282,10 @@
                         <div class="prod-desc">{{ $product->translate($locale ?? 'es', 'description') }}</div>
                         <div>
                             @if($product->isOfferActive())
-                                <span class="prod-price-old">{{ $product->price }}</span>
-                                <span class="prod-price prod-price-offer">{{ $product->offer_price }}</span>
+                                <span class="prod-price-old">{{ $product->price }} {{ $restaurant->currencySymbol() }}</span>
+                                <span class="prod-price prod-price-offer">{{ $product->offer_price }} {{ $restaurant->currencySymbol() }}</span>
                             @else
-                                <span class="prod-price">{{ $product->price }}</span>
+                                <span class="prod-price">{{ $product->price }} {{ $restaurant->currencySymbol() }}</span>
                             @endif
                         </div>
                         @if(!empty($ordersMode) || $product->visibleAllergens->isNotEmpty())

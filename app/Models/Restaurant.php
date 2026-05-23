@@ -13,9 +13,21 @@ class Restaurant extends Model
         'account_id',
         'name',
         'subdomain',
+        'currency',
         'ai_credits',
         'ai_demo_unlimited',
     ];
+
+    private const CURRENCY_SYMBOLS = [
+        'EUR' => '€', 'USD' => '$', 'GBP' => '£', 'MXN' => '$',
+        'COP' => '$', 'ARS' => '$', 'BRL' => 'R$', 'CLP' => '$',
+        'PEN' => 'S/', 'JPY' => '¥', 'CNY' => '¥', 'CHF' => 'Fr',
+    ];
+
+    public function currencySymbol(): string
+    {
+        return self::CURRENCY_SYMBOLS[$this->currency ?? 'EUR'] ?? ($this->currency ?? '€');
+    }
 
     protected $casts = [
         'ai_demo_unlimited' => 'boolean',

@@ -204,3 +204,30 @@
         </div>
     </div>
 </div>
+
+{{-- ── MONEDA ─────────────────────────────────────────── --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+    <h3 class="text-base font-semibold text-gray-800 mb-1">Moneda</h3>
+    <p class="text-sm text-gray-500 mb-4">Se muestra junto a los precios en el panel y en la carta pública.</p>
+    <div class="flex items-center gap-3">
+        <select wire:model="currency"
+                class="rounded-xl border border-gray-200 text-sm text-gray-800 px-3 py-2 focus:ring-1 focus:ring-gray-400 focus:border-gray-400">
+            <option value="EUR">€ EUR — Euro</option>
+            <option value="USD">$ USD — Dólar EE.UU.</option>
+            <option value="GBP">£ GBP — Libra esterlina</option>
+            <option value="MXN">$ MXN — Peso mexicano</option>
+            <option value="COP">$ COP — Peso colombiano</option>
+            <option value="ARS">$ ARS — Peso argentino</option>
+            <option value="BRL">R$ BRL — Real brasileño</option>
+            <option value="CLP">$ CLP — Peso chileno</option>
+            <option value="PEN">S/ PEN — Sol peruano</option>
+            <option value="JPY">¥ JPY — Yen japonés</option>
+            <option value="CNY">¥ CNY — Yuan chino</option>
+            <option value="CHF">Fr CHF — Franco suizo</option>
+        </select>
+        <button type="button" wire:click="saveCurrency"
+                class="px-4 py-2 rounded-xl text-sm font-semibold bg-gray-800 hover:bg-gray-900 text-white transition-colors">
+            Guardar
+        </button>
+    </div>
+</div>

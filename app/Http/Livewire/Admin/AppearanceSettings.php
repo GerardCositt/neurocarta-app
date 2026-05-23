@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Restaurant;
 use App\Models\Setting;
 use App\Services\ImageAssetService;
 use App\Services\MenuBrandPaletteService;
@@ -22,6 +23,8 @@ class AppearanceSettings extends Component
     /** @var string Color principal de la carta (#RRGGBB); editable sin depender del logo. */
     public $accentHexInput = '#c9a84c';
 
+    public string $currency = 'EUR';
+
     private function getRestaurantId(): ?int
     {
         return session('admin_restaurant_id');
@@ -36,6 +39,18 @@ class AppearanceSettings extends Component
     {
         $this->currentLogoPath = Setting::get('admin_logo_path', null, $this->getRestaurantId());
         $this->syncAccentInputFromStoredPalette();
+        $restaurant = Restaurant::find($this->getRestaurantId());
+        $this->currency = $restaurant?->currency ?? 'EUR';
+    }
+
+    public function saveCurrency(): void
+    {
+        $allowed = ['EUR','USD','GBP','MXN','COP','ARS','BRL','CLP','PEN','JPY','CNY','CHF'];
+        if (! in_array($this->currency, $allowed, true)) {
+            $this->currency = 'EUR';
+        }
+        Restaurant::where('id', $this->getRestaurantId())->update(['currency' => $this->currency]);
+        session()->flash('message', __('admin.appearance.currency_saved'));
     }
 
     /**

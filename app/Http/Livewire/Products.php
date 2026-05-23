@@ -274,6 +274,7 @@ class Products extends Component
             'canUseAi'              => PlanFeatureGate::allows('ai'),
             'canUseCsvImport'       => PlanFeatureGate::allows('csv_import'),
             'canUseOffers'          => PlanFeatureGate::allows('offers'),
+            'currencySymbol'        => \App\Models\Restaurant::find($restaurantId)?->currencySymbol() ?? '€',
         ]);
     }
 
