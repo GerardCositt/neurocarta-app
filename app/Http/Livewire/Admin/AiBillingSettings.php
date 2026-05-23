@@ -54,9 +54,13 @@ class AiBillingSettings extends Component
         session()->flash('message', 'API key de traducción guardada.');
     }
 
-    public function buyCredits(): void
+    public function buyCredits(string $packageKey): void
     {
-        session()->flash('message', 'La compra de créditos se conectará aquí con Stripe.');
+        if (! in_array($packageKey, ['starter', 'pro', 'max'], true)) {
+            return;
+        }
+
+        $this->redirect(route('checkout.credits.get', ['package' => $packageKey]));
     }
 
     private function estimatedCreditsForLog(AiUsageLog $log): int

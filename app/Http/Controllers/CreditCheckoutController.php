@@ -14,6 +14,12 @@ class CreditCheckoutController extends Controller
         'max'     => ['credits' => 3000, 'amount_cents' => 3900, 'label' => 'Pack Max — 3.000 créditos IA'],
     ];
 
+    public function createFromGet(Request $request)
+    {
+        $request->merge(['package' => $request->query('package')]);
+        return $this->create($request);
+    }
+
     public function create(Request $request)
     {
         $request->validate([
