@@ -100,7 +100,7 @@ class CreditCheckoutController extends Controller
                 'automatic_tax'              => ['enabled' => true],
                 'billing_address_collection' => 'required',
                 'tax_id_collection'          => ['enabled' => true],
-                'customer_update'            => ['address' => 'auto'],
+                'customer_update'            => ['name' => 'auto', 'address' => 'auto'],
                 'invoice_creation'           => ['enabled' => true],
                 'success_url' => route('credits.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url'  => route('settings.ai-billing'),
