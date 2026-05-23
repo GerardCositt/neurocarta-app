@@ -6,6 +6,7 @@ use App\Mail\PaymentFailed;
 use App\Mail\PaymentSucceeded;
 use App\Mail\SubscriptionActivated;
 use App\Mail\SubscriptionCanceled;
+use App\Models\Restaurant;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -52,8 +53,15 @@ class StripeWebhookController extends Controller
 
     private function handleCheckoutCompleted(object $session): Response
     {
-        // Only handle subscription-mode sessions.
-        if (($session->mode ?? null) !== 'subscription') {
+        $mode = $session->mode ?? null;
+
+        // Credit purchase (one-time payment).
+        if ($mode === 'payment' && ($session->metadata->type ?? null) === 'credit_purchase') {
+            return $this->handleCreditPurchaseCompleted($session);
+        }
+
+        // Only handle subscription-mode sessions beyond this point.
+        if ($mode !== 'subscription') {
             return response('OK', 200);
         }
 
@@ -407,6 +415,42 @@ class StripeWebhookController extends Controller
         }
 
         return null;
+    }
+
+    private function handleCreditPurchaseCompleted(object $session): Response
+    {
+        $meta         = $session->metadata ?? null;
+        $restaurantId = $meta->restaurant_id ?? null;
+        $credits      = (int) ($meta->credits ?? 0);
+        $packageKey   = $meta->package_key ?? '?';
+
+        if (! $restaurantId || $credits <= 0) {
+            Log::error('StripeWebhook: credit_purchase missing metadata.', [
+                'session_id'    => $session->id ?? null,
+                'restaurant_id' => $restaurantId,
+                'credits'       => $credits,
+            ]);
+            return response('OK', 200);
+        }
+
+        $restaurant = Restaurant::find((int) $restaurantId);
+        if (! $restaurant) {
+            Log::error('StripeWebhook: credit_purchase — restaurant not found.', [
+                'restaurant_id' => $restaurantId,
+            ]);
+            return response('OK', 200);
+        }
+
+        $restaurant->increment('ai_credits', $credits);
+
+        Log::info('StripeWebhook: credit_purchase completed.', [
+            'restaurant_id' => $restaurantId,
+            'credits_added' => $credits,
+            'package_key'   => $packageKey,
+            'session_id'    => $session->id ?? null,
+        ]);
+
+        return response('OK', 200);
     }
 
     private function mailAccountUsers(Subscription $subscription, \Closure $makeMailFn): void

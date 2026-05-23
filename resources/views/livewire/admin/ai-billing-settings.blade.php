@@ -64,7 +64,6 @@
             @if($canBuyCredits)
             <div class="admin-bulk-tooltip admin-bulk-tooltip--below">
                 <button type="button"
-                        wire:click="buyCredits"
                         class="admin-bulk-tooltip__trigger"
                         aria-describedby="buy-credits-tooltip"
                         aria-label="Comprar créditos">
@@ -73,13 +72,20 @@
                     </svg>
                     Comprar créditos
                 </button>
-                <div id="buy-credits-tooltip" class="admin-bulk-tooltip__bubble" role="tooltip">
-                    <p class="admin-bulk-tooltip__line font-semibold text-gray-700">Recargas de créditos IA</p>
+                <div id="buy-credits-tooltip" class="admin-bulk-tooltip__bubble" role="tooltip" style="min-width:220px;">
+                    <p class="admin-bulk-tooltip__line font-semibold text-gray-700 mb-1">Recargas de créditos IA</p>
                     @foreach($creditPackages as $package)
-                        <p class="admin-bulk-tooltip__line flex items-center justify-between gap-3">
-                            <span>{{ $package['label'] }}</span>
-                            <span class="font-semibold whitespace-nowrap">{{ number_format($package['credits'], 0, ',', '.') }} cr · {{ $package['euros'] }}</span>
-                        </p>
+                        <form method="POST" action="{{ route('checkout.credits') }}" style="margin:0;">
+                            @csrf
+                            <input type="hidden" name="package" value="{{ $package['key'] }}">
+                            <button type="submit"
+                                    class="w-full flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-amber-50 transition-colors group">
+                                <span class="text-[12px] text-gray-700 group-hover:text-amber-800">{{ $package['label'] }}</span>
+                                <span class="text-[12px] font-semibold whitespace-nowrap text-gray-800 group-hover:text-amber-800">
+                                    {{ number_format($package['credits'], 0, ',', '.') }} cr · {{ $package['euros'] }}
+                                </span>
+                            </button>
+                        </form>
                     @endforeach
                     <div class="mt-2 pt-2 border-t border-slate-200 relative"
                          onmouseenter="this.querySelector('[data-consumos-panel]').classList.remove('hidden')"

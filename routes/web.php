@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CreditCheckoutController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Livewire\Pairings;
 use App\Http\Livewire\Products;
@@ -187,6 +188,8 @@ Route::middleware(['auth:sanctum', 'verified', 'throttle:10,1'])->group(function
     Route::post('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+    Route::post('/checkout/credits', [CreditCheckoutController::class, 'create'])->name('checkout.credits');
+    Route::get('/checkout/credits/success', [CreditCheckoutController::class, 'success'])->name('credits.success');
 });
 
 // ─── Stripe Webhook ───────────────────────────────────────────────────────────
