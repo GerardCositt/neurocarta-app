@@ -51,11 +51,24 @@ class BillingPortalController extends Controller
         }
 
         try {
-            $stripe  = new StripeClient($stripeSecret);
-            $session = $stripe->billingPortal->sessions->create([
+            $stripe = new StripeClient($stripeSecret);
+
+            $params = [
                 'customer'   => $subscription->stripe_customer_id,
-                'return_url' => route('product'),
-            ]);
+                'return_url' => route('subscription.manage'),
+            ];
+
+            // If the subscription exists in Stripe, go directly to the "Change plan" screen.
+            if ($subscription->stripe_subscription_id) {
+                $params['flow_data'] = [
+                    'type' => 'subscription_update',
+                    'subscription_update' => [
+                        'subscription' => $subscription->stripe_subscription_id,
+                    ],
+                ];
+            }
+
+            $session = $stripe->billingPortal->sessions->create($params);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             Log::error('BillingPortal: failed to create session — ' . $e->getMessage(), [
                 'account_id'          => $account->id,
