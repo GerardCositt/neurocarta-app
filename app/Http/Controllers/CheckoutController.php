@@ -50,16 +50,11 @@ class CheckoutController extends Controller
                 ->withErrors(['checkout' => 'No se encontró una suscripción asociada. Contacta a soporte.']);
         }
 
-        // Already fully active — direct to portal so they can upgrade/manage,
-        // not to dashboard with a "plan is active" dead end.
-        if ($subscription->status === 'active') {
-            if ($subscription->stripe_customer_id) {
-                return redirect()->route('subscription.manage')
-                    ->with('status', 'Tu suscripción ya está activa. Desde aquí puedes cambiar de plan.');
-            }
-            // Active but no Stripe customer (e.g. manually activated by admin) — just go home.
-            return redirect()->route('product')
-                ->with('status', 'Tu plan ya está activo.');
+        // Already active with a real Stripe subscription → send to portal to manage/upgrade.
+        // Active but no stripe_subscription_id (manually set) → allow checkout to proceed.
+        if ($subscription->status === 'active' && $subscription->stripe_subscription_id) {
+            return redirect()->route('subscription.manage')
+                ->with('status', 'Tu suscripción ya está activa. Desde aquí puedes cambiar de plan.');
         }
 
         // Guard: Stripe must be configured.
