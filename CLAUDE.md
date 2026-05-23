@@ -138,17 +138,22 @@ Variables clave:
 - **OpenAI API key configurada en producción (2026-05-23)**: `OPENAI_API_KEY` añadida al `.env` de Jotelulu (`/opt/neurocarta/.env`) y copiada al contenedor con `docker cp`. Esto activa el modo `platform` en `AiCreditService`: la plataforma paga las llamadas y descuenta créditos del saldo del restaurante. Los planes Pro y Premium tienen IA habilitada; Básico sigue sin IA.
 - **Créditos IA mensuales automáticos (2026-05-23)**: Nuevo comando `credits:monthly-refill` en `app/Console/Commands/RefillMonthlyAiCreditsCommand.php`. Establece (no acumula) 300 créditos a cada restaurante de cuentas con plan Pro o Premium. Programado en `Kernel.php` con `monthlyOn(1, '02:00')`. Se ejecuta el día 1 de cada mes. Relación correcta en Account: `subscriptions` (plural, `hasMany`). Probado manualmente en producción: "Done: 1 restaurants refilled."
 - **Modal confirmación IA detrás del panel de edición de producto (2026-05-23)**: El modal `@if($confirmingAiAction)` en `products.blade.php` tenía `z-50` (z-index:50) pero `productfrm.blade.php` usa `z-index:20000` en su div raíz. Fix: cambiar a `style="z-index:30000"` en el div del modal de confirmación. Commit: `305d3a3`.
+- **Rename `active` → `hidden` en 4 tablas (2026-05-23)**: La columna `active` tenía semántica invertida (`true` = oculto). Se renombró a `hidden` en `products`, `categories`, `pairings` y `allergens`. Migración `2026_05_23_100000_rename_active_to_hidden_in_menu_tables.php` usa `DB::statement("ALTER TABLE x RENAME COLUMN active TO hidden")` con SQL puro — **no usa `renameColumn()`** que requiere `doctrine/dbal` (no instalado). Tests en SQLite funcionan sin DBAL. Commits: `b7c4fe1`. Regla: usar SQL puro para renombrar columnas en este proyecto.
+- **Split `Products.php` en 3 traits (2026-05-23)**: El componente Livewire `Products.php` pasó de 1515 a 705 líneas extrayendo 3 traits en `app/Http/Livewire/Concerns/`: `ManagesProductBulkActions` (selección + acciones masivas), `ManagesProductAi` (IA descripción/imagen/alérgenos), `ManagesProductDemoContent` (carga/borrado plantilla demo). Los métodos que los traits llaman en el componente padre se cambiaron de `private` a `protected`: `getRestaurantId()`, `notifyNavigationMenuRefresh()`, `buildFilteredProductQuery()`, `aiCredits()`. Los traits no pueden acceder a miembros `private` del componente — usar `protected`. Commit: `4f42589`.
+- **Tests para servicios críticos (2026-05-23)**: 54 tests nuevos en total — `tests/Unit/AiCreditServiceTest.php` (11: costes, créditos, spend, billing modes), `tests/Unit/OpenAiServiceTest.php` (9: detección key, generación texto/imagen con `Http::fake`, errores), `tests/Feature/StripeWebhookTest.php` (15: guards, payment_succeeded/failed, sub_deleted/updated, checkout validaciones), `tests/Unit/ColorMathTest.php` (19: HSL↔RGB, hex, WCAG contraste). Commits: `4219d6b`, `a96bda9`.
+- **Split `MenuBrandPaletteService` en 3 clases (2026-05-23)**: El servicio de 668 líneas se dividió en: `App\Support\ColorMath` (155 líneas, matemática pura estática — HSL↔RGB, hex, WCAG luminancia/contraste), `App\Support\LogoColorSampler` (270 líneas, operaciones GD — carga, reescalado, color dominante por hue-buckets, swatches distintos), y `MenuBrandPaletteService` (263 líneas, API pública + construcción de vars CSS, inyecta `LogoColorSampler`). La API pública no cambió — ningún caller actualizado. `LogoColorSampler` se inyecta por constructor, lo que lo hace testable de forma independiente. Commit: `a96bda9`.
 
 ---
 
-## Estado Git (2026-05-23, último commit 305d3a3)
+## Estado Git (2026-05-23, último commit a96bda9)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
 - **QA manual**: `docs/LAUNCH-QA.md` (bloques 1–11) — pendiente en oficina.
 - **Stripe / Legal**: cerrados por el equipo (código + documentos); verificar live en Fase 10.
-- **Tests Launch**: 16 tests (`./scripts/launch-test.sh`) + `PublicMenuPerformanceTest`.
+- **Tests**: 54 tests nuevos en esta sesión (total ~81 incluyendo Launch suite). `./scripts/launch-test.sh` + `PublicMenuPerformanceTest`.
 - **IA activa en producción**: `OPENAI_API_KEY` configurada; plan Pro con 300 créditos/mes (refill automático día 1 a las 02:00).
+- **Auditoría de código (pasos 4–7 completados)**: rename active→hidden, split Products.php en traits, tests para AiCreditService/OpenAiService/StripeWebhook, split MenuBrandPaletteService. Pendientes: paso 8+ (si aplica).
 
 ---
 
