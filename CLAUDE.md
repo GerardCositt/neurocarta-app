@@ -142,10 +142,11 @@ Variables clave:
 - **Split `Products.php` en 3 traits (2026-05-23)**: El componente Livewire `Products.php` pasó de 1515 a 705 líneas extrayendo 3 traits en `app/Http/Livewire/Concerns/`: `ManagesProductBulkActions` (selección + acciones masivas), `ManagesProductAi` (IA descripción/imagen/alérgenos), `ManagesProductDemoContent` (carga/borrado plantilla demo). Los métodos que los traits llaman en el componente padre se cambiaron de `private` a `protected`: `getRestaurantId()`, `notifyNavigationMenuRefresh()`, `buildFilteredProductQuery()`, `aiCredits()`. Los traits no pueden acceder a miembros `private` del componente — usar `protected`. Commit: `4f42589`.
 - **Tests para servicios críticos (2026-05-23)**: 54 tests nuevos en total — `tests/Unit/AiCreditServiceTest.php` (11: costes, créditos, spend, billing modes), `tests/Unit/OpenAiServiceTest.php` (9: detección key, generación texto/imagen con `Http::fake`, errores), `tests/Feature/StripeWebhookTest.php` (15: guards, payment_succeeded/failed, sub_deleted/updated, checkout validaciones), `tests/Unit/ColorMathTest.php` (19: HSL↔RGB, hex, WCAG contraste). Commits: `4219d6b`, `a96bda9`.
 - **Split `MenuBrandPaletteService` en 3 clases (2026-05-23)**: El servicio de 668 líneas se dividió en: `App\Support\ColorMath` (155 líneas, matemática pura estática — HSL↔RGB, hex, WCAG luminancia/contraste), `App\Support\LogoColorSampler` (270 líneas, operaciones GD — carga, reescalado, color dominante por hue-buckets, swatches distintos), y `MenuBrandPaletteService` (263 líneas, API pública + construcción de vars CSS, inyecta `LogoColorSampler`). La API pública no cambió — ningún caller actualizado. `LogoColorSampler` se inyecta por constructor, lo que lo hace testable de forma independiente. Commit: `a96bda9`.
+- **Overlay importación IA sin parpadeo con Alpine.js (2026-05-23)**: `wire:loading.delay.shortest wire:target="process"` parpadeaba durante la petición larga de IA porque cualquier interacción del usuario (checkboxes, inputs) dispara peticiones Livewire cortas que activan/desactivan el loading. Fix en `resources/views/livewire/admin/import-ai.blade.php`: el div raíz usa `x-data` con `processing` (bool Alpine), `step` y `flashMessage` vinculados via `@entangle`. El botón añade `@click="processing = true"`. El overlay usa `x-show="processing"` — inmune a peticiones Livewire ajenas. `init()` observa `step` (cuando cambia de 'upload' → ocultar) y `flashMessage` (error mientras step='upload' → ocultar). Emoji 🤖 reemplazado por 🦋 con animación CSS `butterfly-float` (ondulación + rotación, 2,4s). Commit: `143658c`. **Regla general**: para overlays que deben mantenerse durante peticiones Livewire largas, usar Alpine.js + `@entangle` en lugar de `wire:loading`.
 
 ---
 
-## Estado Git (2026-05-23, último commit a96bda9)
+## Estado Git (2026-05-23, último commit 143658c)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
@@ -154,6 +155,7 @@ Variables clave:
 - **Tests**: 54 tests nuevos en esta sesión (total ~81 incluyendo Launch suite). `./scripts/launch-test.sh` + `PublicMenuPerformanceTest`.
 - **IA activa en producción**: `OPENAI_API_KEY` configurada; plan Pro con 300 créditos/mes (refill automático día 1 a las 02:00).
 - **Auditoría de código (pasos 4–7 completados)**: rename active→hidden, split Products.php en traits, tests para AiCreditService/OpenAiService/StripeWebhook, split MenuBrandPaletteService. Pendientes: paso 8+ (si aplica).
+- **Fix overlay importación IA**: parpadeo resuelto con Alpine.js. 🦋 animada en lugar de 🤖.
 
 ---
 
