@@ -105,6 +105,7 @@ Variables clave:
 | `FILAMENT_ADMIN_EMAIL` | test@test.com |
 | `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL` | opcional — CDN sin barra final; vacío = `public/demo/` → storage |
 | `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_FLAT` | `false` por defecto — `true` si en el CDN los JPG están en la raíz del bucket (sin carpeta `demo/`) |
+| `OPENAI_API_KEY` | clave de plataforma para modo IA billing `platform` (activa desde 2026-05-23) |
 
 ---
 
@@ -132,16 +133,22 @@ Variables clave:
 - **Checkout Stripe redirige al admin si suscripción está `active` (decisión de diseño)**: `CheckoutController::create()` redirige a dashboard si `$subscription->status === 'active'`. Esto es correcto: la página `/subscription/expired` es para usuarios expirados, no para cambio de plan desde panel activo. El checkout no funcionará hasta configurar `STRIPE_SECRET` y los `STRIPE_PRICE_*` en el `.env` de producción.
 - **Usuario de prueba para planes**: `geycor@gmail.com` / `1234` (Bar Geycor, subdominio `bar-geycor`). Usar `php artisan dev:set-plan basico --email=geycor@gmail.com` para cambiar de plan. `test@test.com` es el admin de Filament y no tiene cuenta/suscripción asociada — no usar para pruebas de planes.
 - **Plantilla «Cargar datos de prueba» y fotos demo (2026-05-19)**: Una sola plantilla fija en `App\Support\DemoContent` (18 platos + 5 categorías). El cliente pulsa **Cargar datos de prueba** solo si la carta **no tiene ningún producto**; **Borrar datos de prueba** solo si todos los productos son plantilla (`products.is_template = true`) o legado que coincide por firma nombre+descripción+precio — en cuanto exista **un producto propio** (`is_template = false`), no hay carga ni borrado masivo. Columna `products.is_template` (migración `2026_05_19_200000`). Import CSV/IA y guardar ficha marcan `is_template = false`. **Fotos (decisión)**: no se versionan JPEG de stock en el repo (evita imágenes que no coinciden con el plato). Sin archivo ni CDN → producto sin `photo` → placeholder `noimg.png`. Origen, en orden: `local/demo-product-images/`, `img/demo-product-images/`, `public/demo/` (solo local, `.gitignore`), o `NEUROCARTA_TEMPLATE_PRODUCT_IMAGE_BASE_URL` (+ `FLAT` opcional). Script dev opcional: `bash scripts/download-demo-food-images.sh` (Pexels → `public/demo/`, no commitear). Tras SQL/rutas rotas: `php artisan demo:resync-template-photos` (`--by-name`). **Cabecera tabla `/product`**: sin sticky en `<thead>`. Commits: `407fb35`, `c346f3f` (stock revertido en repo), política sin JPG en git en commit posterior.
+- **Fix z-index modales admin — stacking context -mx-4 (2026-05-23)**: Los modales de edición en `/category`, `/allergen` y `/pairing` aparecían por detrás de la cabecera. Causa raíz: el div `.-mx-4` tenía `position:relative; z-index:2` vía CSS, creando un stacking context que atrapaba los `position:fixed` internos al z-index:2 del contexto padre. Fix: mover el bloque `@if($isOpen)...<div id="lw-*-edit-modal-root">@include(...)` fuera del div `-mx-4`, justo antes de los modales de confirmación de borrado. Adicionalmente, el `z-index` del header (`.admin-page-header`) se bajó de 10000 a 50 en `admin-overrides.css` para que los modales en `z-index:20000` siempre ganen. El z-index:50 del header sigue siendo superior al máximo de contenido de página (z-index:28 del bulk panel).
+- **Banner "Saldo IA" eliminado del sidebar (2026-05-23)**: Se eliminó `<livewire:admin.ai-credits-banner />` de `navigation-menu.blade.php`. El padding inferior del nav cambió de `pb-44` a `pb-6`. El saldo de créditos sigue siendo visible en `/settings/ai-billing`.
+- **OpenAI API key configurada en producción (2026-05-23)**: `OPENAI_API_KEY` añadida al `.env` de Jotelulu (`/opt/neurocarta/.env`) y copiada al contenedor con `docker cp`. Esto activa el modo `platform` en `AiCreditService`: la plataforma paga las llamadas y descuenta créditos del saldo del restaurante. Los planes Pro y Premium tienen IA habilitada; Básico sigue sin IA.
+- **Créditos IA mensuales automáticos (2026-05-23)**: Nuevo comando `credits:monthly-refill` en `app/Console/Commands/RefillMonthlyAiCreditsCommand.php`. Establece (no acumula) 300 créditos a cada restaurante de cuentas con plan Pro o Premium. Programado en `Kernel.php` con `monthlyOn(1, '02:00')`. Se ejecuta el día 1 de cada mes. Relación correcta en Account: `subscriptions` (plural, `hasMany`). Probado manualmente en producción: "Done: 1 restaurants refilled."
+- **Modal confirmación IA detrás del panel de edición de producto (2026-05-23)**: El modal `@if($confirmingAiAction)` en `products.blade.php` tenía `z-50` (z-index:50) pero `productfrm.blade.php` usa `z-index:20000` en su div raíz. Fix: cambiar a `style="z-index:30000"` en el div del modal de confirmación. Commit: `305d3a3`.
 
 ---
 
-## Estado Git (2026-05-19, último commit 407fb35)
+## Estado Git (2026-05-23, último commit 305d3a3)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
 - **QA manual**: `docs/LAUNCH-QA.md` (bloques 1–11) — pendiente en oficina.
 - **Stripe / Legal**: cerrados por el equipo (código + documentos); verificar live en Fase 10.
 - **Tests Launch**: 16 tests (`./scripts/launch-test.sh`) + `PublicMenuPerformanceTest`.
+- **IA activa en producción**: `OPENAI_API_KEY` configurada; plan Pro con 300 créditos/mes (refill automático día 1 a las 02:00).
 
 ---
 
