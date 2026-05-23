@@ -1,4 +1,14 @@
-<div class="space-y-6 relative">
+<div
+    x-data="{
+        processing: false,
+        step: @entangle('step'),
+        flashMessage: @entangle('flashMessage'),
+        init() {
+            this.$watch('step', val => { if (val !== 'upload') this.processing = false; });
+            this.$watch('flashMessage', val => { if (val && this.step === 'upload') this.processing = false; });
+        }
+    }"
+    class="space-y-6 relative">
 
     <style>
         @keyframes import-ai-progress-slide {
@@ -21,16 +31,26 @@
             background: linear-gradient(90deg, #6b7280, #111827);
             animation: import-ai-progress-slide 1.35s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
+        @keyframes butterfly-float {
+            0%   { transform: translateY(0px) rotate(-10deg) scale(1); }
+            25%  { transform: translateY(-18px) rotate(8deg) scale(1.08); }
+            50%  { transform: translateY(-6px) rotate(-4deg) scale(0.95); }
+            75%  { transform: translateY(-22px) rotate(12deg) scale(1.05); }
+            100% { transform: translateY(0px) rotate(-10deg) scale(1); }
+        }
+        .butterfly-anim {
+            display: inline-block;
+            animation: butterfly-float 2.4s ease-in-out infinite;
+        }
     </style>
 
-    {{-- Overlay durante análisis (Livewire no pinta el paso "processing" en la misma petición larga) --}}
-    {{-- display:none inicial: sin esto, el overlay puede verse antes de hidratar Livewire y bloquear la página --}}
-    <div wire:loading.flex.delay.shortest wire:target="process"
+    {{-- Overlay durante análisis IA — controlado por Alpine para no parpadear con peticiones cortas --}}
+    <div x-show="processing"
          style="display: none;"
          class="fixed inset-0 z-[100] flex items-center justify-center bg-white/75 backdrop-blur-[1px] px-4"
          aria-live="polite" aria-busy="true">
         <div class="max-w-md w-full rounded-2xl border border-gray-200 bg-white shadow-lg p-6 text-center">
-            <p class="text-4xl mb-3" aria-hidden="true">🤖</p>
+            <p class="text-5xl mb-3" aria-hidden="true"><span class="butterfly-anim">🦋</span></p>
             <p class="text-base font-semibold text-gray-800">Analizando la carta con IA…</p>
             <p class="text-sm text-gray-500 mt-2">Leyendo el archivo y extrayendo productos. Puede tardar hasta un minuto.</p>
             <div class="import-ai-progress-track mt-5" role="progressbar" aria-valuetext="Trabajando">
@@ -207,12 +227,11 @@
             @else
                 <span></span>
             @endif
-            <button type="button" wire:click="process" wire:loading.attr="disabled" wire:target="process,file"
+            <button type="button" @click="processing = true" wire:click="process" wire:loading.attr="disabled" wire:target="process,file"
                     @if(!$file || !$configured) disabled @endif
                     style="padding-left: 3rem; padding-right: 3rem; min-width: 26rem;"
                     class="py-4 rounded-2xl text-base font-bold bg-green-600 hover:bg-green-700 border-2 border-green-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2 w-auto max-w-full whitespace-nowrap">
-                <span wire:loading.remove wire:target="process">✨ Analizar con IA</span>
-                <span wire:loading wire:target="process">Analizando…</span>
+                ✨ Analizar con IA
             </button>
         </div>
     </div>
