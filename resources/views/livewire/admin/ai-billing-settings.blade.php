@@ -1,4 +1,7 @@
 <div>
+<script>
+window.addEventListener('redirect-to', function(e) { window.location.href = e.detail.url; });
+</script>
     @if (session()->has('message'))
         <x-admin.banner variant="success">{{ session('message') }}</x-admin.banner>
     @endif
