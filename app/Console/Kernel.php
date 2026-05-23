@@ -29,6 +29,9 @@ class Kernel extends ConsoleKernel
 
         // Emails de aviso de fin de trial (día 5 y día 7)
         $schedule->command('trial:send-warnings')->dailyAt('09:00');
+
+        // Recarga mensual de créditos IA (día 1 de cada mes a las 02:00)
+        $schedule->command('credits:monthly-refill')->monthlyOn(1, '02:00');
     }
 
     /**
