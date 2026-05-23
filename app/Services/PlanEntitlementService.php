@@ -46,18 +46,21 @@ class PlanEntitlementService
             'csv_import'   => false,
             'translations' => false,
             'offers'       => false,
+            'api'          => false,
         ],
         self::PLAN_PRO => [
             'ai'           => true,
             'csv_import'   => true,
             'translations' => true,
             'offers'       => true,
+            'api'          => true,
         ],
         self::PLAN_PREMIUM => [
             'ai'           => true,
             'csv_import'   => true,
             'translations' => true,
             'offers'       => true,
+            'api'          => true,
         ],
     ];
 

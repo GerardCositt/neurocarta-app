@@ -91,6 +91,11 @@ class Restaurant extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function apiKeys()
+    {
+        return $this->hasMany(RestaurantApiKey::class);
+    }
+
     /** Carta de ventas / ferias: demo.neurocarta.ai o flag explícito en BD. */
     public function isPublicSalesDemo(): bool
     {

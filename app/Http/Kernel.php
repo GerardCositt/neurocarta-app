@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'subscription.public'    => \App\Http\Middleware\CheckPublicMenuSubscription::class,
         'plan.feature'           => \App\Http\Middleware\EnsurePlanFeature::class,
         'turnstile'              => \App\Http\Middleware\VerifyTurnstile::class,
+        'api.key'                => \App\Http\Middleware\AuthenticateApiKey::class,
     ];
 }

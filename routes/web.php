@@ -226,6 +226,10 @@ Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription
         return view('settings.ai-billing');
     })->middleware('plan.feature:ai')->name('settings.ai-billing');
 
+    Route::get('/settings/api', function () {
+        return view('settings.api');
+    })->name('settings.api');
+
     Route::middleware('plan.feature:csv_import')->group(function () {
         Route::get('/settings/import-products', function () {
             return view('settings.import-products');

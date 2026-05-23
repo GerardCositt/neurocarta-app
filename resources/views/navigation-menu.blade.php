@@ -211,6 +211,14 @@
                           {{ request()->is('settings/orders') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                     {{ __('admin.nav.orders') }}
                 </a>
+                <a href="{{ url('/settings/api') }}"
+                   class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm transition-colors
+                          {{ request()->is('settings/api') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="admin-nav-label">API</span>
+                    @if($needsUpgrade)
+                        <span class="admin-nav-label shrink-0 text-xs font-semibold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Pro</span>
+                    @endif
+                </a>
             </div>
         </details>
 

@@ -37,6 +37,7 @@ class Product extends Model
         'recommended',
         'restaurant_id',
         'is_template',
+        'external_sku',
     ];
 
     protected $casts = [

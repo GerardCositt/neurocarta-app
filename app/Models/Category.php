@@ -24,6 +24,7 @@ class Category extends Model
         'order',
         'icon',
         'restaurant_id',
+        'external_sku',
     ];
 
     protected $casts = [
