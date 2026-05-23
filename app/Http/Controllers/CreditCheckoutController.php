@@ -33,17 +33,17 @@ class CreditCheckoutController extends Controller
         $account = $user->accounts()->first();
 
         if (! $account) {
-            return back()->withErrors(['checkout' => 'Tu cuenta no está configurada. Contacta a soporte.']);
+            return back()->with('credit_error', 'Tu cuenta no está configurada. Contacta a soporte.');
         }
 
         $restaurant = $account->restaurants()->first();
         if (! $restaurant) {
-            return back()->withErrors(['checkout' => 'No se encontró un restaurante asociado. Contacta a soporte.']);
+            return back()->with('credit_error', 'No se encontró un restaurante asociado. Contacta a soporte.');
         }
 
         $stripeSecret = config('stripe.secret');
         if (! $stripeSecret) {
-            return back()->withErrors(['checkout' => 'El sistema de pagos no está disponible. Contacta a soporte.']);
+            return back()->with('credit_error', 'El sistema de pagos no está disponible. Contacta a soporte.');
         }
 
         $stripe = new StripeClient($stripeSecret);
@@ -98,7 +98,7 @@ class CreditCheckoutController extends Controller
                 'account_id'  => $account->id,
                 'package_key' => $packageKey,
             ]);
-            return back()->withErrors(['checkout' => 'No se pudo iniciar el pago. Inténtalo de nuevo o contacta a soporte.']);
+            return back()->with('credit_error', 'Error Stripe: ' . $e->getMessage());
         }
 
         return redirect($session->url, 303);

@@ -5,6 +5,9 @@ window.addEventListener('redirect-to', function(e) { window.location.href = e.de
     @if (session()->has('message'))
         <x-admin.banner variant="success">{{ session('message') }}</x-admin.banner>
     @endif
+    @if (session()->has('credit_error'))
+        <x-admin.banner variant="error">{{ session('credit_error') }}</x-admin.banner>
+    @endif
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 scroll-mt-24 max-w-5xl">
         <h3 class="text-lg font-semibold text-gray-800">IA y facturación</h3>
@@ -78,14 +81,14 @@ window.addEventListener('redirect-to', function(e) { window.location.href = e.de
                 <div id="buy-credits-tooltip" class="admin-bulk-tooltip__bubble" role="tooltip" style="min-width:220px;">
                     <p class="admin-bulk-tooltip__line font-semibold text-gray-700 mb-1">Recargas de créditos IA</p>
                     @foreach($creditPackages as $package)
-                        <button type="button"
-                                wire:click="buyCredits('{{ $package['key'] }}')"
-                                class="w-full flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-amber-50 transition-colors group">
+                        <a href="{{ route('checkout.credits.get', ['package' => $package['key']]) }}"
+                           wire:ignore
+                           class="w-full flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-amber-50 transition-colors group no-underline">
                             <span class="text-[12px] text-gray-700 group-hover:text-amber-800">{{ $package['label'] }}</span>
                             <span class="text-[12px] font-semibold whitespace-nowrap text-gray-800 group-hover:text-amber-800">
                                 {{ number_format($package['credits'], 0, ',', '.') }} cr · {{ $package['euros'] }} <span class="font-normal text-gray-400">+ IVA</span>
                             </span>
-                        </button>
+                        </a>
                     @endforeach
                     <div class="mt-2 pt-2 border-t border-slate-200 relative"
                          onmouseenter="this.querySelector('[data-consumos-panel]').classList.remove('hidden')"
