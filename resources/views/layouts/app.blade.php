@@ -130,6 +130,18 @@
                                         @livewire('admin.restaurant-switcher', ['mode' => 'header'])
                                     </div>
                                 </details>
+                                @if($_hR)
+                                <a href="{{ route('checkout.credits.get', ['package' => 'pro']) }}"
+                                   target="_blank" rel="noopener noreferrer"
+                                   class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white transition-colors flex-shrink-0"
+                                   style="background:#FF7A00;"
+                                   onmouseover="this.style.background='#e06900'" onmouseout="this.style.background='#FF7A00'">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-2.21 0-4 .895-4 2s1.79 2 4 2 4 .895 4 2-1.79 2-4 2m0-10c1.714 0 3.175.537 3.732 1.286M12 8V6m0 12v-2"/>
+                                    </svg>
+                                    Créditos IA
+                                </a>
+                                @endif
                                 <details class="relative admin-user-menu text-left self-end lg:self-start">
                                     <summary
                                         class="admin-cta-trigger flex items-center gap-3 cursor-pointer rounded-xl border py-2 pl-3 pr-3 min-w-0 sm:min-w-[17rem] shadow-sm transition-colors select-none"
