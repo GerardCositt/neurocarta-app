@@ -1106,5 +1106,5 @@ html[data-effective-theme="dark"] .admin-shell .admin-main table thead.admin-pro
 .admin-modal-overlay {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 9500 !important;
+    z-index: 25000 !important;
 }
