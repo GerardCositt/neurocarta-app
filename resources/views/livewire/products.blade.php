@@ -766,37 +766,36 @@
     @endif
 
     {{-- Overlay generación masiva de imágenes IA — JS puro igual que import-ai --}}
-    <div id="bulk-gen-photos-overlay"
-         style="display:none;"
-         class="fixed inset-0 z-[100] flex items-center justify-center bg-white/75 backdrop-blur-[1px] px-4"
-         aria-live="polite" aria-busy="true">
-        <div class="max-w-md w-full rounded-2xl border border-gray-200 bg-white shadow-lg p-6 text-center">
-            <p class="text-5xl mb-3" aria-hidden="true">
-                <span style="display:inline-block;animation:butterfly-float 2.4s ease-in-out infinite">🦋</span>
-            </p>
-            <p class="text-base font-semibold text-gray-800">Generando imágenes con IA…</p>
-            <p class="text-sm text-gray-500 mt-2">Creando una imagen por cada producto sin foto. Puede tardar varios minutos.</p>
-            <div class="import-ai-progress-track mt-5" role="progressbar" aria-valuetext="Trabajando">
-                <div class="import-ai-progress-fill"></div>
-            </div>
-            <p class="text-xs text-gray-400 mt-3">No cierres esta pestaña.</p>
-        </div>
-    </div>
     <style>
-        @keyframes butterfly-float {
+        @keyframes nc-butterfly-float {
             0%   { transform: translateY(0px) rotate(-10deg) scale(1); }
             25%  { transform: translateY(-18px) rotate(8deg) scale(1.08); }
             50%  { transform: translateY(-6px) rotate(-4deg) scale(0.95); }
             75%  { transform: translateY(-22px) rotate(12deg) scale(1.05); }
             100% { transform: translateY(0px) rotate(-10deg) scale(1); }
         }
-        .import-ai-progress-track { background:#e5e7eb; border-radius:9999px; height:6px; overflow:hidden; }
-        .import-ai-progress-fill  { height:100%; width:40%; border-radius:9999px; background:linear-gradient(90deg,#6b7280,#111827); animation:import-ai-progress-slide 1.35s cubic-bezier(0.4,0,0.2,1) infinite; }
-        @keyframes import-ai-progress-slide {
+        @keyframes nc-progress-slide {
             0%   { transform: translateX(-100%); }
             100% { transform: translateX(350%); }
         }
+        #bulk-gen-photos-overlay .nc-progress-track { background:#e5e7eb; border-radius:9999px; height:6px; overflow:hidden; margin-top:1.25rem; }
+        #bulk-gen-photos-overlay .nc-progress-fill  { height:100%; width:40%; border-radius:9999px; background:linear-gradient(90deg,#FF7A00,#ff9d3f); animation:nc-progress-slide 2.8s cubic-bezier(0.4,0,0.2,1) infinite; }
+        #bulk-gen-photos-overlay .nc-butterfly       { display:inline-block; width:72px; height:72px; animation:nc-butterfly-float 2.4s ease-in-out infinite; margin-bottom:0.75rem; }
     </style>
+    <div id="bulk-gen-photos-overlay"
+         style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:50000; background:rgba(255,255,255,0.92);"
+         class="flex items-center justify-center px-4"
+         aria-live="polite" aria-busy="true">
+        <div style="max-width:28rem; width:100%; border-radius:1rem; border:1px solid #e5e7eb; background:#fff; box-shadow:0 10px 40px rgba(0,0,0,0.12); padding:2rem; text-align:center;">
+            <img src="{{ asset('img/butterfly.svg') }}" alt="NeuroCarta" class="nc-butterfly" style="margin:0 auto;">
+            <p style="font-size:1rem; font-weight:600; color:#1f2937; margin-bottom:0.5rem;">Generando imágenes con IA…</p>
+            <p style="font-size:0.875rem; color:#6b7280;">Creando una imagen por cada producto sin foto. Puede tardar varios minutos.</p>
+            <div class="nc-progress-track" role="progressbar" aria-valuetext="Trabajando">
+                <div class="nc-progress-fill"></div>
+            </div>
+            <p style="font-size:0.75rem; color:#9ca3af; margin-top:0.75rem;">No cierres esta pestaña.</p>
+        </div>
+    </div>
     <script>
     window.addEventListener('bulk-gen-photos-done', function () {
         var el = document.getElementById('bulk-gen-photos-overlay');
