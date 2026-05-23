@@ -151,19 +151,28 @@ Variables clave:
 - **Split `Products.php` en 3 traits (2026-05-23)**: El componente Livewire `Products.php` pasó de 1515 a 705 líneas extrayendo 3 traits en `app/Http/Livewire/Concerns/`: `ManagesProductBulkActions` (selección + acciones masivas), `ManagesProductAi` (IA descripción/imagen/alérgenos), `ManagesProductDemoContent` (carga/borrado plantilla demo). Los métodos que los traits llaman en el componente padre se cambiaron de `private` a `protected`: `getRestaurantId()`, `notifyNavigationMenuRefresh()`, `buildFilteredProductQuery()`, `aiCredits()`. Los traits no pueden acceder a miembros `private` del componente — usar `protected`. Commit: `4f42589`.
 - **Tests para servicios críticos (2026-05-23)**: 54 tests nuevos en total — `tests/Unit/AiCreditServiceTest.php` (11: costes, créditos, spend, billing modes), `tests/Unit/OpenAiServiceTest.php` (9: detección key, generación texto/imagen con `Http::fake`, errores), `tests/Feature/StripeWebhookTest.php` (15: guards, payment_succeeded/failed, sub_deleted/updated, checkout validaciones), `tests/Unit/ColorMathTest.php` (19: HSL↔RGB, hex, WCAG contraste). Commits: `4219d6b`, `a96bda9`.
 - **Split `MenuBrandPaletteService` en 3 clases (2026-05-23)**: El servicio de 668 líneas se dividió en: `App\Support\ColorMath` (155 líneas, matemática pura estática — HSL↔RGB, hex, WCAG luminancia/contraste), `App\Support\LogoColorSampler` (270 líneas, operaciones GD — carga, reescalado, color dominante por hue-buckets, swatches distintos), y `MenuBrandPaletteService` (263 líneas, API pública + construcción de vars CSS, inyecta `LogoColorSampler`). La API pública no cambió — ningún caller actualizado. `LogoColorSampler` se inyecta por constructor, lo que lo hace testable de forma independiente. Commit: `a96bda9`.
+- **Modal "Comprar créditos IA" en header (2026-05-23)**: Botón naranja (`#FF7A00`) en el header del admin, visible solo cuando hay restaurante seleccionado (`$_hR`). Abre un modal centrado (`id="creditsIaModal"`) con 3 tarjetas de packs de créditos + tabla de consumo por acción. El modal también salta automáticamente la **primera vez** que un usuario se queda sin créditos (`InsufficientAiCreditsException`), guardado con `localStorage('nc_credits_modal_shown')` — el botón del header siempre lo abre sin importar el localStorage. El modal se cierra con la X o haciendo clic en el fondo. Coste por acción: generar imagen 10cr, mejorar imagen 5cr, generar descripción 3cr, texto alérgeno 2cr, importar carta IA 15cr. Commits: `f6fba9a`, `cf67534`, `dafbeb4`, `23e7483`.
+- **Créditos mensuales por plan corregidos (2026-05-23)**: Pro 200 créditos/mes, Premium 400 créditos/mes (el comando `credits:monthly-refill` usaba 300 — corregido a los valores definitivos 200/400). Actualizado en `subscription/expired.blade.php` y en la landing `App.jsx`. Commit landing: `ba7571f`.
+- **Stripe `tax_behavior: exclusive` para IVA aditivo (2026-05-23)**: En `CreditCheckoutController`, `price_data` lleva `'tax_behavior' => 'exclusive'` para que el IVA se sume al precio base en lugar de estar incluido. Sin esta key, Stripe trata el precio como inclusivo de impuestos. Commit: `f6fba9a`.
+- **Stripe `customer_update[name]` requerido con tax_id_collection (2026-05-23)**: Al activar `tax_id_collection` en Stripe Checkout, Stripe exige que `customer_update` incluya `'name' => 'auto'`; sin él devuelve "Tax ID collection requires updating business name on the customer". Fix en `CreditCheckoutController`. Commit: `f6fba9a`.
+- **Stripe Customer Portal sin `flow_data` (2026-05-23)**: `flow_data.type = 'subscription_update'` requiere que el Customer Portal esté configurado en el Dashboard de Stripe (Settings → Billing → Customer portal → Switch plans). Si no está configurado, Stripe devuelve error → el controlador caía a `redirect('product')`. Fix: eliminar `flow_data` de `BillingPortalController::redirect()`. El portal simplemente abre y el usuario gestiona el plan desde ahí. **Pendiente**: configurar "Switch plans" en el Dashboard de Stripe con los 6 price IDs live para que el cambio de plan desde el portal funcione. Commit: `384c82b`.
+- **`/subscription/manage` rediseñada con 2 botones por tarjeta (2026-05-23)**: En lugar de un toggle superior + 1 botón por tarjeta (confuso porque el toggle no afectaba la acción al hacer clic), cada tarjeta muestra los 2 botones de forma independiente: mensual y anual con sus precios. El combo plan+intervalo actual se muestra como etiqueta deshabilitada "actual". Usuarios con Stripe: botones que hacen POST al portal. Usuarios sin Stripe (trial): enlaces `<a>` a `checkout.start`. Commit: `384c82b`.
+- **Checkout Stripe abre en pestaña nueva (2026-05-23)**: Los enlaces de packs de créditos en `ai-billing-settings.blade.php` tienen `target="_blank" rel="noopener noreferrer"`. Commit: `f6fba9a`.
+- **`dispatchBrowserEvent` de Livewire escucha en `document` (2026-05-23)**: El evento se dispara en el nodo del componente y burbujea hasta `document`. Usar siempre `document.addEventListener('nombre-evento', fn)`, no `window.addEventListener` ni escuchar en el elemento del componente directamente.
 - **Overlay importación IA — solución definitiva JS puro (2026-05-23)**: El enfoque `wire:loading wire:target="process"` parpadeaba con peticiones cortas. El enfoque Alpine.js + `@entangle` en el elemento raíz tampoco funcionaba: Livewire pierde el estado Alpine al re-renderizar el componente. Solución definitiva en commit `45b58a4`: overlay con `id="import-ai-overlay"` y `style="display:none"`, botón con `onclick` puro que lo muestra, servidor lanza `dispatchBrowserEvent('import-ai-done')` en TODOS los caminos de retorno de `process()` (early returns + catch + éxito), listener JS lo oculta. Emoji 🦋 con animación CSS `butterfly-float` (ondulación + rotación, 2,4s). **Regla general**: para overlays durante peticiones Livewire largas usar JS puro + `dispatchBrowserEvent` desde el servidor. No usar `x-data` en el elemento raíz de un componente Livewire para estado que deba sobrevivir re-renders.
 
 ---
 
-## Estado Git (2026-05-23, último commit 45b58a4)
+## Estado Git (2026-05-23, último commit 384c82b)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
 - **QA manual**: `docs/LAUNCH-QA.md` (bloques 1–11) — pendiente en oficina.
-- **Stripe live activo**: claves y price IDs configurados en `.env` producción. Pendiente: prueba de pago real completa.
+- **Stripe live activo**: claves y price IDs configurados en `.env` producción. Pendiente: configurar Customer Portal en Dashboard (Switch plans + 6 price IDs) y prueba de pago real completa.
 - **Tests**: ~81 tests. `./scripts/launch-test.sh` + `PublicMenuPerformanceTest`.
-- **IA activa en producción**: `OPENAI_API_KEY` configurada; plan Pro con 300 créditos/mes (refill automático día 1 a las 02:00).
-- **Overlay importación IA**: fix definitivo con JS puro + `dispatchBrowserEvent`. Commit `45b58a4`.: El overlay Alpine.js no aparecía porque `x-data` en el elemento raíz de Livewire pierde estado al re-renderizar. Reemplazado por JS puro: `onclick` muestra el overlay (`id="import-ai-overlay"`, `style="display:none"`); el servidor dispara `dispatchBrowserEvent('import-ai-done')` en TODOS los caminos de retorno de `process()` (incluyendo `ValidationException` capturada y re-lanzada); un listener JS lo oculta. Commit: `45b58a4`. **Regla general**: no poner `x-data` en el elemento raíz de un componente Livewire si el estado Alpine debe sobrevivir re-renders durante peticiones largas; usar JS puro + browser events del servidor.
+- **IA activa en producción**: `OPENAI_API_KEY` configurada; Pro 200 créditos/mes, Premium 400 créditos/mes (refill automático día 1 a las 02:00).
+- **Modal créditos IA**: botón naranja en header + popup automático primera vez sin créditos. Commits: `f6fba9a`, `cf67534`.
+- **Overlay importación IA**: fix definitivo con JS puro + `dispatchBrowserEvent`. Commit `45b58a4`. **Regla general**: no poner `x-data` en el elemento raíz de un componente Livewire si el estado Alpine debe sobrevivir re-renders durante peticiones largas; usar JS puro + browser events del servidor.
 - **Stripe en producción configurado (2026-05-23)**: Claves live (`sk_live_`, `whsec_`) y 6 price IDs live añadidos al `.env` de Jotelulu. El contenedor lee el `.env` vía `env_file` en `docker-compose.prod.yml` — para actualizar variables hay que recrear el contenedor (`docker compose -f docker-compose.prod.yml up -d --force-recreate app`), no solo copiarlo con `docker cp` + `config:clear`. Los price IDs de test (`price_1TYkS7...`) no funcionan en live mode. Webhook apunta a `https://app.neurocarta.ai/stripe/webhook`.
 
 ---
@@ -245,14 +254,15 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 
 ### Fase 2 — Pagos y suscripciones
 - [x] Stripe en código (Checkout + webhooks). Pendiente: **live** probado (Fase 10).
-- [ ] Stripe conectado en producción (claves `.env`).
-- [ ] Checkout real para cada plan.
-- [ ] Webhooks de Stripe configurados.
-- [ ] Activación automática de suscripción tras pago.
-- [ ] Cancelación, impago y renovación gestionados.
-- [ ] Facturación anual/mensual clara.
+- [x] Stripe conectado en producción (claves `.env` + 6 price IDs live configurados).
+- [x] Checkout para planes (suscripción) y para packs de créditos IA — abre en nueva pestaña.
+- [x] Webhooks de Stripe configurados (`/stripe/webhook`, `whsec_` en `.env`).
+- [ ] Activación automática de suscripción tras pago — pendiente prueba real.
+- [ ] Cancelación, impago y renovación gestionados — pendiente prueba real.
+- [x] Facturación anual/mensual clara en `/subscription/manage` (2 botones por tarjeta) y en `/subscription/expired`.
 - [ ] Emails de trial, alta, pago fallido y renovación.
-- [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Límites y features alineados con landing (`b95fdf1`). Pendiente: Stripe live y prueba de cobro.
+- [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Límites y features alineados con landing (`b95fdf1`).
+- [ ] Customer Portal de Stripe configurado en Dashboard (Settings → Billing → Customer portal): activar "Switch plans", añadir los 6 price IDs live, configurar prorrateo. **Bloqueante** para cambio de plan desde el portal.
 
 ### Fase 3 — Multi-restaurante / tenants
 - [ ] Cada restaurante aislado correctamente.
