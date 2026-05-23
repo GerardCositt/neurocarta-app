@@ -131,6 +131,7 @@ class ProductImport extends Component
         $linkedAllergens = 0;
         $unknownAllergens = 0;
 
+        try {
         DB::transaction(function () use ($rows, $restaurantId, &$created, &$updated, &$linkedAllergens, &$unknownAllergens) {
             $maxCategoryOrder = (int) (Category::where('restaurant_id', $restaurantId)->max('order') ?? 0);
             $maxProductOrder = (int) (Product::where('restaurant_id', $restaurantId)->max('order') ?? 0);
@@ -206,6 +207,11 @@ class ProductImport extends Component
                 }
             }
         });
+        } catch (\Throwable $e) {
+            $this->previewErrors = ['Error al importar: ' . $e->getMessage()];
+            $this->hasPreview = true;
+            return;
+        }
 
         session()->flash('message', __('admin.product_import.flash_done', [
             'created' => $created,
