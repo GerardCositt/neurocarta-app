@@ -152,7 +152,7 @@ class ProductImport extends Component
                     'price'          => ($row['price'] ?? null) !== '' ? (string) $row['price'] : null,
                     'offer'          => $this->toBool($row['offer'] ?? false),
                     'offer_price'    => ($row['offer_price'] ?? null) !== '' ? (string) $row['offer_price'] : null,
-                    'offer_badge'    => ($row['offer_badge'] ?? null) !== '' ? (string) $row['offer_badge'] : null,
+                    'offer_badge'    => ($row['offer_badge'] ?? null) !== '' ? (string) $row['offer_badge'] : 'Oferta',
                     'offer_start'    => ($row['offer_start'] ?? null) !== '' ? (string) $row['offer_start'] : null,
                     'offer_end'      => ($row['offer_end'] ?? null) !== '' ? (string) $row['offer_end'] : null,
                     'hidden'         => $this->toBool($row['hidden'] ?? false),
