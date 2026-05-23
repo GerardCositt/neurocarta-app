@@ -59,7 +59,7 @@
                     Solo falta un paso: crea tu contraseña para activar la cuenta.
                 </p>
                 <p>
-                    El enlace es válido <span class="badge">3 días</span>. Si lo pierdes, puedes solicitar uno nuevo desde el login.
+                    El enlace es válido <span class="badge">3 horas</span>. Si lo pierdes, puedes solicitar uno nuevo desde el login.
                 </p>
 
                 <div class="btn-wrap">
