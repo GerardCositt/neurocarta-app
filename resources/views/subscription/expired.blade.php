@@ -71,6 +71,7 @@
                     <li>✓ 250 productos</li>
                     <li>✓ 15 categorías</li>
                     <li>✓ IA + traducciones + CSV</li>
+                    <li>✓ <strong>200 créditos IA/mes</strong></li>
                 </ul>
                 <div class="plan-btn" style="margin-top:24px;background:#c52439;color:#fff;">Elegir Pro</div>
             </div>
@@ -93,6 +94,7 @@
                     <li>✓ 70 productos</li>
                     <li>✓ 6 categorías</li>
                     <li>✗ Sin IA ni traducciones</li>
+                    <li style="color:rgba(255,255,255,.40);">— Sin créditos IA incluidos</li>
                 </ul>
                 <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Básico</div>
             </div>
@@ -114,7 +116,8 @@
                 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.80);">
                     <li>✓ 1.000 productos</li>
                     <li>✓ 100 categorías</li>
-                    <li>✓ IA ilimitada</li>
+                    <li>✓ IA + traducciones + CSV</li>
+                    <li>✓ <strong>400 créditos IA/mes</strong></li>
                 </ul>
                 <div class="plan-btn" style="margin-top:24px;background:rgba(255,255,255,.08);color:#fff;">Elegir Premium</div>
             </div>
