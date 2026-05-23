@@ -256,8 +256,8 @@
                                     @if ($canUseAi ?? false)
                                     <button type="button" wire:click="confirmGenerateDescriptionWithAi" wire:loading.attr="disabled" wire:target="confirmGenerateDescriptionWithAi,generateDescriptionWithAi,confirmAiAction"
                                             class="inline-flex items-center gap-2 rounded-lg border-2 border-green-600 bg-green-50 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-green-700 hover:bg-green-100">
-                                        <span wire:loading.remove wire:target="generateDescriptionWithAi">{{ __('admin.product_form.generate_description_ai') }} · {{ $aiDescriptionCost }}</span>
-                                        <span wire:loading wire:target="generateDescriptionWithAi">{{ __('admin.product_form.generating_description_ai') }}</span>
+                                        <span wire:loading.remove wire:target="generateDescriptionWithAi,confirmAiAction">{{ __('admin.product_form.generate_description_ai') }} · {{ $aiDescriptionCost }}</span>
+                                        <span wire:loading wire:target="generateDescriptionWithAi,confirmAiAction">{{ __('admin.product_form.generating_description_ai') }}</span>
                                     </button>
                                     @endif
                                 </div>
@@ -270,6 +270,9 @@
                                 </p>
                                 <textarea wire:model="description" rows="4" placeholder="{{ __('admin.product_form.placeholder_description') }}"
                                           class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm resize-none"></textarea>
+                                <div wire:loading wire:target="generateDescriptionWithAi,confirmAiAction" class="mt-1.5 product-ai-progress-track">
+                                    <div class="product-ai-progress-fill"></div>
+                                </div>
                                 @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
@@ -300,8 +303,8 @@
                                     @if ($canUseAi ?? false)
                                     <button type="button" wire:click="confirmGenerateAllergenTextWithAi" wire:loading.attr="disabled" wire:target="confirmGenerateAllergenTextWithAi,generateAllergenTextWithAi,confirmAiAction"
                                             class="inline-flex items-center gap-2 rounded-lg border-2 border-green-600 bg-green-50 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-green-700 hover:bg-green-100">
-                                        <span wire:loading.remove wire:target="generateAllergenTextWithAi">{{ __('admin.product_form.generate_allergen_text_ai') }} · {{ $aiAllergenTextCost }}</span>
-                                        <span wire:loading wire:target="generateAllergenTextWithAi">{{ __('admin.product_form.generating_allergen_text_ai') }}</span>
+                                        <span wire:loading.remove wire:target="generateAllergenTextWithAi,confirmAiAction">{{ __('admin.product_form.generate_allergen_text_ai') }} · {{ $aiAllergenTextCost }}</span>
+                                        <span wire:loading wire:target="generateAllergenTextWithAi,confirmAiAction">{{ __('admin.product_form.generating_allergen_text_ai') }}</span>
                                     </button>
                                     @endif
                                 </div>
@@ -309,6 +312,9 @@
                                 <textarea wire:model="aller" rows="4"
                                           placeholder="{{ __('admin.product_form.aller_placeholder') }}"
                                           class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm resize-none"></textarea>
+                                <div wire:loading wire:target="generateAllergenTextWithAi,confirmAiAction" class="mt-1.5 product-ai-progress-track">
+                                    <div class="product-ai-progress-fill"></div>
+                                </div>
                                 @error('aller') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
