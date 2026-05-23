@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        if (app()->isProduction()) {
+            $this->error('DatabaseSeeder está deshabilitado en producción. Usa --force si es imprescindible.');
+            return;
+        }
+
         $this->call(MandatoryAllergensSeeder::class);
         $this->call(RestaurantSeeder::class);
         $this->call(AdviceSeeder::class);

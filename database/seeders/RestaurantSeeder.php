@@ -14,9 +14,9 @@ class RestaurantSeeder extends Seeder
         Restaurant::updateOrCreate(
             ['subdomain' => 'carta'],
             [
-                'name' => 'Bar Jaen III',
+                'name'              => 'Restaurante Demo',
                 'ai_demo_unlimited' => true,
-                'ai_credits' => 999_999,
+                'ai_credits'        => 999_999,
             ]
         );
 
