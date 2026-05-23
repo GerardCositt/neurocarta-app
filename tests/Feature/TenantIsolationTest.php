@@ -42,14 +42,14 @@ class TenantIsolationTest extends TestCase
     {
         $category = Category::withoutGlobalScopes()->firstOrCreate(
             ['name' => 'Test Cat', 'restaurant_id' => $restaurant->id],
-            ['active' => true, 'order' => 1]
+            ['hidden' => false, 'order' => 1]
         );
 
         return Product::withoutGlobalScopes()->create([
             'name'          => $name,
             'restaurant_id' => $restaurant->id,
             'category_id'   => $category->id,
-            'active'        => true,
+            'hidden'        => false,
             'price'         => '10.00',
             'order'         => 1,
         ]);
