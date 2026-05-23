@@ -13,7 +13,7 @@
         $sub             = $account ? $account->subscriptions()->latest()->first() : null;
         $currentPlan     = $sub?->plan_code ?? '';
         $currentInterval = $sub?->billing_interval ?? 'monthly';
-        $hasStripe       = $sub && $sub->stripe_customer_id;
+        $hasStripe       = $sub && $sub->stripe_customer_id && $sub->stripe_subscription_id;
         $periodEnd       = $sub?->current_period_end_at;
         $planLabels      = ['basico' => 'Básico', 'pro' => 'Pro', 'premium' => 'Premium', 'trial' => 'Trial'];
         $intervalLabel   = $currentInterval === 'annual' ? 'anual' : 'mensual';
