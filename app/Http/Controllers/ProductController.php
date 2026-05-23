@@ -386,15 +386,6 @@ class ProductController extends Controller
         return false;
     }
 
-    public function offer()
-    {
-
-        $products = Product::where('active', false)->where('offer', true)->get();
-
-        return view('menulist', compact('products'));
-
-    }
-
     /**
      * Show the form for creating a new resource.
      *
