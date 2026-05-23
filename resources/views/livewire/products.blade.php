@@ -697,7 +697,8 @@
     @endif
 
     @if($confirmingAiAction)
-    <div class="fixed inset-0 z-50 admin-modal-overlay flex items-center justify-center"
+    <div class="fixed inset-0 admin-modal-overlay flex items-center justify-center"
+         style="z-index:30000"
          wire:loading.remove
          wire:target="confirmAiAction">
         <div class="absolute inset-0 bg-black bg-opacity-50" wire:click="cancelAiActionConfirmation"></div>
