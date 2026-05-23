@@ -53,6 +53,16 @@ class CreditCheckoutController extends Controller
         $stripeCustomerId = $subscription?->stripe_customer_id ?? null;
 
         try {
+            // Verify the stored customer exists in this Stripe mode (test vs live IDs differ).
+            if ($stripeCustomerId) {
+                try {
+                    $stripe->customers->retrieve($stripeCustomerId);
+                } catch (\Stripe\Exception\InvalidRequestException $e) {
+                    // Customer doesn't exist in this mode — create a fresh one.
+                    $stripeCustomerId = null;
+                }
+            }
+
             if (! $stripeCustomerId) {
                 $customer = $stripe->customers->create([
                     'email'             => $user->email,
@@ -61,6 +71,9 @@ class CreditCheckoutController extends Controller
                     'metadata'          => ['account_id' => (string) $account->id],
                 ]);
                 $stripeCustomerId = $customer->id;
+
+                // Persist so future sessions reuse this live customer.
+                $subscription?->update(['stripe_customer_id' => $stripeCustomerId]);
             }
 
             $session = $stripe->checkout->sessions->create([
