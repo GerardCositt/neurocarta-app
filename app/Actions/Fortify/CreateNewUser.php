@@ -129,11 +129,11 @@ class CreateNewUser implements CreatesNewUsers
             'registered_billing_interval' => $billingInterval,
         ]);
 
-        // 6. Enviar email con enlace firmado para crear contraseña (válido 3 días)
+        // 6. Enviar email con enlace firmado para crear contraseña (válido 3 horas)
         try {
             $setPasswordUrl = URL::temporarySignedRoute(
                 'set-password.show',
-                now()->addDays(3),
+                now()->addHours(3),
                 ['user' => $user->id]
             );
 

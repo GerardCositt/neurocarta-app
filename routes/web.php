@@ -63,7 +63,7 @@ Route::post('/register/resend-activation', function (\Illuminate\Http\Request $r
     if ($user) {
         $setPasswordUrl = URL::temporarySignedRoute(
             'set-password.show',
-            now()->addDays(3),
+            now()->addHours(3),
             ['user' => $user->id]
         );
         try {
