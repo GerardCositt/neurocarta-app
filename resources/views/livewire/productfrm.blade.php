@@ -2,8 +2,16 @@
 
     <style>
         @keyframes product-ai-progress-slide {
-            0% { left: -40%; }
+            0%   { left: -40%; }
             100% { left: 100%; }
+        }
+        @keyframes product-ai-butterfly-slide {
+            0%   { left: 0%; }
+            100% { left: 100%; }
+        }
+        @keyframes product-ai-butterfly-flap {
+            from { transform: scaleX(1); }
+            to   { transform: scaleX(0.22); }
         }
         .product-ai-progress-track {
             position: relative;
@@ -18,8 +26,23 @@
             bottom: 0;
             width: 40%;
             border-radius: 9999px;
-            background: linear-gradient(90deg, #f59e0b, #111827);
+            background: linear-gradient(90deg, #f59e0b, #1D1D1B);
             animation: product-ai-progress-slide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .product-ai-butterfly-wrap {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2rem;
+            margin-left: -1rem;
+            animation: product-ai-butterfly-slide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .product-ai-butterfly-wrap svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transform-origin: center center;
+            animation: product-ai-butterfly-flap 0.28s ease-in-out infinite alternate;
         }
     </style>
 
@@ -270,8 +293,28 @@
                                 </p>
                                 <textarea wire:model="description" rows="4" placeholder="{{ __('admin.product_form.placeholder_description') }}"
                                           class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm resize-none"></textarea>
-                                <div wire:loading wire:target="generateDescriptionWithAi,confirmAiAction" class="mt-1.5 product-ai-progress-track">
-                                    <div class="product-ai-progress-fill"></div>
+                                <div wire:loading wire:target="generateDescriptionWithAi,confirmAiAction" style="position:relative;height:2rem;margin-top:0.375rem;">
+                                    <div style="position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;" class="product-ai-progress-track">
+                                        <div class="product-ai-progress-fill"></div>
+                                    </div>
+                                    <div class="product-ai-butterfly-wrap">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                                            <path d="M48,44 C38,16 5,12 5,34 C5,54 26,62 48,60" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M52,44 C62,16 95,12 95,34 C95,54 74,62 52,60" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M48,61 C35,65 8,74 8,86 C8,95 32,92 48,72" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M52,61 C65,65 92,74 92,86 C92,95 68,92 52,72" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="30" cy="40" r="5.5" fill="#FFC107" opacity="0.55"/>
+                                            <circle cx="70" cy="40" r="5.5" fill="#FFC107" opacity="0.55"/>
+                                            <circle cx="25" cy="76" r="4" fill="#FFC107" opacity="0.4"/>
+                                            <circle cx="75" cy="76" r="4" fill="#FFC107" opacity="0.4"/>
+                                            <ellipse cx="50" cy="58" rx="3.5" ry="15" fill="#1D1D1B"/>
+                                            <circle cx="50" cy="42" r="3.5" fill="#1D1D1B"/>
+                                            <path d="M48,39 Q40,25 34,18" fill="none" stroke="#1D1D1B" stroke-width="1.5" stroke-linecap="round"/>
+                                            <circle cx="34" cy="18" r="2.5" fill="#1D1D1B"/>
+                                            <path d="M52,39 Q60,25 66,18" fill="none" stroke="#1D1D1B" stroke-width="1.5" stroke-linecap="round"/>
+                                            <circle cx="66" cy="18" r="2.5" fill="#1D1D1B"/>
+                                        </svg>
+                                    </div>
                                 </div>
                                 @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
@@ -312,8 +355,28 @@
                                 <textarea wire:model="aller" rows="4"
                                           placeholder="{{ __('admin.product_form.aller_placeholder') }}"
                                           class="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm resize-none"></textarea>
-                                <div wire:loading wire:target="generateAllergenTextWithAi,confirmAiAction" class="mt-1.5 product-ai-progress-track">
-                                    <div class="product-ai-progress-fill"></div>
+                                <div wire:loading wire:target="generateAllergenTextWithAi,confirmAiAction" style="position:relative;height:2rem;margin-top:0.375rem;">
+                                    <div style="position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;" class="product-ai-progress-track">
+                                        <div class="product-ai-progress-fill"></div>
+                                    </div>
+                                    <div class="product-ai-butterfly-wrap">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                                            <path d="M48,44 C38,16 5,12 5,34 C5,54 26,62 48,60" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M52,44 C62,16 95,12 95,34 C95,54 74,62 52,60" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M48,61 C35,65 8,74 8,86 C8,95 32,92 48,72" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M52,61 C65,65 92,74 92,86 C92,95 68,92 52,72" fill="#FF7A00" stroke="#1D1D1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="30" cy="40" r="5.5" fill="#FFC107" opacity="0.55"/>
+                                            <circle cx="70" cy="40" r="5.5" fill="#FFC107" opacity="0.55"/>
+                                            <circle cx="25" cy="76" r="4" fill="#FFC107" opacity="0.4"/>
+                                            <circle cx="75" cy="76" r="4" fill="#FFC107" opacity="0.4"/>
+                                            <ellipse cx="50" cy="58" rx="3.5" ry="15" fill="#1D1D1B"/>
+                                            <circle cx="50" cy="42" r="3.5" fill="#1D1D1B"/>
+                                            <path d="M48,39 Q40,25 34,18" fill="none" stroke="#1D1D1B" stroke-width="1.5" stroke-linecap="round"/>
+                                            <circle cx="34" cy="18" r="2.5" fill="#1D1D1B"/>
+                                            <path d="M52,39 Q60,25 66,18" fill="none" stroke="#1D1D1B" stroke-width="1.5" stroke-linecap="round"/>
+                                            <circle cx="66" cy="18" r="2.5" fill="#1D1D1B"/>
+                                        </svg>
+                                    </div>
                                 </div>
                                 @error('aller') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
