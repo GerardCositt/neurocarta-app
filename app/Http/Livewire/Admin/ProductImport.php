@@ -114,7 +114,9 @@ class ProductImport extends Component
             return;
         }
 
-        $restaurant = app()->bound('restaurant') ? app('restaurant') : null;
+        $rid = session('admin_restaurant_id')
+            ?? (app()->bound('restaurant') ? app('restaurant')?->id : null);
+        $restaurant = $rid ? Restaurant::find($rid) : null;
         if (! $restaurant instanceof Restaurant) {
             $this->previewErrors = ['No hay restaurante activo en el panel. Crea uno o recarga sesión.'];
             $this->hasPreview = true;
