@@ -40,6 +40,24 @@ RUN mkdir -p storage/framework/sessions storage/framework/views storage/framewor
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Filament 3 serves assets as static files under public/css|js/filament/
+RUN mkdir -p \
+        public/css/filament/forms \
+        public/css/filament/support \
+        public/css/filament/filament \
+        public/js/filament/filament \
+        public/js/filament/support \
+        public/js/filament/notifications \
+        public/js/filament/tables/components \
+    && cp vendor/filament/forms/dist/index.css      public/css/filament/forms/forms.css \
+    && cp vendor/filament/support/dist/index.css    public/css/filament/support/support.css \
+    && cp vendor/filament/filament/dist/theme.css   public/css/filament/filament/app.css \
+    && cp vendor/filament/filament/dist/index.js    public/js/filament/filament/app.js \
+    && cp vendor/filament/filament/dist/echo.js     public/js/filament/filament/echo.js \
+    && cp vendor/filament/support/dist/index.js     public/js/filament/support/support.js \
+    && cp vendor/filament/notifications/dist/index.js public/js/filament/notifications/notifications.js \
+    && cp vendor/filament/tables/dist/components/table.js public/js/filament/tables/components/table.js
+
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
