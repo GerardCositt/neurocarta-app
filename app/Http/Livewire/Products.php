@@ -36,7 +36,7 @@ class Products extends Component
     use Concerns\ManagesProductDemoContent;
 
     public $name, $description, $product_id, $category_id, $pairing_id;
-    public $price, $offer_price, $offer_badge, $offer_start, $offer_end;
+    public $price, $offer_price, $offer_badge = '', $offer_start, $offer_end;
 
     /** @var bool */
     public $offer = false;
