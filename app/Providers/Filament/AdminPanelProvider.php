@@ -34,6 +34,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('NeuroCarta.ai')
+            ->brandLogo(fn () => view('filament.brand-logo'))
+            ->brandLogoHeight('2rem')
             ->favicon('/favicon/favicon.ico?v=20260420')
             ->colors([
                 'primary' => Color::Amber,
