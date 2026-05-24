@@ -18,9 +18,9 @@ RUN a2enmod rewrite headers \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         git unzip \
-        libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libonig-dev libpq-dev \
+        libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libonig-dev libpq-dev libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) pdo_mysql pdo_pgsql pgsql gd zip opcache \
+    && docker-php-ext-install -j$(nproc) pdo_mysql pdo_pgsql pgsql gd zip opcache intl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN echo "log_errors = On\nerror_log = /dev/stderr\ndisplay_errors = Off" > /usr/local/etc/php/conf.d/errors.ini
