@@ -2,6 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\RestaurantResource;
+use App\Filament\Resources\SubscriptionResource;
+use App\Filament\Resources\UserResource;
 use App\Models\Restaurant;
 use App\Models\Subscription;
 use App\Models\User;
@@ -20,17 +23,20 @@ class StatsOverview extends BaseWidget
             Stat::make('Usuarios', $totalUsers)
                 ->description('Total registrados')
                 ->icon('heroicon-o-users')
-                ->color('primary'),
+                ->color('primary')
+                ->url(UserResource::getUrl('index')),
 
             Stat::make('Restaurantes', $totalRestaurants)
                 ->description('Total activos')
                 ->icon('heroicon-o-building-storefront')
-                ->color('success'),
+                ->color('success')
+                ->url(RestaurantResource::getUrl('index')),
 
             Stat::make('Suscripciones activas', $activeSubscriptions)
                 ->description('Active + Trialing')
                 ->icon('heroicon-o-credit-card')
-                ->color('warning'),
+                ->color('warning')
+                ->url(SubscriptionResource::getUrl('index')),
         ];
     }
 }
