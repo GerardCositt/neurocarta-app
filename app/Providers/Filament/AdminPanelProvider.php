@@ -5,6 +5,9 @@ namespace App\Providers\Filament;
 use App\Filament\Resources\RestaurantResource;
 use App\Filament\Resources\SubscriptionResource;
 use App\Filament\Resources\UserResource;
+use App\Filament\Widgets\StatsOverview;
+use App\Filament\Widgets\SubscriptionsByPlanChart;
+use App\Filament\Widgets\UserRegistrationsChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -44,7 +47,9 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->widgets([
-                Widgets\AccountWidget::class,
+                StatsOverview::class,
+                SubscriptionsByPlanChart::class,
+                UserRegistrationsChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
