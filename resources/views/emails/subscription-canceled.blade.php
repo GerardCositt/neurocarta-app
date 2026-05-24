@@ -84,7 +84,9 @@
         <div class="footer">
             Has recibido este email porque tienes una cuenta en
             <a href="https://neurocarta.ai">neurocarta.ai</a>.<br><br>
-            © {{ date('Y') }} NeuroCarta.ai® · <a href="mailto:hola@neurocarta.ai">hola@neurocarta.ai</a>
+            © {{ date('Y') }} NeuroCarta.ai® — Cositt · CIF B93340602<br>
+            <a href="mailto:hola@neurocarta.ai">hola@neurocarta.ai</a> ·
+            <a href="https://neurocarta.ai/privacidad">Política de privacidad</a>
         </div>
     </div>
 </body>

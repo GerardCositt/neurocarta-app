@@ -77,7 +77,9 @@
             Has recibido este email porque alguien se registró con esta dirección en
             <a href="https://neurocarta.ai">neurocarta.ai</a>.<br>
             Si no fuiste tú, ignora este mensaje.<br><br>
-            © {{ date('Y') }} NeuroCarta.ai® · <a href="mailto:hola@neurocarta.ai">hola@neurocarta.ai</a>
+            © {{ date('Y') }} NeuroCarta.ai® — Cositt · CIF B93340602<br>
+            <a href="mailto:hola@neurocarta.ai">hola@neurocarta.ai</a> ·
+            <a href="https://neurocarta.ai/privacidad">Política de privacidad</a>
         </div>
 
     </div>
