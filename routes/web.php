@@ -230,6 +230,10 @@ Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription
         return view('settings.api');
     })->name('settings.api');
 
+    Route::get('/settings/privacy', [\App\Http\Controllers\PrivacyController::class, 'show'])->name('settings.privacy');
+    Route::get('/settings/privacy/export', [\App\Http\Controllers\PrivacyController::class, 'export'])->name('settings.privacy.export');
+    Route::delete('/settings/privacy', [\App\Http\Controllers\PrivacyController::class, 'destroy'])->name('settings.privacy.destroy');
+
     Route::middleware('plan.feature:csv_import')->group(function () {
         Route::get('/settings/import-products', function () {
             return view('settings.import-products');

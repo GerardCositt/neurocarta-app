@@ -219,6 +219,11 @@
                         <span class="admin-nav-label shrink-0 text-xs font-semibold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full">Pro</span>
                     @endif
                 </a>
+                <a href="{{ url('/settings/privacy') }}"
+                   class="block px-3 py-2 rounded-xl text-sm transition-colors
+                          {{ request()->is('settings/privacy*') ? 'admin-nav-active' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="admin-nav-label">Privacidad y datos</span>
+                </a>
             </div>
         </details>
 
