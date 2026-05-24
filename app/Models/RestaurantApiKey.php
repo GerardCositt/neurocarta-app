@@ -2,12 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\RestaurantScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RestaurantApiKey extends Model
 {
     protected $fillable = ['restaurant_id', 'key_hash', 'key_prefix', 'last_used_at', 'revoked_at'];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::addGlobalScope(new RestaurantScope());
+    }
 
     protected $casts = [
         'last_used_at' => 'datetime',

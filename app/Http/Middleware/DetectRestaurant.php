@@ -15,14 +15,22 @@ class DetectRestaurant
 
         // Demo / staging: permitir forzar restaurante por query (?restaurant=ID) incluso con subdominio.
         // Útil para demos multi-restaurante en un solo dominio (p. ej. v2-carta...) desde el panel admin.
+        // Solo se permite si el usuario autenticado es owner del restaurante o es admin global.
         if (! app()->environment('production')) {
             $forcedId = $request->query('restaurant');
             if ($forcedId !== null && $forcedId !== '' && is_numeric($forcedId)) {
                 $forced = Restaurant::find((int) $forcedId);
                 if ($forced) {
-                    app()->instance('restaurant', $forced);
+                    $user    = $request->user();
+                    $isAdmin = $user && $user->hasPanelAdminAccess();
+                    $owns    = $user && $user->accounts()
+                        ->whereHas('restaurants', fn ($q) => $q->where('id', $forced->id))
+                        ->exists();
 
-                    return $next($request);
+                    if ($isAdmin || $owns) {
+                        app()->instance('restaurant', $forced);
+                        return $next($request);
+                    }
                 }
             }
         }
