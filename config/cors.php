@@ -19,7 +19,11 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'https://neurocarta.ai',
+        'https://app.neurocarta.ai',
+        'https://neurocarta-staging.onrender.com',
+    ],
 
     'allowed_origins_patterns' => [],
 

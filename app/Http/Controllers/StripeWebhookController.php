@@ -435,12 +435,22 @@ class StripeWebhookController extends Controller
         $restaurantId = $meta->restaurant_id ?? null;
         $credits      = (int) ($meta->credits ?? 0);
         $packageKey   = $meta->package_key ?? '?';
+        $sessionId    = $session->id ?? null;
 
         if (! $restaurantId || $credits <= 0) {
             Log::error('StripeWebhook: credit_purchase missing metadata.', [
-                'session_id'    => $session->id ?? null,
+                'session_id'    => $sessionId,
                 'restaurant_id' => $restaurantId,
                 'credits'       => $credits,
+            ]);
+            return response('OK', 200);
+        }
+
+        // Idempotency: prevent duplicate credits if Stripe retries the event.
+        $cacheKey = 'stripe_session_processed_' . $sessionId;
+        if (! cache()->add($cacheKey, true, now()->addDays(30))) {
+            Log::info('StripeWebhook: credit_purchase already processed (duplicate event).', [
+                'session_id' => $sessionId,
             ]);
             return response('OK', 200);
         }
