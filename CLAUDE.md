@@ -98,7 +98,11 @@ Variables clave:
 | `DB_DATABASE` | `neurocarta` |
 | `DB_USERNAME` | `neurocarta` |
 | `SESSION_DRIVER` | `cookie` |
-| `MAIL_HOST` | `neurocarta.ai` |
+| `MAIL_HOST` | `smtp.resend.com` |
+| `MAIL_PORT` | `465` |
+| `MAIL_USERNAME` | `resend` |
+| `MAIL_PASSWORD` | API key de Resend |
+| `MAIL_ENCRYPTION` | `ssl` |
 | `MAIL_FROM_ADDRESS` | `noreply@neurocarta.ai` |
 | `TURNSTILE_SECRET_KEY` | vacía (desactivado en login) |
 | `TURNSTILE_SITE_KEY` | vacía (desactivado en login) |
@@ -311,7 +315,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Logs / monitorización (Sentry, etc.) — opcional pre-lanzamiento.
 - [x] HTTPS Let's Encrypt en nginx.
 - [ ] Dominio `demo.neurocarta.ai` (opcional ventas).
-- [ ] Emails SMTP en prod → prueba registro real (QA bloque 10).
+- [x] Emails SMTP en prod — configurado con Resend (smtp.resend.com:465, dominio neurocarta.ai verificado). Test manual `Mail::raw()` exitoso 2026-05-24.
 
 ### Fase 7 — Seguridad
 - [x] Revisar permisos de admin (`FILAMENT_ADMIN_EMAIL`) — `hasPanelAdminAccess()` requiere `is_admin=true` en BD o email en `FILAMENT_ADMIN_EMAIL`/`demo_admin_emails`. Usuarios normales no acceden al panel.
