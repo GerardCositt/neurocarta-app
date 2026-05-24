@@ -170,10 +170,10 @@ Variables clave:
 
 ---
 
-## Estado Git (2026-05-24, último commit 44a1b90 en rama upgrade/laravel-11)
+## Estado Git (2026-05-24, último commit 1397a67 en main)
 
 - `main` en GitHub con deploy automático a Jotelulu (push → Action → `deploy.sh`).
-- **Rama de upgrade**: `upgrade/laravel-11` — contiene la migración completa L8→L11 + LW2→3 + Filament 2→3. Pendiente merge a `main` tras QA en staging/producción.
+- **Upgrade L8→L11 + LW2→3 + F2→3 mergeado a main** — producción funcionando en Laravel 11.53.1, PHP 8.4, Filament 3. Rama `upgrade/laravel-11` se puede eliminar.
 - **Guion servidor**: `docs/SERVIDOR-LANZAMIENTO.md` + `bash scripts/server-launch-check.sh` en `/opt/neurocarta`.
 - **QA manual**: `docs/LAUNCH-QA.md` (bloques 1–11) — pendiente en oficina.
 - **Stripe live activo**: claves y price IDs configurados en `.env` producción. Pendiente: configurar Customer Portal en Dashboard (Switch plans + 6 price IDs) y prueba de pago real completa.
@@ -268,7 +268,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Activación automática de suscripción tras pago — pendiente prueba real.
 - [ ] Cancelación, impago y renovación gestionados — pendiente prueba real.
 - [x] Facturación anual/mensual clara en `/subscription/manage` (2 botones por tarjeta) y en `/subscription/expired`.
-- [ ] Emails de trial, alta, pago fallido y renovación.
+- [x] Emails de trial, alta, pago fallido y renovación — 7 plantillas completas con footer legal Cositt · CIF B93340602. Commit `1397a67`.
 - [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Límites y features alineados con landing (`b95fdf1`).
 - [ ] Customer Portal de Stripe configurado en Dashboard (Settings → Billing → Customer portal): activar "Switch plans", añadir los 6 price IDs live, configurar prorrateo. **Bloqueante** para cambio de plan desde el portal.
 
@@ -294,10 +294,10 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 
 ### Fase 5 — Legal
 - [x] Términos, privacidad, cookies, aviso legal — **cerrado por abogado** (publicado en `neurocarta.ai`; validar enlaces en registro).
-- [ ] Consentimiento para emails.
-- [ ] RGPD: exportar/eliminar datos de cliente si aplica.
-- [ ] Información de empresa, CIF/NIF y dirección legal.
-- [ ] Condiciones de uso de IA si se generan textos/imágenes.
+- [x] Consentimiento para emails — solo emails transaccionales (bienvenida, trial, pago); consentimiento implícito al registrarse ("Al registrarte aceptas…"). No hay emails de marketing.
+- [x] RGPD: exportar/eliminar datos de cliente — `PrivacyController` + `/settings/privacy` con descarga JSON (Art. 20) y eliminación de cuenta con contraseña (Art. 17). Commit `2fa18fa`.
+- [x] Información de empresa, CIF/NIF y dirección legal — footer de los 7 emails transaccionales: "Cositt · CIF B93340602". Commit `1397a67`.
+- [x] Condiciones de uso de IA si se generan textos/imágenes — aviso in-app en `/settings/import-ai` con enlace a Términos. Commit `0e8ab1c`.
 
 ### Fase 6 — Producción técnica
 - [ ] `.env` de producción revisado → **verificar en servidor** (`docs/SERVIDOR-LANZAMIENTO.md` §5).
@@ -314,16 +314,18 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Emails SMTP en prod → prueba registro real (QA bloque 10).
 
 ### Fase 7 — Seguridad
-- [ ] Revisar permisos de admin (`FILAMENT_ADMIN_EMAIL`).
-- [ ] Proteger rutas internas.
-- [x] Rate limit IA (30/min); login/registro con throttle Fortify.
+- [x] Revisar permisos de admin (`FILAMENT_ADMIN_EMAIL`) — `hasPanelAdminAccess()` requiere `is_admin=true` en BD o email en `FILAMENT_ADMIN_EMAIL`/`demo_admin_emails`. Usuarios normales no acceden al panel.
+- [x] Proteger rutas internas — todas las rutas admin/panel requieren `auth:sanctum + verified`; solo `/up`, `stripe/webhook` (con firma Stripe), carta pública y `set-password` (URL firmada) son públicas. Verificado `2026-05-24`.
+- [x] Rate limit IA (30/min); login/registro con throttle Fortify. Filament login: 5 intentos/min por defecto.
 - [x] Validación fuerte de subida de archivos públicos: logos, productos y alérgenos limitados a `jpg/jpeg`, `png`, `webp`; CSV/importaciones limitadas por tipo.
 - [x] Evitar SVG peligroso en uploads públicos: SVG/GIF eliminados de validaciones y `accept`; `ImageAssetService` rechaza MIME no raster y re-encodea antes de guardar.
-- [ ] CSRF funcionando.
-- [ ] Cookies seguras en producción.
-- [ ] Contraseñas y tokens nunca en repo.
-- [ ] Revisar `.gitignore` para `storage`, `.env`, backups y dumps.
-- [ ] Auditoría básica de dependencias.
+- [x] CSRF funcionando — `VerifyCsrfToken` solo excluye `stripe/webhook` (correcto). Verificado `2026-05-24`.
+- [ ] Cookies seguras en producción — `SESSION_SECURE_COOKIE=true` añadido al `.env.example` (commit `28674d1`). **Pendiente**: confirmar que está en el `.env` del servidor Jotelulu.
+- [x] Contraseñas y tokens nunca en repo — `git grep` limpio (solo valores de test en tests). Verificado `2026-05-24`.
+- [x] Revisar `.gitignore` para `storage`, `.env`, backups y dumps — cubre `.env`, `storage/*.key`, `*.sql`, `*.dump`, `*.backup`. Verificado `2026-05-24`.
+- [x] Auditoría básica de dependencias — `composer audit`: sin vulnerabilidades. Verificado `2026-05-24`.
+- [x] CORS `allowed_origins` restringido — whitelist explícita (neurocarta.ai, app.neurocarta.ai, staging). Commit `28674d1`.
+- [x] Idempotencia compra créditos IA — `cache()->add()` 30 días en `handleCreditPurchaseCompleted`. Commit `28674d1`.
 
 ### Fase 8 — Calidad
 - [ ] Prueba manual completa: registro -> trial -> crear carta -> verla pública → **script**: `docs/LAUNCH-QA.md` bloques 1-3.
@@ -336,8 +338,8 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Revisar rendimiento de carta con 100-300 productos.
 
 ### Fase 9 — Comercial
-- [ ] Definir precios finales.
-- [ ] Definir qué incluye cada plan.
+- [x] Definir precios finales — Básico 25/275€, Pro 35/385€, Premium 69/759€. Publicados en landing y en código.
+- [x] Definir qué incluye cada plan — `PlanEntitlementService` + landing. Alineados.
 - [ ] Demo preparada en **producción** → `bash scripts/ensure-demo-docker.sh` (`SERVIDOR-LANZAMIENTO.md` §7).
 - [x] Restaurante demo en código (`demo:ensure`, `subdomain=demo`, `DemoMenuSeeder`). Plantilla de ejemplo en panel: `DemoContent` + `demo:resync-template-photos` (`407fb35`).
 - [ ] Preparar onboarding para primeros clientes.
@@ -349,10 +351,10 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 ### Fase 10 — Antes de cobrar a clientes
 - [ ] Stripe en modo live probado con pago pequeño.
 - [ ] Emails reales llegan bien.
-- [ ] Backups restaurables.
+- [x] Backups restaurables — restauración probada 2026-05-16 (`neurocarta_restore`, recuentos verificados).
 - [ ] Dominio final probado.
-- [ ] Política legal publicada.
+- [x] Política legal publicada — publicada en `neurocarta.ai/terminos`, `neurocarta.ai/privacidad`.
 - [ ] Panel sin datos demo mezclados.
-- [ ] Usuario cliente no puede acceder a `/admin` salvo que corresponda.
+- [x] Usuario cliente no puede acceder a `/admin` salvo que corresponda — `canAccessPanel()` requiere `hasPanelAdminAccess()`. Verificado `2026-05-24`.
 - [ ] Flujo de alta tarda menos de 5 minutos.
 - [ ] Al menos 2-3 restaurantes piloto probados de principio a fin.
