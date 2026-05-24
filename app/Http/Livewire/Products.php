@@ -158,7 +158,7 @@ class Products extends Component
     /** El sidebar «Ver carta» solo montaba una vez; tras crear/editar desde Livewire hay que refrescar el estado. */
     protected function notifyNavigationMenuRefresh(): void
     {
-        $this->emit('navigationMenuRefresh');
+        $this->dispatch('navigationMenuRefresh');
     }
 
     private function imageAssets(): ImageAssetService
@@ -488,7 +488,7 @@ class Products extends Component
         }
 
         $url = route('product');
-        $this->dispatchBrowserEvent('product-stored-navigate', ['url' => $url]);
+        $this->dispatch('product-stored-navigate', url: $url);
         $this->redirectRoute('product');
     }
 

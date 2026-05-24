@@ -16,7 +16,7 @@
     {{-- Barra de acciones (misma lógica que productos: filtros izquierda, primarios derecha) --}}
     <div class="flex flex-col gap-3 xl:flex-row xl:justify-between xl:items-start mb-5 min-w-0">
         <div class="w-full min-w-0 xl:flex-1 xl:max-w-md">
-            <input wire:model.debounce.400ms="q"
+            <input wire:model.live.debounce.400ms="q"
                    type="search"
                    placeholder="{{ __('admin.category_page.search_placeholder') }}"
                    class="w-full border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
@@ -259,14 +259,18 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', initCategoriesSortable);
-document.addEventListener('livewire:load', initCategoriesSortable);
-document.addEventListener('livewire:update', function () {
-    const el = document.getElementById('categories-sortable');
-    if (el && el._sortable) {
-        el._sortable.destroy();
-        el._sortable = null;
-    }
-    initCategoriesSortable();
+document.addEventListener('livewire:initialized', initCategoriesSortable);
+document.addEventListener('livewire:initialized', function () {
+    Livewire.hook('commit', function ({ succeed }) {
+        succeed(function () {
+            queueMicrotask(function () {
+                const el = document.getElementById('categories-sortable');
+                if (!el) return;
+                if (el._sortable) { el._sortable.destroy(); el._sortable = null; }
+                initCategoriesSortable();
+            });
+        });
+    });
 });
 
 function initCategoriesSortable() {

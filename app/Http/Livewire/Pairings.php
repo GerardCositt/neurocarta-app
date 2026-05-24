@@ -240,7 +240,7 @@ class Pairings extends Component
                 ['pairing_name' => $this->name],
                 null
             );
-            $this->emit('aiCreditsUpdated');
+            $this->dispatch('aiCreditsUpdated');
 
             session()->flash('message', __('admin.pairing_page.flash_ai_generated'));
         } catch (InsufficientAiCreditsException $e) {

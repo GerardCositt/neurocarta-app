@@ -32,7 +32,7 @@ trait ManagesProductAi
 
     private function notifyAiCreditsChanged(): void
     {
-        $this->emit('aiCreditsUpdated');
+        $this->dispatch('aiCreditsUpdated');
     }
 
     private function guardAiPlan(): bool
@@ -168,8 +168,8 @@ trait ManagesProductAi
 
     protected function handleInsufficientCredits(): void
     {
-        $this->dispatchBrowserEvent('insufficient-ai-credits');
-        $this->dispatchBrowserEvent('bulk-gen-photos-done');
+        $this->dispatch('insufficient-ai-credits');
+        $this->dispatch('bulk-gen-photos-done');
     }
 
     public function confirmAiAction(): void
@@ -437,14 +437,14 @@ trait ManagesProductAi
     public function generateMissingProductPhotos(): void
     {
         if (! $this->guardAiExecution()) {
-            $this->dispatchBrowserEvent('bulk-gen-photos-done');
+            $this->dispatch('bulk-gen-photos-done');
             return;
         }
 
         try {
             if (! $this->productImageAi()->isConfigured()) {
                 session()->flash('message', __('admin.products.flash_bulk_gen_no_key'));
-                $this->dispatchBrowserEvent('bulk-gen-photos-done');
+                $this->dispatch('bulk-gen-photos-done');
                 return;
             }
 
@@ -495,7 +495,7 @@ trait ManagesProductAi
                     ? __('admin.products.flash_bulk_gen_done', ['count' => $generated])
                     : __('admin.products.flash_bulk_gen_none'));
             }
-            $this->dispatchBrowserEvent('bulk-gen-photos-done');
+            $this->dispatch('bulk-gen-photos-done');
         } catch (InsufficientAiCreditsException $e) {
             $this->handleInsufficientCredits();
         } catch (\Throwable $e) {
@@ -503,7 +503,7 @@ trait ManagesProductAi
                 'message' => $e->getMessage(),
             ]);
             session()->flash('message', __('admin.products.flash_bulk_gen_fail'));
-            $this->dispatchBrowserEvent('bulk-gen-photos-done');
+            $this->dispatch('bulk-gen-photos-done');
         }
     }
 }

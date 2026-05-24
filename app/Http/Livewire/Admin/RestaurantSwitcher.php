@@ -56,10 +56,7 @@ class RestaurantSwitcher extends Component
         $r = Restaurant::find($id);
         if (!$r) return;
         $this->pendingDelete = null;
-        $this->dispatchBrowserEvent('show-delete-restaurant', [
-            'id'   => $r->id,
-            'name' => $r->name,
-        ]);
+        $this->dispatch('show-delete-restaurant', id: $r->id, name: $r->name);
     }
 
     public function deleteRestaurant(int $id): void

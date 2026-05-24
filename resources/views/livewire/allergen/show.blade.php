@@ -15,7 +15,7 @@
 
     <div class="flex flex-col gap-3 xl:flex-row xl:justify-between xl:items-start mb-5 min-w-0">
         <div class="w-full min-w-0 xl:flex-1 xl:max-w-md">
-            <input wire:model.debounce.400ms="q"
+            <input wire:model.live.debounce.400ms="q"
                    type="search"
                    placeholder="{{ __('admin.allergen_page.search_placeholder') }}"
                    class="w-full border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />

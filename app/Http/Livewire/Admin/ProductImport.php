@@ -219,7 +219,7 @@ class ProductImport extends Component
             'linked' => $linkedAllergens,
             'unknown' => $unknownAllergens,
         ]));
-        $this->emit('navigationMenuRefresh');
+        $this->dispatch('navigationMenuRefresh');
         $this->reset(['file']);
         $this->resetPreview();
     }

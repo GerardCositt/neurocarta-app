@@ -430,9 +430,11 @@
                     });
                 }
                 document.addEventListener('DOMContentLoaded', scan);
-                document.addEventListener('livewire:load', function () {
+                document.addEventListener('livewire:initialized', function () {
                     scan();
-                    document.addEventListener('livewire:update', scan);
+                    Livewire.hook('commit', function ({ succeed }) {
+                        succeed(function () { queueMicrotask(scan); });
+                    });
                 });
             })();
         </script>
@@ -441,8 +443,8 @@
         <script>
         (function () {
             var MODAL_KEY = 'nc_credits_modal_shown';
-            // Livewire v2 dispara dispatchBrowserEvent sobre document (burbujea desde el nodo del componente)
-            document.addEventListener('insufficient-ai-credits', function () {
+            // Livewire v3 dispatches browser events on window
+            window.addEventListener('insufficient-ai-credits', function () {
                 if (!localStorage.getItem(MODAL_KEY)) {
                     localStorage.setItem(MODAL_KEY, '1');
                     var el = document.getElementById('creditsIaModal');

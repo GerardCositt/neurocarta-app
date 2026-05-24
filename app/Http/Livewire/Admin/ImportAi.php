@@ -88,13 +88,13 @@ class ImportAi extends Component
     {
         if (! $this->planAllows('ai')) {
             $this->flash(__('admin.plan.feature_not_available'), 'error');
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
             return;
         }
 
         if (! PlanFeatureGate::attemptAiAction()) {
             $this->flash(__('admin.plan.ai_rate_limited'), 'error');
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
             return;
         }
 
@@ -111,13 +111,13 @@ class ImportAi extends Component
                 'file.max'      => __('admin.import_ai.validation_file_max'),
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
             throw $e;
         }
 
         if (!$this->openAi()->isConfigured()) {
             $this->flash(__('admin.import_ai.flash_configure_key'), 'error');
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
             return;
         }
 
@@ -148,7 +148,7 @@ class ImportAi extends Component
                 $this->selected = [];
                 $this->flash(__('admin.import_ai.flash_no_products'), 'error');
                 $this->step = 'upload';
-                $this->dispatchBrowserEvent('import-ai-done');
+                $this->dispatch('import-ai-done');
                 return;
             }
 
@@ -160,12 +160,12 @@ class ImportAi extends Component
             }
 
             $this->step = 'preview';
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
 
         } catch (\RuntimeException $e) {
             $this->flash($e->getMessage(), 'error');
             $this->step = 'upload';
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
         } catch (\Throwable $e) {
             Log::error('ImportAi process failed', [
                 'message' => $e->getMessage(),
@@ -173,7 +173,7 @@ class ImportAi extends Component
             ]);
             $this->flash(__('admin.import_ai.flash_unexpected', ['message' => $e->getMessage()]), 'error');
             $this->step = 'upload';
-            $this->dispatchBrowserEvent('import-ai-done');
+            $this->dispatch('import-ai-done');
         }
     }
 
@@ -280,8 +280,8 @@ class ImportAi extends Component
                 ]);
             }
 
-            $this->emit('aiCreditsUpdated');
-            $this->emit('navigationMenuRefresh');
+            $this->dispatch('aiCreditsUpdated');
+            $this->dispatch('navigationMenuRefresh');
 
             $this->savedProducts   = $savedProds;
             $this->savedCategories = $savedCats;

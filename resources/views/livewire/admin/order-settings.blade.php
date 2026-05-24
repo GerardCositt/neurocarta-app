@@ -42,7 +42,7 @@
                 {{ $ordersMode === 'order'
                     ? 'border-2 border-amber-400 bg-amber-50 ring-2 ring-amber-100'
                     : 'border border-gray-200 bg-white hover:bg-gray-50' }}">
-                <input type="radio" wire:model="ordersMode" value="order"
+                <input type="radio" wire:model.live="ordersMode" value="order"
                        class="mt-0.5 form-radio text-amber-600 border-gray-300 focus:ring-amber-500">
                 <div class="min-w-0">
                     <div class="text-sm font-semibold {{ $ordersMode === 'order' ? 'text-amber-900' : 'text-gray-800' }}">Pedido</div>
@@ -55,7 +55,7 @@
                 {{ $ordersMode === 'list'
                     ? 'border-2 border-amber-300 bg-amber-50 ring-1 ring-amber-100'
                     : 'border border-gray-200 bg-white hover:bg-gray-50' }}">
-                <input type="radio" wire:model="ordersMode" value="list"
+                <input type="radio" wire:model.live="ordersMode" value="list"
                        class="mt-0.5 form-radio text-amber-500 border-gray-300 focus:ring-amber-500">
                 <div class="min-w-0">
                     <div class="text-sm font-semibold {{ $ordersMode === 'list' ? 'text-amber-900' : 'text-gray-700' }}">Lista</div>

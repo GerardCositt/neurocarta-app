@@ -6,10 +6,10 @@
 
     <div class="flex flex-col gap-3 mb-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-            <input wire:model.debounce.400ms="q" type="search" placeholder="Buscar por nº, nombre, teléfono…"
+            <input wire:model.live.debounce.400ms="q" type="search" placeholder="Buscar por nº, nombre, teléfono…"
                    class="w-full border border-gray-200 bg-white rounded-xl py-3 px-5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
 
-            <select wire:model="statusFilter"
+            <select wire:model.live="statusFilter"
                     class="w-full border border-gray-200 bg-white rounded-xl py-3 px-5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm">
                 <option value="">Todos los estados</option>
                 @foreach($statusLabels as $key => $label)

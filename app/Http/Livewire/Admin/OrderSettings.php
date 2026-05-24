@@ -37,10 +37,7 @@ class OrderSettings extends Component
             Setting::put('orders_mode', 'list', $rid);
             session()->flash('order_settings_v3_overlay', true);
             session()->flash('message', __('admin.order_settings.v3_active'));
-            $this->dispatchBrowserEvent('orders-mode-revert-list', [
-                'delayMs' => 2500,
-                'componentId' => $this->id,
-            ]);
+            $this->dispatch('orders-mode-revert-list', delayMs: 2500, componentId: $this->getId());
 
             return;
         }

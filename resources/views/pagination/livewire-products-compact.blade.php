@@ -3,9 +3,6 @@
 <div>
     @if ($paginator->total() > 0)
         @php
-            isset($this->numberOfPaginatorsRendered[$paginator->getPageName()])
-                ? $this->numberOfPaginatorsRendered[$paginator->getPageName()]++
-                : $this->numberOfPaginatorsRendered[$paginator->getPageName()] = 1;
             $rangeFirst = $paginator->firstItem() ?? 0;
             $rangeLast = $paginator->lastItem() ?? 0;
             $rangeTotal = $paginator->total();

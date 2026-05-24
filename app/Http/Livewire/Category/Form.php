@@ -35,7 +35,7 @@ class Form extends Component
 
         $this->category->name ="";
 
-        $this->emit('categoryCreated');
+        $this->dispatch('categoryCreated');
     }
 
 }

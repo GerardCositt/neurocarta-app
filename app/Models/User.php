@@ -52,7 +52,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->email && in_array($this->email, $emails, true);
     }
 
-    public function canAccessFilament(): bool
+    public function canAccessPanel(\Filament\Panel $panel): bool
     {
         return $this->hasPanelAdminAccess();
     }

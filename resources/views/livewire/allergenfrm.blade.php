@@ -77,7 +77,7 @@
                             <p class="text-xs text-gray-500 mb-3">{{ __('admin.allergen_page.link_panel_hint') }}</p>
                             <div class="mb-3">
                                 <input type="search"
-                                       wire:model.debounce.300ms="linkProductQ"
+                                       wire:model.live.debounce.300ms="linkProductQ"
                                        placeholder="{{ __('admin.allergen_page.link_search_placeholder') }}"
                                        class="w-full max-w-md border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
                             </div>

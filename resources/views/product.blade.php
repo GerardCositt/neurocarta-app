@@ -14,7 +14,7 @@
     </div>
 </x-app-layout>
 <script type="text/javascript">
-    window.livewire.on('userStore', () => {
+    Livewire.on('userStore', () => {
         $('#exampleModal').modal('hide');
     });
 </script>

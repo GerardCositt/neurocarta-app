@@ -5,16 +5,16 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\RestaurantResource\Pages;
 use App\Models\Restaurant;
 use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 
 class RestaurantResource extends Resource
 {
     protected static ?string $model = Restaurant::class;
-    protected static ?string $navigationIcon = 'heroicon-o-office-building';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
     protected static ?string $navigationLabel = 'Restaurantes';
     protected static ?string $modelLabel = 'Restaurante';
     protected static ?string $pluralModelLabel = 'Restaurantes';
@@ -77,7 +77,7 @@ class RestaurantResource extends Resource
                         'success' => fn ($state) => str_contains((string)$state, 'PREMIUM'),
                         'primary' => fn ($state) => str_contains((string)$state, 'PRO'),
                         'warning' => fn ($state) => str_contains((string)$state, 'BASICO'),
-                        'secondary',
+                        'gray',
                     ]),
                 Tables\Columns\TextColumn::make('ai_credits')
                     ->label('Créditos IA')

@@ -13,11 +13,11 @@
     {{-- Barra de acciones --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:justify-between xl:items-start mb-5 min-w-0">
         <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3 min-w-0 flex-1">
-            <input wire:model.debounce.500ms="q" type="search"
+            <input wire:model.live.debounce.500ms="q" type="search"
                    placeholder="{{ __('admin.products.search_placeholder') }}"
                    class="w-full sm:w-auto sm:min-w-[12rem] sm:flex-1 sm:max-w-md border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm" />
 
-            <select wire:model="selectedCategory"
+            <select wire:model.live="selectedCategory"
                     class="w-full sm:w-auto min-w-0 border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm">
                 <option value="">{{ __('admin.products.all_categories') }}</option>
                 @foreach($categories as $cat)
@@ -25,7 +25,7 @@
                 @endforeach
             </select>
 
-            <select wire:model="commercialFilter" title="{{ __('admin.products.filter_catalog_title') }}"
+            <select wire:model.live="commercialFilter" title="{{ __('admin.products.filter_catalog_title') }}"
                     class="w-full sm:w-auto min-w-0 border border-gray-200 bg-white rounded-xl py-2 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm sm:max-w-[18rem]">
                 <option value="">{{ __('admin.products.filter_all') }}</option>
                 <option value="featured">{{ __('admin.products.filter_featured') }}</option>
@@ -37,7 +37,7 @@
 
             <label class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-600 sm:whitespace-nowrap w-full sm:w-auto">
                 <span>{{ __('admin.products.per_page') }}</span>
-                <select wire:model="perPageOption"
+                <select wire:model.live="perPageOption"
                         class="w-full sm:w-auto border border-gray-200 bg-white rounded-xl py-2 pl-3 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm min-w-0 sm:min-w-[11rem]">
                     <option value="15">{{ __('admin.products.per_page_15') }}</option>
                     <option value="30">{{ __('admin.products.per_page_30') }}</option>
@@ -123,8 +123,10 @@
     @php
         if ($products instanceof \Illuminate\Contracts\Pagination\Paginator) {
             $pageIds = $products->getCollection()->pluck('id')->map(fn ($id) => (int) $id)->all();
+            $page = $products->currentPage();
         } else {
             $pageIds = $products->pluck('id')->map(fn ($id) => (int) $id)->all();
+            $page = 1;
         }
         $sel = array_map('intval', $selectedProducts ?? []);
         $pageIntersection = array_intersect($pageIds, $sel);
@@ -819,16 +821,20 @@ function navigateToProductsAfterSave(e) {
     if (!url) return;
     window.location.assign(url);
 }
-document.addEventListener('product-stored-navigate', navigateToProductsAfterSave);
+window.addEventListener('product-stored-navigate', navigateToProductsAfterSave);
 document.addEventListener('DOMContentLoaded', initProductsSortable);
-document.addEventListener('livewire:load', initProductsSortable);
-document.addEventListener('livewire:update', function () {
-    const el = document.getElementById('products-sortable');
-    if (el && el._sortable) {
-        el._sortable.destroy();
-        el._sortable = null;
-    }
-    initProductsSortable();
+document.addEventListener('livewire:initialized', initProductsSortable);
+document.addEventListener('livewire:initialized', function () {
+    Livewire.hook('commit', function ({ succeed }) {
+        succeed(function () {
+            queueMicrotask(function () {
+                const el = document.getElementById('products-sortable');
+                if (!el) return;
+                if (el._sortable) { el._sortable.destroy(); el._sortable = null; }
+                initProductsSortable();
+            });
+        });
+    });
 });
 
 function initProductsSortable() {

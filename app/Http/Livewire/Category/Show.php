@@ -201,7 +201,7 @@ class Show extends Component
                 'hidden' => (bool) $this->hidden,
             ]);
             session()->flash('message', __('admin.category.flash_updated'));
-            $this->emit('navigationMenuRefresh');
+            $this->dispatch('navigationMenuRefresh');
             return true;
         } else {
             $svc = app(PlanEntitlementService::class);
@@ -225,7 +225,7 @@ class Show extends Component
                 'restaurant_id' => $restaurantId,
             ]);
             session()->flash('message', __('admin.category.flash_created'));
-            $this->emit('navigationMenuRefresh');
+            $this->dispatch('navigationMenuRefresh');
             return true;
         }
     }
@@ -273,7 +273,7 @@ class Show extends Component
         if ($category->products()->count() === 0) {
             $category->delete();
             session()->flash('message', __('admin.category.flash_deleted'));
-            $this->emit('navigationMenuRefresh');
+            $this->dispatch('navigationMenuRefresh');
             if ((int) $this->category_id === (int) $id) {
                 $this->closeForm();
             }

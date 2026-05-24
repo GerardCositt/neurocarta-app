@@ -30,7 +30,7 @@ class Form extends Component
             "name" => $this->allergen->name,
         ]);
         $this->allergen->name = "";
-        $this->emit('allergenCreated');
+        $this->dispatch('allergenCreated');
 
     }
 }

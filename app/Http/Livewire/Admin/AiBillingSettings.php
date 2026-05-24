@@ -61,7 +61,7 @@ class AiBillingSettings extends Component
         }
 
         $url = route('checkout.credits.get', ['package' => $packageKey]);
-        $this->dispatchBrowserEvent('redirect-to', ['url' => $url]);
+        $this->dispatch('redirect-to', url: $url);
     }
 
     private function estimatedCreditsForLog(AiUsageLog $log): int

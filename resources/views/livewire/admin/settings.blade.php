@@ -67,7 +67,7 @@
                     <div class="text-sm font-semibold text-gray-800">Pedidos habilitados</div>
                     <div class="text-xs text-gray-500 mt-0.5">Si lo desactivas, desaparece el carrito y el envío de pedidos.</div>
                 </div>
-                <input type="checkbox" wire:model="ordersEnabled"
+                <input type="checkbox" wire:model.live="ordersEnabled"
                        class="form-checkbox w-5 h-5 rounded text-amber-500 border-gray-300 focus:ring-amber-300 cursor-pointer">
             </label>
 

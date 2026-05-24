@@ -359,7 +359,7 @@ function confirmDelRestaurant() {
     if (!_delRestId) return;
     var val = document.getElementById('del-rest-input').value;
     if (val !== _delRestName) return;
-    window.livewire.emit('confirmDeleteRestaurant', _delRestId);
+    Livewire.dispatch('confirmDeleteRestaurant', { id: _delRestId });
     closeDelModal();
 }
 </script>
