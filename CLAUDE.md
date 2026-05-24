@@ -304,8 +304,8 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Condiciones de uso de IA si se generan textos/imágenes — aviso in-app en `/settings/import-ai` con enlace a Términos. Commit `0e8ab1c`.
 
 ### Fase 6 — Producción técnica
-- [ ] `.env` de producción revisado → **verificar en servidor** (`docs/SERVIDOR-LANZAMIENTO.md` §5).
-- [ ] `APP_ENV=production` / `APP_DEBUG=false` / `APP_URL` → `launch:check` en prod.
+- [x] `.env` de producción revisado — verificado 2026-05-24: APP_ENV=production, APP_DEBUG=false, APP_URL correcto, STRIPE_SECRET live, STRIPE_WEBHOOK_SECRET configurado.
+- [x] `APP_ENV=production` / `APP_DEBUG=false` / `APP_URL` — confirmados en producción 2026-05-24.
 - [x] Base de datos PostgreSQL en Docker; migraciones en `deploy.sh`.
 - [x] Backups automáticos DB + storage (`scripts/backup.sh`, cron 03:00) — restauración probada 2026-05-16.
 - [ ] Copia off-server de backups (recomendado antes de escalar).
