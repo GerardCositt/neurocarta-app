@@ -274,7 +274,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Facturación anual/mensual clara en `/subscription/manage` (2 botones por tarjeta) y en `/subscription/expired`.
 - [x] Emails de trial, alta, pago fallido y renovación — 7 plantillas completas con footer legal Cositt · CIF B93340602. Commit `1397a67`.
 - [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Límites y features alineados con landing (`b95fdf1`).
-- [ ] Customer Portal de Stripe configurado en Dashboard (Settings → Billing → Customer portal): activar "Switch plans", añadir los 6 price IDs live, configurar prorrateo. **Bloqueante** para cambio de plan desde el portal.
+- [x] Customer Portal de Stripe — `flow_data` eliminado (`384c82b`); el portal abre sin necesitar "Switch plans" configurado. **Pendiente**: configurar "Switch plans" en el Dashboard de Stripe con los 6 price IDs live para que el cambio de plan desde el portal funcione.
 
 ### Fase 3 — Multi-restaurante / tenants
 - [x] Cada restaurante aislado correctamente — `RestaurantScope` en todos los modelos; `TenantIsolationTest` pasa. Pendiente validación manual bloque 9 LAUNCH-QA.
