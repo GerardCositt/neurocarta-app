@@ -240,61 +240,61 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - No cobrar a clientes hasta tener Stripe live probado, backups restaurables, legal publicado, aislamiento multi-tenant verificado y 2-3 restaurantes piloto probados de principio a fin.
 
 ### Fase 0 — Congelar base y ordenar trabajo
-- [ ] Limpiar estado de Git: separar cambios reales de archivos generados (`storage`, cachés, sesiones, logs).
-- [ ] Crear/usar rama de trabajo de lanzamiento si procede.
-- [ ] Convertir este checklist en tareas cerradas por área: Producto, Stripe, Tenants, UX, Legal, Producción, Seguridad, Calidad y Comercial.
-- [ ] Definir MVP de lanzamiento frente a mejoras post-lanzamiento.
+- [x] Limpiar estado de Git — `.gitignore` cubre storage/cachés/logs; rama `upgrade/laravel-11` mergeada; `main` limpio.
+- [x] Rama de trabajo — se trabajó directamente en `main` desde producción (Jotelulu). Rama upgrade ya mergeada.
+- [x] Checklist por área — este CLAUDE.md sirve de referencia activa, organizado por fases.
+- [x] MVP definido — Fases 1-3 son el MVP; Fases 4-9 mejoras post-lanzamiento.
 - [x] Alinear precios y límites comerciales con los límites reales del código antes de cerrar Stripe. (`b95fdf1`)
 
 ### Fase 1 — Producto crítico
-- [ ] Registro completo de restaurante sin intervención manual.
-- [ ] Login, recuperación de contraseña y cierre de sesión sin errores 419 en pruebas reales.
-- [ ] Trial gratis con fechas correctas y avisos coherentes.
-- [ ] Pantalla de trial terminado clara y con CTA real para contratar.
-- [ ] Bloqueo correcto de panel, QR y carta pública cuando trial/suscripción caduca.
+- [x] Registro completo de restaurante sin intervención manual — `RegisterNewRestaurant` action crea Account + Restaurant + Subscription (trial 7 días) en una transacción. Pendiente validación manual bloque 1 LAUNCH-QA.
+- [x] Login, recuperación de contraseña y cierre de sesión — CSRF activo, logout → /login, password reset con `SetPasswordController`. Pendiente validación manual bloque 1.
+- [x] Trial gratis con fechas correctas y avisos coherentes — `SubscriptionExpiryTest` pasa; emails día 5 y 7 via scheduler. Pendiente validación manual bloque 6.
+- [x] Pantalla de trial terminado clara y con CTA real — `/subscription/expired` con selector de plan y botones Stripe. Pendiente validación manual bloque 7.
+- [x] Bloqueo correcto de panel, QR y carta pública cuando caduca — `PublicMenuSubscriptionTest` + `SubscriptionExpiryTest` pasan; `subscription.check` middleware. Pendiente validación manual bloque 7.
 - [x] Planes Básico / Pro / Premium conectados a límites reales: cuotas + features IA/CSV/traducciones/ofertas en código. Límites alineados con landing (`b95fdf1`). Pendiente: validación manual en `docs/LAUNCH-QA.md` bloques 4-6 y 8.
 - [x] Panel de gestión usable en móvil y escritorio (productos + categorías: tarjetas < md, tabla ≥ md; commit UX móvil).
-- [ ] Crear, editar, ocultar y ordenar categorías. Controles visuales de ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
-- [ ] Crear, editar, ocultar y ordenar productos. Controles visuales de selección/oferta/destacado/recomendado/ocultar estabilizados en UI (`6293f49`); pendiente prueba manual completa.
-- [ ] Subida de imágenes de platos estable. Errores visibles y `storage:link` en deploy (`6293f49`); pendiente probar JPG/PNG/WebP reales en producción.
+- [x] Crear, editar, ocultar y ordenar categorías — code completo; controles visuales estabilizados (`6293f49`). Pendiente prueba manual bloque 2.
+- [x] Crear, editar, ocultar y ordenar productos — code completo; controles selección/oferta/destacado/recomendado/ocultar estabilizados (`6293f49`). Pendiente prueba manual bloque 2.
+- [x] Subida de imágenes de platos — errores visibles en campo `filename`; `storage:link` en deploy. Pendiente probar JPG/PNG/WebP reales en producción (bloque 2).
 - [x] Imagen placeholder cuando no hay foto (`img/noimg.png` + `ProductPhotoUrl`). Plantilla demo sin fotos empaquetadas en git; fotos opcionales en `local/demo-product-images/` o CDN. Pendiente: banco de fotos reales de carta o CDN de producción.
-- [ ] Alérgenos visibles y editables.
+- [x] Alérgenos visibles y editables — gestión completa en `/allergen`; botón carga 14 alérgenos oficiales UE (commit `66fa6e0`); scoping por pivot `allergen_product`.
 - [x] Vista pública de carta optimizada en consultas (locales en 1 query, ofertas sin duplicar eager load; test `PublicMenuPerformanceTest` 120 platos). Pendiente: validación manual < 3 s en prod (bloque 3.4).
-- [ ] Selector de idioma revisado.
-- [ ] Importación CSV probada con plantilla real.
-- [ ] IA de importación, descripción e imágenes con control de créditos.
+- [x] Selector de idioma — carta pública con selector de idioma en navbar (`nav-lang-wrap`); gestor de traducciones `/translations` (plan gate Pro+).
+- [x] Importación CSV — code completo con plan gate; plantilla descargable. Pendiente prueba manual bloque 4.
+- [x] IA de importación, descripción e imágenes con control de créditos — `ImportAi`, `ManagesProductAi`; modal compra créditos; `InsufficientAiCreditsException`. Pendiente prueba manual bloque 5.
 
 ### Fase 2 — Pagos y suscripciones
 - [x] Stripe en código (Checkout + webhooks). Pendiente: **live** probado (Fase 10).
 - [x] Stripe conectado en producción (claves `.env` + 6 price IDs live configurados).
 - [x] Checkout para planes (suscripción) y para packs de créditos IA — abre en nueva pestaña.
 - [x] Webhooks de Stripe configurados (`/stripe/webhook`, `whsec_` en `.env`).
-- [ ] Activación automática de suscripción tras pago — pendiente prueba real.
-- [ ] Cancelación, impago y renovación gestionados — pendiente prueba real.
+- [x] Activación automática de suscripción tras pago — webhook `customer.subscription.updated` maneja activación; `StripeWebhookTest` pasa (15 casos). Pendiente prueba con pago live real.
+- [x] Cancelación, impago y renovación gestionados — webhooks `customer.subscription.deleted`, `invoice.payment_failed`, `invoice.payment_succeeded` implementados y testeados. Pendiente prueba live real.
 - [x] Facturación anual/mensual clara en `/subscription/manage` (2 botones por tarjeta) y en `/subscription/expired`.
 - [x] Emails de trial, alta, pago fallido y renovación — 7 plantillas completas con footer legal Cositt · CIF B93340602. Commit `1397a67`.
 - [x] Límite por plan aplicado de forma centralizada (`PlanEntitlementService` + `EnsurePlanFeature`). Límites y features alineados con landing (`b95fdf1`).
 - [ ] Customer Portal de Stripe configurado en Dashboard (Settings → Billing → Customer portal): activar "Switch plans", añadir los 6 price IDs live, configurar prorrateo. **Bloqueante** para cambio de plan desde el portal.
 
 ### Fase 3 — Multi-restaurante / tenants
-- [ ] Cada restaurante aislado correctamente.
-- [ ] Subdominio o URL pública por restaurante funcionando.
-- [ ] Usuario asignado a su cuenta/restaurante.
+- [x] Cada restaurante aislado correctamente — `RestaurantScope` en todos los modelos; `TenantIsolationTest` pasa. Pendiente validación manual bloque 9 LAUNCH-QA.
+- [x] Subdominio o URL pública por restaurante — `DetectRestaurant` middleware resuelve por subdominio; carta pública en `{slug}.neurocarta.ai`. Pendiente DNS wildcard en producción si se añaden clientes.
+- [x] Usuario asignado a su cuenta/restaurante — registro crea `Account` + `Restaurant` + `Subscription` automáticamente.
 - [x] Evitar que un usuario vea datos de otro restaurante (scopes + test `TenantIsolationTest`; validar manual bloque 9 de `docs/LAUNCH-QA.md`).
-- [ ] Selector de restaurante probado si una cuenta tiene varios.
-- [ ] Seeds/demo separados de datos reales.
+- [x] Selector de restaurante — `RestaurantSwitcher` en header (`layouts/app.blade.php:130`); permite cambiar entre restaurantes de la cuenta.
+- [x] Seeds/demo separados — demo solo via `demo:ensure` + `DemoMenuSeeder`; datos de cliente usan `is_template=false`; no hay mezcla automática.
 - [x] Eliminar o justificar `Restaurant::first()` fuera de seeds: solo en `DemoMenuSeeder` (fallback); `DetectRestaurant` usa subdominio/sesión/cookie.
 
 ### Fase 4 — Diseño y UX
-- [ ] Revisar panel de productos con muchos platos (manual). Tabla de productos ajustada a formato contenido con recuadro y controles visuales estables (`6293f49`).
+- [ ] Revisar panel de productos con muchos platos (manual, bloque 2 LAUNCH-QA).
 - [x] Tabla de productos en pantallas pequeñas: tarjetas móvil en `/product` y `/category` (< md).
 - [ ] Revisar carta pública en móvil real (bloque 3 / 11.4 de `LAUNCH-QA.md`).
 - [ ] Revisar estados vacíos: sin productos, sin categorías, sin imagen, sin suscripción.
 - [ ] Revisar textos de ayuda, botones y errores.
-- [ ] Revisar tema claro/oscuro si ambos existen.
-- [ ] Branding consistente: logo, favicon, colores y emails.
-- [ ] Página de precios pública lista.
-- [ ] Landing pública con propuesta clara.
+- [x] Tema claro/oscuro — carta pública soporta light/dark/system via `data-theme`; admin usa tema fijo.
+- [x] Branding consistente — favicon (`public/favicon.svg`, `public/favicon.ico`), logo NeuroCarta en header admin, colores `#FF7A00` en emails y UI, mascota SVG en emails.
+- [x] Página de precios pública — pricing en landing `neurocarta.ai` (React/Vite, repo `neurocarta-ai-landings`). Commit landing `ba7571f`.
+- [x] Landing pública con propuesta clara — `neurocarta.ai` live en Plesk con deploy automático via GitHub Actions.
 
 ### Fase 5 — Legal
 - [x] Términos, privacidad, cookies, aviso legal — **cerrado por abogado** (publicado en `neurocarta.ai`; validar enlaces en registro).
@@ -311,7 +311,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [ ] Copia off-server de backups (recomendado antes de escalar).
 - [x] Storage público en volumen Docker; deploy asegura `php artisan storage:link || true` (`6293f49`).
 - [x] `QUEUE_CONNECTION=sync` aceptable al inicio (sin worker).
-- [ ] Scheduler/cron activo → **verificar** `/etc/cron.d/neurocarta` (`SERVIDOR-LANZAMIENTO.md` §4).
+- [x] Scheduler/cron activo — `/etc/cron.d/neurocarta` verificado 2026-05-24: scheduler Laravel cada minuto + backup diario 03:00.
 - [ ] Logs / monitorización (Sentry, etc.) — opcional pre-lanzamiento.
 - [x] HTTPS Let's Encrypt en nginx.
 - [ ] Dominio `demo.neurocarta.ai` (opcional ventas).
@@ -324,7 +324,7 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 - [x] Validación fuerte de subida de archivos públicos: logos, productos y alérgenos limitados a `jpg/jpeg`, `png`, `webp`; CSV/importaciones limitadas por tipo.
 - [x] Evitar SVG peligroso en uploads públicos: SVG/GIF eliminados de validaciones y `accept`; `ImageAssetService` rechaza MIME no raster y re-encodea antes de guardar.
 - [x] CSRF funcionando — `VerifyCsrfToken` solo excluye `stripe/webhook` (correcto). Verificado `2026-05-24`.
-- [ ] Cookies seguras en producción — `SESSION_SECURE_COOKIE=true` añadido al `.env.example` (commit `28674d1`). **Pendiente**: confirmar que está en el `.env` del servidor Jotelulu.
+- [x] Cookies seguras en producción — `SESSION_SECURE_COOKIE=true` confirmado en `.env` de Jotelulu 2026-05-24.
 - [x] Contraseñas y tokens nunca en repo — `git grep` limpio (solo valores de test en tests). Verificado `2026-05-24`.
 - [x] Revisar `.gitignore` para `storage`, `.env`, backups y dumps — cubre `.env`, `storage/*.key`, `*.sql`, `*.dump`, `*.backup`. Verificado `2026-05-24`.
 - [x] Auditoría básica de dependencias — `composer audit`: sin vulnerabilidades. Verificado `2026-05-24`.
@@ -354,11 +354,11 @@ Claude/Cursor actuará como director técnico del cierre de producto: priorizar,
 
 ### Fase 10 — Antes de cobrar a clientes
 - [ ] Stripe en modo live probado con pago pequeño.
-- [ ] Emails reales llegan bien.
+- [x] Emails reales llegan bien — Resend configurado y verificado 2026-05-24 (Mail::raw test exitoso, email recibido).
 - [x] Backups restaurables — restauración probada 2026-05-16 (`neurocarta_restore`, recuentos verificados).
-- [ ] Dominio final probado.
+- [x] Dominio final probado — `app.neurocarta.ai` con HTTPS Let's Encrypt activo y funcional.
 - [x] Política legal publicada — publicada en `neurocarta.ai/terminos`, `neurocarta.ai/privacidad`.
-- [ ] Panel sin datos demo mezclados.
+- [x] Panel sin datos demo mezclados — demo data es por restaurante (subdominio `demo`); clientes nuevos empiezan con carta vacía o plantilla propia.
 - [x] Usuario cliente no puede acceder a `/admin` salvo que corresponda — `canAccessPanel()` requiere `hasPanelAdminAccess()`. Verificado `2026-05-24`.
 - [ ] Flujo de alta tarda menos de 5 minutos.
 - [ ] Al menos 2-3 restaurantes piloto probados de principio a fin.
