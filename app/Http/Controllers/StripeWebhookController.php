@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\PaymentFailed;
 use App\Mail\PaymentSucceeded;
+use App\Mail\PlanChanged;
 use App\Mail\SubscriptionActivated;
 use App\Mail\SubscriptionCanceled;
 use App\Models\Restaurant;
@@ -336,6 +337,9 @@ class StripeWebhookController extends Controller
             return response('OK', 200);
         }
 
+        $oldPlanCode        = $subscription->plan_code;
+        $oldBillingInterval = $subscription->billing_interval;
+
         $updates = [];
 
         // Sync period dates if present.
@@ -393,6 +397,14 @@ class StripeWebhookController extends Controller
                 'stripe_subscription_id' => $stripeSubscriptionId,
                 'updates'                => array_keys($updates),
             ]);
+
+            // Send email when the plan or interval actually changed.
+            if (
+                isset($updates['plan_code'])
+                && ($updates['plan_code'] !== $oldPlanCode || ($updates['billing_interval'] ?? $oldBillingInterval) !== $oldBillingInterval)
+            ) {
+                $this->mailAccountUsers($subscription, fn ($user) => new PlanChanged($user, $subscription, $oldPlanCode, $oldBillingInterval));
+            }
         }
 
         return response('OK', 200);
