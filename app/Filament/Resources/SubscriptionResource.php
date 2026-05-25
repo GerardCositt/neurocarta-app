@@ -74,6 +74,12 @@ class SubscriptionResource extends Resource
                         )
                     )
                     ->copyable(),
+                Tables\Columns\TextColumn::make('telefono')
+                    ->label('Teléfono')
+                    ->getStateUsing(fn (Subscription $record): string =>
+                        $record->account?->users()->first()?->phone ?? '—'
+                    )
+                    ->copyable(),
                 Tables\Columns\TextColumn::make('email_verificado')
                     ->label('Email verificado')
                     ->getStateUsing(fn (Subscription $record): string =>
