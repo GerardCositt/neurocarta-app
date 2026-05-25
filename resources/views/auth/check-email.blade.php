@@ -19,7 +19,7 @@
 
             <div style="margin-top:28px;padding:14px 16px;border-radius:12px;background:rgba(255,193,7,.08);border:1px solid rgba(255,193,7,.20);">
                 <p style="margin:0;font-size:13px;color:rgba(255,193,7,.90);line-height:1.5;">
-                    El enlace caduca en <strong>3 días</strong>.<br>
+                    El enlace caduca en <strong>3 horas</strong>.<br>
                     Revisa también la carpeta de spam.
                 </p>
             </div>
