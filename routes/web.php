@@ -32,6 +32,13 @@ use Illuminate\Support\Facades\URL;
 // Health check para Render
 Route::get('/up', fn () => response('OK', 200));
 
+// ─── Páginas legales (públicas, sin auth) ─────────────────────────────────
+Route::get('/legal/privacidad', [\App\Http\Controllers\LegalController::class, 'privacidad'])->name('legal.privacidad');
+Route::get('/legal/cookies', [\App\Http\Controllers\LegalController::class, 'cookies'])->name('legal.cookies');
+Route::get('/legal/aviso-legal', [\App\Http\Controllers\LegalController::class, 'avisoLegal'])->name('legal.aviso-legal');
+Route::get('/legal/condiciones', [\App\Http\Controllers\LegalController::class, 'condiciones'])->name('legal.condiciones');
+Route::get('/legal/contratacion', [\App\Http\Controllers\LegalController::class, 'contratacion'])->name('legal.contratacion');
+
 // ─── Registro: selector de plan + formulario ───────────────────────────────
 // Rutas estáticas ANTES del parámetro dinámico {plan}
 
