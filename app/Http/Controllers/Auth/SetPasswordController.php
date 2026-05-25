@@ -65,10 +65,9 @@ class SetPasswordController extends Controller
             $subscription = $account?->subscriptions()->latest()->first();
 
             if ($subscription && $subscription->status === 'inactive' && $subscription->plan_code !== 'trial') {
-                return redirect()->route('checkout.start', [
-                    'plan'     => $subscription->plan_code,
-                    'interval' => $subscription->billing_interval ?? 'monthly',
-                ]);
+                $plan     = $subscription->plan_code;
+                $interval = $subscription->billing_interval ?? 'monthly';
+                return view('checkout.start', compact('plan', 'interval'));
             }
 
             return redirect()->route('product');
