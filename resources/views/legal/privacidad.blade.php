@@ -12,7 +12,7 @@
     <style>
         body { background: #0F0F0F; color: #e5e7eb; font-family: "Inter", ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
         .legal-prose h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: #fff; }
-        .legal-prose h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; color: #fff; }
+        .legal-prose h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; color: #FF7A00; }
         .legal-prose h3 { font-size: 1.05rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.4rem; color: #e5e7eb; }
         .legal-prose p { margin-bottom: 1rem; line-height: 1.75; color: #d1d5db; }
         .legal-prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #d1d5db; }
