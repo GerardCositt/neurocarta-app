@@ -59,6 +59,24 @@
 
             <p>Las presentes condiciones de uso y navegación tienen como finalidad regular la relación entre el titular de la página web, COSITT PROJECTS S.L., como prestador del servicio, y los usuarios que acceden, navegan y disfrutan del servicio ofrecido.</p>
 
+            <p>COSITT PROJECTS S.L. proporciona el acceso libre y gratuito a gran cantidad de información, servicios y datos (en adelante, «los contenidos»), cuya propiedad pertenece a COSITT PROJECTS S.L. o a sus licenciantes a los que el usuario puede tener acceso.</p>
+
+            <p>El usuario se compromete expresamente a hacer un adecuado uso de los contenidos y servicios que COSITT PROJECTS S.L. ofrece, conforme a lo establecido en la ley, la moral, el orden público y las presentes condiciones y, con carácter enunciativo pero no limitativo, a no emplearlos para:</p>
+
+            <ul>
+                <li>Introducir intencionadamente en la red virus informáticos o realizar actuaciones susceptibles de alterar, estropear, interrumpir o generar errores o daños en los sistemas físicos y lógicos de COSITT PROJECTS S.L., creadora del sitio web, o de terceras personas; así como obstaculizar el acceso de otros usuarios al sitio web.</li>
+                <li>Intentar acceder a las cuentas de correo electrónico de otros usuarios o a áreas restringidas de los sistemas informáticos de COSITT PROJECTS S.L. o de terceros y, en su caso, extraer información.</li>
+                <li>Vulnerar los derechos de propiedad intelectual o industrial, así como difundir, transmitir o poner a disposición de terceros cualquier tipo de información, elemento o contenido que suponga una violación del secreto de las comunicaciones y la legislación sobre protección de datos de carácter personal.</li>
+                <li>Suplantar la identidad de otro usuario, de las administraciones públicas o de un tercero, en el uso del sitio web.</li>
+                <li>Reproducir, copiar, distribuir, poner a disposición o de cualquier otra forma comunicar públicamente, transformar o modificar los contenidos, a menos que se cuente con la autorización del titular de los correspondientes derechos de explotación o ello resulte legalmente permitido.</li>
+                <li>Recabar datos con finalidad publicitaria y remitir publicidad de cualquier clase y comunicaciones con fines de venta u otra de naturaleza comercial sin que medie previa solicitud o consentimiento.</li>
+            </ul>
+
+            <p>Cualquier incumplimiento de las cláusulas contenidas en el presente sitio web (Aviso Legal, Política de Privacidad, Política de Cookies, así como otros contenidos que supongan obligaciones para el usuario) y en general de la legalidad vigente en España, se comunicará inmediatamente por parte de COSITT PROJECTS S.L. a las autoridades pertinentes, comprometiéndose ésta a cooperar con las mismas. En tal caso, el usuario responderá frente a COSITT PROJECTS S.L. o frente a terceros, de cualesquiera daños y perjuicios que pudieran causarse como consecuencia del incumplimiento de estas obligaciones.</p>
+
+            {{-- ════ PENDIENTE: resto del Aviso Legal ════ --}}
+            <p><em style="color: #f59e0b;">⚠ Pendiente: resto del documento.</em></p>
+
 
         </div>
 
