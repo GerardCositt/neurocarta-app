@@ -190,11 +190,13 @@ Route::post('/subscription/portal', [\App\Http\Controllers\BillingPortalControll
 
 // ─── Stripe Checkout ──────────────────────────────────────────────────────────
 // No subscription.check — expired/inactive users must be able to reach checkout.
+// checkout.start is a public spinner page (auto-submits POST) — no auth needed on the GET.
+Route::get('/checkout/start', [CheckoutController::class, 'start'])->name('checkout.start');
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+
 Route::middleware(['auth:sanctum', 'verified', 'throttle:10,1'])->group(function () {
-    Route::get('/checkout/start', [CheckoutController::class, 'start'])->name('checkout.start');
     Route::post('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
     Route::post('/checkout/credits', [CreditCheckoutController::class, 'create'])->name('checkout.credits');
     Route::get('/checkout/credits/go', [CreditCheckoutController::class, 'createFromGet'])->name('checkout.credits.get');
     Route::get('/checkout/credits/success', [CreditCheckoutController::class, 'success'])->name('credits.success');
