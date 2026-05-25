@@ -63,6 +63,24 @@ class SubscriptionResource extends Resource
                     ->label('Cuenta')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
+                    ->getStateUsing(fn (Subscription $record): string =>
+                        $record->account?->users()->first()?->email ?? '—'
+                    )
+                    ->searchable(query: fn ($query, string $search) =>
+                        $query->whereHas('account.users', fn ($q) =>
+                            $q->where('email', 'like', "%{$search}%")
+                        )
+                    )
+                    ->copyable(),
+                Tables\Columns\TextColumn::make('email_verificado')
+                    ->label('Email verificado')
+                    ->getStateUsing(fn (Subscription $record): string =>
+                        $record->account?->users()->first()?->email_verified_at ? 'Sí' : 'No'
+                    )
+                    ->badge()
+                    ->color(fn (string $state): string => $state === 'Sí' ? 'success' : 'warning'),
                 Tables\Columns\BadgeColumn::make('plan_code')
                     ->label('Plan')
                     ->colors([
@@ -115,6 +133,14 @@ class SubscriptionResource extends Resource
                         'pro'     => 'Pro',
                         'premium' => 'Premium',
                     ]),
+                Tables\Filters\Filter::make('sin_verificar')
+                    ->label('Sin verificar email')
+                    ->query(fn ($query) => $query->whereHas('account.users', fn ($q) =>
+                        $q->whereNull('email_verified_at')
+                    )),
+                Tables\Filters\Filter::make('expirados_sin_pagar')
+                    ->label('Expirados sin pagar')
+                    ->query(fn ($query) => $query->where('status', 'inactive')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
