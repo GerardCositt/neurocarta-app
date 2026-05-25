@@ -23,39 +23,68 @@ class ConversionFunnelWidget extends BaseWidget
             ? round(($activos / $totalUsers) * 100, 1)
             : 0;
 
-        $subsUrl       = SubscriptionResource::getUrl('index');
-        $usersUrl      = UserResource::getUrl('index');
+        $subsUrl  = SubscriptionResource::getUrl('index');
+        $usersUrl = UserResource::getUrl('index');
+
+        $sinVerificarStat = Stat::make('Sin verificar email', $sinVerificar)
+            ->icon('heroicon-o-envelope-open')
+            ->color('warning');
+
+        if ($sinVerificar > 0) {
+            $sinVerificarStat
+                ->description('Clic para ver lista')
+                ->url($subsUrl . '?tableFilters[sin_verificar][isActive]=1');
+        } else {
+            $sinVerificarStat->description('No hay registros en este estado');
+        }
+
+        $trialingStat = Stat::make('Trial activo', $trialing)
+            ->icon('heroicon-o-clock')
+            ->color('primary');
+
+        if ($trialing > 0) {
+            $trialingStat
+                ->description('Clic para ver lista')
+                ->url($subsUrl . '?tableFilters[status][value]=trialing');
+        } else {
+            $trialingStat->description('No hay registros en este estado');
+        }
+
+        $expiradosStat = Stat::make('Expirados sin pagar', $expiradosSinPagar)
+            ->icon('heroicon-o-x-circle')
+            ->color('danger');
+
+        if ($expiradosSinPagar > 0) {
+            $expiradosStat
+                ->description('Clic para ver lista')
+                ->url($subsUrl . '?tableFilters[expirados_sin_pagar][isActive]=1');
+        } else {
+            $expiradosStat->description('No hay registros en este estado');
+        }
+
+        $activosStat = Stat::make('Activos / Pagando', $activos)
+            ->icon('heroicon-o-check-circle')
+            ->color('success');
+
+        if ($activos > 0) {
+            $activosStat
+                ->description('Clic para ver lista')
+                ->url($subsUrl . '?tableFilters[status][value]=active');
+        } else {
+            $activosStat->description('No hay registros en este estado');
+        }
 
         return [
             Stat::make('Registrados', $totalUsers)
-                ->description('Total usuarios creados')
+                ->description($totalUsers > 0 ? 'Clic para ver usuarios' : 'No hay registros aún')
                 ->icon('heroicon-o-user-plus')
                 ->color('gray')
-                ->url($usersUrl),
+                ->url($totalUsers > 0 ? $usersUrl : null),
 
-            Stat::make('Sin verificar email', $sinVerificar)
-                ->description('Link caducado o no clicado — clic para ver lista')
-                ->icon('heroicon-o-envelope-open')
-                ->color('warning')
-                ->url($subsUrl . '?tableFilters[sin_verificar][isActive]=1'),
-
-            Stat::make('Trial activo', $trialing)
-                ->description('Verificados, en periodo de prueba')
-                ->icon('heroicon-o-clock')
-                ->color('primary')
-                ->url($subsUrl . '?tableFilters[status][value]=trialing'),
-
-            Stat::make('Expirados sin pagar', $expiradosSinPagar)
-                ->description('Trial acabó, no contrataron — clic para ver lista')
-                ->icon('heroicon-o-x-circle')
-                ->color('danger')
-                ->url($subsUrl . '?tableFilters[expirados_sin_pagar][isActive]=1'),
-
-            Stat::make('Activos / Pagando', $activos)
-                ->description('Suscripción vigente')
-                ->icon('heroicon-o-check-circle')
-                ->color('success')
-                ->url($subsUrl . '?tableFilters[status][value]=active'),
+            $sinVerificarStat,
+            $trialingStat,
+            $expiradosStat,
+            $activosStat,
 
             Stat::make('Tasa de conversión', $tasaConversion . '%')
                 ->description('Activos sobre total registrados')
