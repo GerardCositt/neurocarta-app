@@ -94,8 +94,6 @@
 
             <p>Todos los contenidos del sitio web, entre otros, textos, fotografías, gráficos, imágenes, iconos, tecnología, software, links y demás contenidos audiovisuales, así como su diseño gráfico y códigos fuente, constituyen una obra cuya propiedad pertenece a COSITT PROJECTS S.L., sin que puedan entenderse cedidos al usuario ninguno de los derechos de explotación sobre los mismos más allá de lo estrictamente necesario para el correcto uso de la web, y con independencia de que sean susceptibles o no de propiedad intelectual.</p>
 
-            {{-- ════ PENDIENTE: resto del Aviso Legal ════ --}}
-            <p><em style="color: #f59e0b;">⚠ Pendiente: resto del documento.</em></p>
 
 
         </div>
