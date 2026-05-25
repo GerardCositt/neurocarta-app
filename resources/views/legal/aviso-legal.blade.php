@@ -74,6 +74,26 @@
 
             <p>Cualquier incumplimiento de las cláusulas contenidas en el presente sitio web (Aviso Legal, Política de Privacidad, Política de Cookies, así como otros contenidos que supongan obligaciones para el usuario) y en general de la legalidad vigente en España, se comunicará inmediatamente por parte de COSITT PROJECTS S.L. a las autoridades pertinentes, comprometiéndose ésta a cooperar con las mismas. En tal caso, el usuario responderá frente a COSITT PROJECTS S.L. o frente a terceros, de cualesquiera daños y perjuicios que pudieran causarse como consecuencia del incumplimiento de estas obligaciones.</p>
 
+            <p>COSITT PROJECTS S.L. no garantiza que su página web cumpla, total o parcialmente, con las legislaciones de otros países. Por tanto, si el usuario reside o se encuentra domiciliado en cualquier otro lugar que no sea España, y decide acceder y/o navegar en el presente sitio web, lo hará bajo su propia responsabilidad y riesgo, debiendo asegurarse de que tal acceso y/o navegación cumple con la legislación local aplicable en su caso.</p>
+
+            <p>COSITT PROJECTS S.L. no se hace responsable de ningún daño o pérdida que se derive de un ataque de denegación de servicio, virus o cualquier otro programa o material tecnológicamente perjudicial que pueda afectar a su ordenador, equipo informático, datos o materiales como consecuencia del uso de esta página web o de la descarga de contenidos de la misma o a los que la misma redireccione.</p>
+
+            <h2>Notificaciones</h2>
+
+            <p>Todas las notificaciones y comunicaciones entre los usuarios y COSITT PROJECTS S.L. se considerarán eficaces, a todos los efectos, cuando se realicen a través de correo postal, correo electrónico o comunicación telefónica.</p>
+
+            <p>Mediante el uso de esta página web, el usuario acepta implícitamente que la mayor parte de las comunicaciones se realizarán por vía electrónica. A efectos contractuales, el usuario consiente usar este medio electrónico de comunicación y reconoce que toda comunicación que se le envíe de forma electrónica cumple con los requisitos legales.</p>
+
+            <h2>Protección de datos de carácter personal</h2>
+
+            <p>El titular de la página web se compromete a tratar los datos personales del usuario de conformidad con lo establecido en la legislación vigente en la materia. Concretamente, se compromete a aplicar lo dispuesto en la LO 3/2018, de 5 de diciembre, de Protección de Datos de Carácter Personal y garantía de los derechos digitales, y en el Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo de 27 de abril de 2016.</p>
+
+            <p>Para más información sobre el tratamiento de sus datos personales en el portal, diríjase a la <a href="{{ route('legal.privacidad') }}">Política de Privacidad</a>.</p>
+
+            <h2>Propiedad intelectual e industrial</h2>
+
+            <p>Todos los contenidos del sitio web, entre otros, textos, fotografías, gráficos, imágenes, iconos, tecnología, software, links y demás contenidos audiovisuales, así como su diseño gráfico y códigos fuente, constituyen una obra cuya propiedad pertenece a COSITT PROJECTS S.L., sin que puedan entenderse cedidos al usuario ninguno de los derechos de explotación sobre los mismos más allá de lo estrictamente necesario para el correcto uso de la web, y con independencia de que sean susceptibles o no de propiedad intelectual.</p>
+
             {{-- ════ PENDIENTE: resto del Aviso Legal ════ --}}
             <p><em style="color: #f59e0b;">⚠ Pendiente: resto del documento.</em></p>
 
