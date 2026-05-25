@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Resources\RestaurantResource;
 use App\Filament\Resources\SubscriptionResource;
 use App\Filament\Resources\UserResource;
+use App\Filament\Widgets\ConversionFunnelWidget;
 use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\SubscriptionsByPlanChart;
 use App\Filament\Widgets\UserRegistrationsChart;
@@ -52,6 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverview::class,
                 SubscriptionsByPlanChart::class,
                 UserRegistrationsChart::class,
+                ConversionFunnelWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
