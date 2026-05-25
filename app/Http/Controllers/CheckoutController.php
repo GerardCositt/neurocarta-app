@@ -182,6 +182,7 @@ class CheckoutController extends Controller
 
     public function success(Request $request)
     {
+        session(['checkout_just_completed' => now()->timestamp]);
         return view('checkout.success');
     }
 
