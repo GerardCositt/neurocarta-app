@@ -270,6 +270,13 @@
 
 
         </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08);">
+            <a href="https://neurocarta.ai" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 0.5rem; color: rgba(255,255,255,0.6); font-size: 0.875rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.6)'">
+                ← Volver a NeuroCarta
+            </a>
+        </div>
+
     </main>
 
     <footer style="border-top: 1px solid rgba(255,255,255,0.08); padding: 1.5rem; text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.3);">
