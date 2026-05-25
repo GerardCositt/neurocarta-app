@@ -83,6 +83,19 @@ class SubscriptionResource extends Resource
                     ->label('Vence')
                     ->dateTime('d/m/Y')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('dias_expirado')
+                    ->label('Días expirado')
+                    ->getStateUsing(function (Subscription $record): string {
+                        if ($record->status !== 'inactive') {
+                            return '—';
+                        }
+                        if (!$record->current_period_end_at) {
+                            return '—';
+                        }
+                        $days = (int) now()->diffInDays($record->current_period_end_at, false) * -1;
+                        return $days > 0 ? $days . 'd' : '—';
+                    })
+                    ->color(fn (string $state): string => $state === '—' ? 'gray' : 'danger'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
