@@ -177,26 +177,11 @@
                             {{ __('admin.products.bulk_clear_offer') }}
                         </button>
                         {{-- Borrar seleccionados --}}
-                        @if(!$confirmingBulkDelete)
                         <button type="button" wire:click="confirmBulkDelete"
                                 class="px-3 py-1.5 rounded-lg bg-red-600 text-xs sm:text-sm font-semibold hover:bg-red-700 cursor-pointer shadow-sm"
                                 style="color:#fff">
                             🗑 Borrar seleccionados
                         </button>
-                        @else
-                        <span class="flex items-center gap-2 flex-wrap">
-                            <span class="text-xs font-semibold text-red-700">¿Borrar {{ count($selectedProducts) }} productos? No se puede deshacer.</span>
-                            <button type="button" wire:click="bulkDelete"
-                                    class="px-3 py-1.5 rounded-lg bg-red-600 text-xs sm:text-sm font-bold hover:bg-red-700 cursor-pointer"
-                                    style="color:#fff">
-                                Sí, borrar
-                            </button>
-                            <button type="button" wire:click="cancelBulkDelete"
-                                    class="px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-700 text-xs sm:text-sm font-medium hover:bg-gray-50 cursor-pointer">
-                                Cancelar
-                            </button>
-                        </span>
-                        @endif
                     </div>
                     <button type="button" wire:click="clearBulkSelection"
                             class="px-3 py-1.5 rounded-lg text-gray-600 text-xs sm:text-sm font-medium hover:bg-gray-100 cursor-pointer shrink-0 lg:ml-auto">
@@ -608,6 +593,45 @@
                         class="px-4 py-2 text-sm text-white bg-red-500 hover:bg-red-600 rounded-xl transition-colors font-semibold cursor-pointer">
                     {{ __('admin.products.modal_delete_confirm') }}
                 </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- Modal confirmación BORRADO MASIVO --}}
+    @if($confirmingBulkDelete)
+    <div class="fixed inset-0 flex items-center justify-center px-4" style="z-index:99999;background:rgba(0,0,0,0.6);"
+         wire:click.self="cancelBulkDelete">
+        <div class="relative w-full max-w-md rounded-2xl overflow-hidden shadow-2xl" style="border:3px solid #dc2626;">
+            {{-- Cabecera roja --}}
+            <div style="background:#dc2626;padding:1.25rem 1.5rem;">
+                <div class="flex items-center gap-3">
+                    <span style="font-size:1.75rem;">⚠️</span>
+                    <div>
+                        <p style="color:#fff;font-size:1rem;font-weight:700;margin:0;">Eliminar productos seleccionados</p>
+                        <p style="color:#fecaca;font-size:0.8125rem;margin:0.125rem 0 0;">Esta acción no se puede deshacer</p>
+                    </div>
+                </div>
+            </div>
+            {{-- Cuerpo --}}
+            <div style="background:#fff;padding:1.25rem 1.5rem 1.5rem;">
+                <p style="color:#1f2937;font-size:0.9375rem;margin:0 0 0.5rem;">
+                    Vas a borrar <strong style="color:#dc2626;">{{ count($selectedProducts) }} {{ count($selectedProducts) === 1 ? 'producto' : 'productos' }}</strong> permanentemente.
+                </p>
+                <p style="color:#6b7280;font-size:0.8125rem;margin:0 0 1.5rem;">
+                    Se eliminarán también sus imágenes. No hay forma de recuperarlos.
+                </p>
+                <div class="flex justify-end gap-3">
+                    <button type="button" wire:click="cancelBulkDelete"
+                            style="padding:0.5rem 1rem;border-radius:0.75rem;border:1px solid #d1d5db;background:#f9fafb;color:#374151;font-size:0.875rem;font-weight:500;cursor:pointer;">
+                        Cancelar
+                    </button>
+                    <button type="button" wire:click="bulkDelete" wire:loading.attr="disabled"
+                            style="padding:0.5rem 1.25rem;border-radius:0.75rem;border:none;background:#dc2626;color:#fff;font-size:0.875rem;font-weight:700;cursor:pointer;">
+                        <span wire:loading.remove wire:target="bulkDelete">🗑 Sí, borrar {{ count($selectedProducts) }} productos</span>
+                        <span wire:loading wire:target="bulkDelete">Borrando…</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
