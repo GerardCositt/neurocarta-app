@@ -10,13 +10,18 @@ class RedirectNonAdminFromPanel
 {
     public function handle(Request $request, Closure $next)
     {
+        // Skip Filament auth pages to prevent redirect loops
+        if ($request->is('admin/login*') || $request->is('admin/logout*') || $request->is('admin/password-reset*')) {
+            return $next($request);
+        }
+
         if (Auth::check() && ! Auth::user()->hasPanelAdminAccess()) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return redirect()->route('filament.admin.auth.login')
-                ->with('status', 'Tu sesión ha expirado o no tienes acceso al panel. Inicia sesión de nuevo.');
+                ->with('status', 'No tienes acceso al panel. Inicia sesión con tu cuenta de administrador.');
         }
 
         return $next($request);
