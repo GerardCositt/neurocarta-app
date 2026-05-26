@@ -294,23 +294,53 @@
             @endforeach
         </div>
 
-        @if(!$aiCredits['uses_client_key'] && !$aiCredits['is_demo_unlimited'] && $totalSelected > 0)
-        @php
-            $estimatedImgCost = $generateImages ? ($imageCost * $totalSelected) : 0;
-            $estimatedTotal   = $importCost + $estimatedImgCost;
-            $availableCredits = $aiCredits['credits'];
-        @endphp
-        <div class="mt-4 rounded-xl border {{ $estimatedTotal > $availableCredits ? 'border-amber-200 bg-amber-50' : 'border-gray-100 bg-gray-50' }} px-4 py-3 text-xs text-gray-600">
-            <span class="font-semibold">Coste estimado:</span>
-            {{ $importCost }} (importar) @if($generateImages) + {{ $imageCost }} × {{ $totalSelected }} productos = <span class="font-semibold">{{ $estimatedTotal }} créditos</span>@else = <span class="font-semibold">{{ $importCost }} créditos</span>@endif
-            · Tienes {{ $availableCredits }} créditos.
-            @if($estimatedTotal > $availableCredits && $generateImages)
-                <span class="text-amber-700 font-medium">Con tus créditos se generarán imágenes hasta agotarlos y el resto de productos se importarán sin imagen.</span>
+        {{-- Opciones de imagen + coste --}}
+        <div class="mt-5 rounded-2xl border border-gray-200 bg-gray-50 p-4 space-y-3">
+            {{-- Checkbox imágenes --}}
+            <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" wire:model.live="generateImages"
+                       class="mt-0.5 w-4 h-4 rounded text-gray-700 focus:ring-gray-400 flex-shrink-0">
+                <span class="text-sm text-gray-700">
+                    Generar imagen IA por cada producto importado
+                    <span class="block text-xs text-gray-400 mt-0.5">
+                        {{ $imageCost }} créditos por producto · puedes generarlas después desde /productos
+                    </span>
+                </span>
+            </label>
+
+            {{-- Coste estimado --}}
+            @if(!$aiCredits['uses_client_key'] && !$aiCredits['is_demo_unlimited'])
+            @php
+                $estimatedImgCost = $generateImages ? ($imageCost * $totalSelected) : 0;
+                $estimatedTotal   = $importCost + $estimatedImgCost;
+                $availableCredits = $aiCredits['credits'];
+                $overBudget       = $estimatedTotal > $availableCredits && $generateImages;
+            @endphp
+            <div class="rounded-xl border {{ $overBudget ? 'border-amber-300 bg-amber-50' : 'border-gray-200 bg-white' }} px-4 py-3">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <div class="text-sm font-semibold {{ $overBudget ? 'text-amber-800' : 'text-gray-800' }}">
+                        Coste total estimado:
+                        <span class="text-base">{{ $estimatedTotal }} créditos</span>
+                    </div>
+                    <div class="text-xs {{ $overBudget ? 'text-amber-700' : 'text-gray-400' }}">
+                        Tienes <strong>{{ $availableCredits }}</strong> créditos
+                    </div>
+                </div>
+                @if($generateImages)
+                <p class="text-xs text-gray-500 mt-1">
+                    {{ $importCost }} (análisis) + {{ $imageCost }} × {{ $totalSelected }} productos
+                </p>
+                @endif
+                @if($overBudget)
+                <p class="text-xs text-amber-700 font-medium mt-2">
+                    ⚠ No tienes créditos suficientes para todas las imágenes. Se generarán las que quepan y el resto se importará sin foto.
+                </p>
+                @endif
+            </div>
             @endif
         </div>
-        @endif
 
-        <div class="mt-6 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="mt-5 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
             <button type="button" wire:click="restart"
                     class="px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
                 ← Volver a subir
