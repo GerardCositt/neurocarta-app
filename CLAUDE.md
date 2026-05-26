@@ -58,6 +58,9 @@
 - **Repo**: `GerardCositt/neurocarta-ai-landings` → carpeta `neurocarta-conversion/`
 - **Deploy**: push a `main` → GitHub Action `deploy-neurocarta-ai.yml` (build Vite + rsync a `httpdocs/`)
 - **SCP manual**: solo emergencia si falla Actions
+- **Protección anti-bot (2026-05-26)**: Cloudflare Turnstile + honeypot + rate limit activos en formulario de contacto y modal de onboarding. Clave pública inyectada en build via GitHub secret `TURNSTILE_SITE_KEY`. Clave secreta en `httpdocs/config.php` (gitignored). Widget Cloudflare: hostname `neurocarta.ai` añadido en dash.cloudflare.com → Turnstile.
+- **`httpdocs/config.php`**: archivo de credenciales server-side (gitignored). Contiene `SMTP_PASS` y `TURNSTILE_SECRET`. Plantilla: `config.example.php`. El `.htaccess` bloquea acceso HTTP directo. Si se pierde (p.ej. recrear servidor), recrear manualmente en Plesk File Manager.
+- **SMTP landing**: `hola@neurocarta.ai` vía `mail.neurocarta.ai:465 SSL`. Password en `config.php` del servidor.
 
 ---
 
@@ -171,6 +174,7 @@ Variables clave:
   - **Livewire 3 paginación custom**: Eliminar `$this->numberOfPaginatorsRendered` de vistas de paginación propias (interno de LW2, ya no existe). El `$page` ya no se inyecta automáticamente en la vista — extraerlo del paginador con `$products->currentPage()`.
   - **Filament 3**: Crear `AdminPanelProvider` (reemplaza `config/filament.php`); `Filament\Resources\Form` → `Filament\Forms\Form`; `Filament\Resources\Table` → `Filament\Tables\Table`; `canAccessFilament()` → `canAccessPanel(Panel $panel): bool`; heroicon `office-building` → `building-office`; color `'secondary'` → `'gray'`.
   - **Stale views**: Tras cada upgrade de Livewire, ejecutar `php artisan view:clear` para eliminar vistas compiladas de la versión anterior.
+- **Seguridad landing neurocarta.ai — protección anti-bot (2026-05-26)**: La contraseña SMTP (`hola@neurocarta.ai`) estaba hardcodeada en texto plano en `contact.php` y `api/onboarding.php`, ambos en repo público. Extraída a `public/config.php` (gitignored). Se añadieron: honeypot (`website` field oculto), rate limit file-based en `/tmp` (5 req/IP/15 min), y Cloudflare Turnstile (render explícito en React via `useRef` + `useEffect` para evitar race condition con `async defer`). La clave pública se inyecta en build via `VITE_TURNSTILE_SITE_KEY` (GitHub secret). La clave secreta está en `config.php` servidor. El widget de Cloudflare requiere que `neurocarta.ai` esté en "Allowed hostnames" (dash.cloudflare.com → Turnstile → Edit widget). Commits en `neurocarta-ai-landings`: `8529f7f` (feat security), `3c93bdd` (fix race condition render explícito).
 
 ---
 
