@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SubscriptionResource\Pages;
+use App\Models\Account;
 use App\Models\Subscription;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -27,9 +28,8 @@ class SubscriptionResource extends Resource
         return $form->schema([
             Forms\Components\Select::make('account_id')
                 ->label('Cuenta')
-                ->relationship('account', 'name')
+                ->options(fn () => Account::orderBy('name')->pluck('name', 'id')->toArray())
                 ->searchable()
-                ->preload()
                 ->required(),
             Forms\Components\Select::make('plan_code')
                 ->label('Plan')
