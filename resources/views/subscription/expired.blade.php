@@ -129,7 +129,7 @@
     <div style="margin-top:32px;text-align:center;">
         <form method="POST" action="{{ route('logout') }}" style="display:inline;">
             @csrf
-            <button type="submit" style="background:none;border:none;cursor:pointer;font-size:13px;color:rgba(255,255,255,.35);text-decoration:underline;padding:0;">
+            <button type="submit" style="background:none;border:1px solid rgba(255,255,255,.25);border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.60);padding:8px 18px;">
                 Cerrar sesión
             </button>
         </form>
