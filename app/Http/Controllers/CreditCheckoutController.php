@@ -77,14 +77,13 @@ class CreditCheckoutController extends Controller
             }
 
             $session = $stripe->checkout->sessions->create([
-                'customer'    => $stripeCustomerId,
-                'mode'        => 'payment',
-                'line_items'  => [[
+                'customer'   => $stripeCustomerId,
+                'mode'       => 'payment',
+                'line_items' => [[
                     'quantity'   => 1,
                     'price_data' => [
                         'currency'     => 'eur',
                         'unit_amount'  => $package['amount_cents'],
-                        'tax_behavior' => 'exclusive',
                         'product_data' => [
                             'name'        => $package['label'],
                             'description' => 'Créditos IA para NeuroCarta.ai®',
@@ -98,13 +97,9 @@ class CreditCheckoutController extends Controller
                     'package_key'   => $packageKey,
                     'credits'       => (string) $package['credits'],
                 ],
-                'automatic_tax'              => ['enabled' => true],
-                'billing_address_collection' => 'required',
-                'tax_id_collection'          => ['enabled' => true],
-                'customer_update'            => ['name' => 'auto', 'address' => 'auto'],
-                'invoice_creation'           => ['enabled' => true],
-                'success_url' => route('credits.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url'  => route('settings.ai-billing'),
+                'invoice_creation' => ['enabled' => true],
+                'success_url'      => route('credits.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url'       => route('settings.ai-billing'),
             ]);
 
         } catch (\Stripe\Exception\ApiErrorException $e) {
