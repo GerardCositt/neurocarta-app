@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Subscription;
+use App\Observers\SubscriptionObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Livewire\Livewire;
@@ -31,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Livewire::component('navigation-menu', \App\Http\Livewire\NavigationMenu::class);
+        Subscription::observe(SubscriptionObserver::class);
     }
 }
