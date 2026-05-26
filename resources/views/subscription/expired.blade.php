@@ -126,13 +126,16 @@
     </div>
 
     {{-- Logout --}}
-    <div style="margin-top:32px;text-align:center;">
+    <div style="margin-top:32px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;">
         <form method="POST" action="{{ route('logout') }}" style="display:inline;">
             @csrf
             <button type="submit" style="background:none;border:1px solid rgba(255,255,255,.25);border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.60);padding:8px 18px;">
                 Cerrar sesión
             </button>
         </form>
+        @if(auth()->user()?->hasPanelAdminAccess())
+            <a href="/admin" style="font-size:12px;color:rgba(255,193,7,.70);text-decoration:none;">→ Ir al panel admin</a>
+        @endif
     </div>
 
 </div>
