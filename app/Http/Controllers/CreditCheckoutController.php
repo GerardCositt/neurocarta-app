@@ -53,12 +53,16 @@ class CreditCheckoutController extends Controller
         $stripeCustomerId = $subscription?->stripe_customer_id ?? null;
 
         try {
-            // Verify the stored customer exists in this Stripe mode (test vs live IDs differ).
+            // Verify the stored customer is usable in this Stripe mode.
+            // Deleted customers return { deleted: true } without throwing — check explicitly.
             if ($stripeCustomerId) {
                 try {
-                    $stripe->customers->retrieve($stripeCustomerId);
-                } catch (\Stripe\Exception\InvalidRequestException $e) {
-                    // Customer doesn't exist in this mode — create a fresh one.
+                    $existing = $stripe->customers->retrieve($stripeCustomerId);
+                    if (! empty($existing->deleted)) {
+                        $stripeCustomerId = null;
+                    }
+                } catch (\Stripe\Exception\ApiErrorException $e) {
+                    // Customer not found or not accessible in this mode — create a fresh one.
                     $stripeCustomerId = null;
                 }
             }

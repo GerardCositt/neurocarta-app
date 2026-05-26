@@ -82,12 +82,16 @@ class CheckoutController extends Controller
                 $locked = Subscription::where('id', $subscription->id)->lockForUpdate()->first();
 
                 if ($locked->stripe_customer_id) {
-                    // Verify customer exists in this Stripe mode (test vs live IDs differ).
+                    // Verify customer is usable in this Stripe mode.
+                    // Deleted customers return { deleted: true } without throwing — check explicitly.
                     try {
-                        $stripe->customers->retrieve($locked->stripe_customer_id);
-                        return $locked->stripe_customer_id;
-                    } catch (\Stripe\Exception\InvalidRequestException $e) {
-                        // Customer not found in this mode — fall through to create a new one.
+                        $existing = $stripe->customers->retrieve($locked->stripe_customer_id);
+                        if (empty($existing->deleted)) {
+                            return $locked->stripe_customer_id;
+                        }
+                        $locked->update(['stripe_customer_id' => null]);
+                    } catch (\Stripe\Exception\ApiErrorException $e) {
+                        // Customer not found or not accessible in this mode — fall through to create.
                         $locked->update(['stripe_customer_id' => null]);
                     }
                 }
