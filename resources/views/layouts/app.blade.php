@@ -364,9 +364,9 @@
                 if (sb) sb.classList.remove('-translate-x-full');
                 if (ov) ov.classList.remove('hidden');
                 try { document.body.style.overflow = 'hidden'; } catch (e) {}
-                // Reset scroll so Productos (first item) is always visible when sidebar opens.
+                // Reset nav scroll after transition ends (200ms) so Productos is always first.
                 const nav = document.getElementById('adminSidebarNav');
-                if (nav) { nav.scrollTop = 0; requestAnimationFrame(() => { nav.scrollTop = 0; }); }
+                if (nav) { nav.scrollTop = 0; setTimeout(() => { nav.scrollTop = 0; }, 220); }
             }
             function closeAdminSidebar() {
                 const sb = document.getElementById('adminSidebar');

@@ -42,7 +42,7 @@
     </div>
 
     {{-- Navegación: Productos → Categorías → Alérgenos → Maridaje → Avisos → Ver carta → QRs --}}
-    <nav id="adminSidebarNav" class="flex-1 min-h-0 overflow-y-auto px-3 pt-5 pb-6 space-y-0.5" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
+    <nav id="adminSidebarNav" class="flex-1 min-h-0 overflow-y-auto px-3 pt-5 pb-6 space-y-0.5" style="-webkit-overflow-scrolling:touch;" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
 
         <a href="{{ url('/product') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors
