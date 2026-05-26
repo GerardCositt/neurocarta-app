@@ -33,17 +33,17 @@ class CreditCheckoutController extends Controller
         $account = $user->accounts()->first();
 
         if (! $account) {
-            return back()->with('credit_error', 'Tu cuenta no está configurada. Contacta a soporte.');
+            return redirect(route('settings.ai-billing'))->with('credit_error', 'Tu cuenta no está configurada. Contacta a soporte.');
         }
 
         $restaurant = $account->restaurants()->first();
         if (! $restaurant) {
-            return back()->with('credit_error', 'No se encontró un restaurante asociado. Contacta a soporte.');
+            return redirect(route('settings.ai-billing'))->with('credit_error', 'No se encontró un restaurante asociado. Contacta a soporte.');
         }
 
         $stripeSecret = config('stripe.secret');
         if (! $stripeSecret) {
-            return back()->with('credit_error', 'El sistema de pagos no está disponible. Contacta a soporte.');
+            return redirect(route('settings.ai-billing'))->with('credit_error', 'El sistema de pagos no está disponible. Contacta a soporte.');
         }
 
         $stripe = new StripeClient($stripeSecret);
@@ -111,8 +111,9 @@ class CreditCheckoutController extends Controller
             Log::error('CreditCheckout: Stripe session creation failed — ' . $e->getMessage(), [
                 'account_id'  => $account->id,
                 'package_key' => $packageKey,
+                'stripe_code' => $e->getStripeCode(),
             ]);
-            return back()->with('credit_error', 'Error Stripe: ' . $e->getMessage());
+            return redirect(route('settings.ai-billing'))->with('credit_error', 'Error al crear sesión de pago: ' . $e->getMessage());
         }
 
         return redirect($session->url, 303);
