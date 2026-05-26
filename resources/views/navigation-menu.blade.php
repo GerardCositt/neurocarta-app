@@ -4,7 +4,7 @@
      class="admin-sidebar-wrap fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen transform
             w-72 max-w-[85vw] -translate-x-full transition-transform duration-200 ease-out
             sm:static sm:z-auto sm:translate-x-0 sm:w-56 sm:max-w-none sm:flex-shrink-0">
-<aside class="admin-sidebar flex-1 flex flex-col min-h-0 w-full overflow-y-auto">
+<aside class="admin-sidebar flex-1 flex flex-col min-h-0 w-full">
 
     {{-- adminLogoPath, qrMenuUrl, qrFilename: Livewire NavigationMenu::mount --}}
 
@@ -42,7 +42,7 @@
     </div>
 
     {{-- Navegación: Productos → Categorías → Alérgenos → Maridaje → Avisos → Ver carta → QRs --}}
-    <nav class="flex-1 px-3 pt-5 pb-6 space-y-0.5" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
+    <nav id="adminSidebarNav" class="flex-1 min-h-0 overflow-y-auto px-3 pt-5 pb-6 space-y-0.5" onclick="if(window.innerWidth < 640) { closeAdminSidebar(); }">
 
         <a href="{{ url('/product') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-colors

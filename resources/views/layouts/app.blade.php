@@ -365,8 +365,8 @@
                 if (ov) ov.classList.remove('hidden');
                 try { document.body.style.overflow = 'hidden'; } catch (e) {}
                 // Reset scroll so Productos (first item) is always visible when sidebar opens.
-                const aside = sb && sb.querySelector('aside');
-                if (aside) aside.scrollTop = 0;
+                const nav = document.getElementById('adminSidebarNav');
+                if (nav) { nav.scrollTop = 0; requestAnimationFrame(() => { nav.scrollTop = 0; }); }
             }
             function closeAdminSidebar() {
                 const sb = document.getElementById('adminSidebar');
