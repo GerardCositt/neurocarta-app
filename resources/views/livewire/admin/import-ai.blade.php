@@ -332,9 +332,14 @@
                 </p>
                 @endif
                 @if($overBudget)
-                <p class="text-xs text-amber-700 font-medium mt-2">
-                    ⚠ No tienes créditos suficientes para todas las imágenes. Se generarán las que quepan y el resto se importará sin foto.
-                </p>
+                <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                    <p class="text-xs text-amber-700 font-medium">⚠ Créditos insuficientes para todas las imágenes.</p>
+                    <button type="button" wire:click="$set('generateImages', false)"
+                            class="self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
+                            style="background:#fff7ed;border:1.5px solid #f59e0b;color:#92400e;">
+                        Importar sin imágenes · solo {{ $importCost }} créditos
+                    </button>
+                </div>
                 @endif
             </div>
             @endif
