@@ -262,7 +262,9 @@
                     applyAdminTheme(getStoredTheme(), false);
 
                     // En móvil, el sidebar debe arrancar cerrado siempre.
+                    // Also ensure body scroll is restored on every page load.
                     try {
+                        document.body.style.overflow = '';
                         if (window.innerWidth < 640 && typeof closeAdminSidebar === 'function') {
                             closeAdminSidebar();
                         }
@@ -378,6 +380,9 @@
                 if (sb) sb.classList.add('-translate-x-full');
                 if (ov) ov.classList.add('hidden');
                 try { document.body.style.overflow = ''; } catch (e) {}
+                // Ensure nav overflow is always restored on close (in case 220ms timer hasn't fired).
+                const nav = document.getElementById('adminSidebarNav');
+                if (nav) nav.style.overflowY = '';
             }
             function toggleSidebarAppearance() {
                 const panel = document.getElementById('appearance-panel');
