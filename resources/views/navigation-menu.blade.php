@@ -4,7 +4,7 @@
      class="admin-sidebar-wrap fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen transform
             w-72 max-w-[85vw] -translate-x-full transition-transform duration-200 ease-out
             sm:static sm:z-auto sm:translate-x-0 sm:w-56 sm:max-w-none sm:flex-shrink-0">
-<aside class="admin-sidebar flex-1 flex flex-col min-h-0 w-full">
+<aside class="admin-sidebar flex-1 flex flex-col min-h-0 w-full overflow-y-auto">
 
     {{-- adminLogoPath, qrMenuUrl, qrFilename: Livewire NavigationMenu::mount --}}
 
