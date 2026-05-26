@@ -156,7 +156,8 @@
                         </button>
                         @endif
                         <button type="button" wire:click="bulkSetRecommended(true)"
-                                class="px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs sm:text-sm font-semibold hover:bg-sky-700 cursor-pointer shadow-sm">
+                                class="px-3 py-1.5 rounded-lg bg-sky-600 text-xs sm:text-sm font-semibold hover:bg-sky-700 cursor-pointer shadow-sm"
+                                style="color:#fff">
                             {{ __('admin.products.bulk_recommend') }}
                         </button>
                         <button type="button" wire:click="bulkSetRecommended(false)"
@@ -175,6 +176,27 @@
                                 class="px-3 py-1.5 rounded-lg bg-white border border-red-300 text-red-700 text-xs sm:text-sm font-semibold hover:bg-red-50 cursor-pointer">
                             {{ __('admin.products.bulk_clear_offer') }}
                         </button>
+                        {{-- Borrar seleccionados --}}
+                        @if(!$confirmingBulkDelete)
+                        <button type="button" wire:click="confirmBulkDelete"
+                                class="px-3 py-1.5 rounded-lg bg-red-600 text-xs sm:text-sm font-semibold hover:bg-red-700 cursor-pointer shadow-sm"
+                                style="color:#fff">
+                            🗑 Borrar seleccionados
+                        </button>
+                        @else
+                        <span class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs font-semibold text-red-700">¿Borrar {{ count($selectedProducts) }} productos? No se puede deshacer.</span>
+                            <button type="button" wire:click="bulkDelete"
+                                    class="px-3 py-1.5 rounded-lg bg-red-600 text-xs sm:text-sm font-bold hover:bg-red-700 cursor-pointer"
+                                    style="color:#fff">
+                                Sí, borrar
+                            </button>
+                            <button type="button" wire:click="cancelBulkDelete"
+                                    class="px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-700 text-xs sm:text-sm font-medium hover:bg-gray-50 cursor-pointer">
+                                Cancelar
+                            </button>
+                        </span>
+                        @endif
                     </div>
                     <button type="button" wire:click="clearBulkSelection"
                             class="px-3 py-1.5 rounded-lg text-gray-600 text-xs sm:text-sm font-medium hover:bg-gray-100 cursor-pointer shrink-0 lg:ml-auto">

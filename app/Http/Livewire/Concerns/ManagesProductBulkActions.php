@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Concerns;
 
 use App\Models\Product;
 use App\Support\PlanFeatureGate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Acciones masivas sobre productos seleccionados en la tabla.
@@ -11,6 +13,45 @@ use App\Support\PlanFeatureGate;
  */
 trait ManagesProductBulkActions
 {
+    public bool $confirmingBulkDelete = false;
+
+    public function confirmBulkDelete(): void
+    {
+        $this->confirmingBulkDelete = true;
+    }
+
+    public function cancelBulkDelete(): void
+    {
+        $this->confirmingBulkDelete = false;
+    }
+
+    public function bulkDelete(): void
+    {
+        $ids = $this->validatedSelectedIds();
+        if ($ids === []) {
+            $this->confirmingBulkDelete = false;
+            return;
+        }
+
+        $rid = $this->getRestaurantId();
+        $products = Product::query()
+            ->whereIn('id', $ids)
+            ->where('restaurant_id', $rid)
+            ->get();
+
+        foreach ($products as $product) {
+            if ($product->photo && ! Str::startsWith($product->photo, ['http://', 'https://'])) {
+                Storage::disk('public')->delete($product->photo);
+            }
+            $product->delete();
+        }
+
+        $count = count($ids);
+        $this->selectedProducts = [];
+        $this->confirmingBulkDelete = false;
+        session()->flash('message', "Se han borrado {$count} productos.");
+    }
+
     private function currentListPage(): int
     {
         $p = (int) (data_get($this->paginators, 'page', $this->page ?? 1) ?: 1);
