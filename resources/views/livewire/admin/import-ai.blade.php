@@ -40,7 +40,7 @@
          class="fixed inset-0 z-[100] flex items-center justify-center bg-white/75 backdrop-blur-[1px] px-4"
          aria-live="polite" aria-busy="true">
         <div class="max-w-md w-full rounded-2xl border border-gray-200 bg-white shadow-lg p-6 text-center">
-            <p class="text-5xl mb-3" aria-hidden="true"><span class="butterfly-anim">🦋</span></p>
+            <p class="text-5xl mb-3" aria-hidden="true"><span class="butterfly-anim"><img src="{{ asset('img/butterfly.svg') }}" alt="" style="width:56px;height:56px;display:inline-block;"></span></p>
             <p class="text-base font-semibold text-gray-800">Analizando la carta con IA…</p>
             <p class="text-sm text-gray-500 mt-2">Leyendo el archivo y extrayendo productos. Puede tardar hasta un minuto.</p>
             <div class="import-ai-progress-track mt-5" role="progressbar" aria-valuetext="Trabajando">
