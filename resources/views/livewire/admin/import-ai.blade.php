@@ -374,7 +374,7 @@
     {{-- ── PASO 5: HECHO ───────────────────────────────── --}}
     @if($step === 'done')
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-        <div class="text-5xl mb-4">🎉</div>
+        <div class="mb-4"><span class="butterfly-anim"><img src="{{ asset('img/butterfly.svg') }}" alt="" style="width:64px;height:64px;display:inline-block;"></span></div>
         <h3 class="text-lg font-bold text-gray-800">¡Importación completada!</h3>
         <p class="text-sm text-gray-500 mt-1">
             Se han creado <strong>{{ $savedProducts }} productos</strong>
@@ -382,7 +382,8 @@
         </p>
         <div class="mt-6 flex flex-col sm:flex-row justify-center gap-3">
             <a href="{{ url('/product') }}"
-               class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gray-800 hover:bg-gray-900 text-white transition-colors text-center">
+               class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gray-800 hover:bg-gray-900 transition-colors text-center"
+               style="color:#fff;">
                 Ver productos
             </a>
             <button type="button" wire:click="restart"
