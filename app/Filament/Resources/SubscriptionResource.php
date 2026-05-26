@@ -25,6 +25,12 @@ class SubscriptionResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
+            Forms\Components\Select::make('account_id')
+                ->label('Cuenta')
+                ->relationship('account', 'name')
+                ->searchable()
+                ->preload()
+                ->required(),
             Forms\Components\Select::make('plan_code')
                 ->label('Plan')
                 ->options([
