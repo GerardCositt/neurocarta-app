@@ -23,7 +23,8 @@ RUN apt-get update \
     && docker-php-ext-install -j$(nproc) pdo_mysql pdo_pgsql pgsql gd zip opcache intl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo "log_errors = On\nerror_log = /dev/stderr\ndisplay_errors = Off" > /usr/local/etc/php/conf.d/errors.ini
+RUN echo "log_errors = On\nerror_log = /dev/stderr\ndisplay_errors = Off" > /usr/local/etc/php/conf.d/errors.ini \
+ && echo "upload_max_filesize = 15M\npost_max_size = 20M\nmax_execution_time = 120" > /usr/local/etc/php/conf.d/uploads.ini
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
