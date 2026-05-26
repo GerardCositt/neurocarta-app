@@ -102,9 +102,21 @@ class ImportAi extends Component
         @ini_set('memory_limit', '512M');
         @set_time_limit(180);
 
+        // Detect HEIC/HEIF (iPhone default format) before general validation.
+        // GD cannot decode HEIF and Imagick is not installed — reject with actionable message.
+        if ($this->file) {
+            $ext  = strtolower($this->file->getClientOriginalExtension());
+            $mime = strtolower((string) $this->file->getMimeType());
+            if (in_array($ext, ['heic', 'heif'], true) || in_array($mime, ['image/heic', 'image/heif'], true)) {
+                $this->addError('file', __('admin.import_ai.validation_file_heic'));
+                $this->dispatch('import-ai-done');
+                return;
+            }
+        }
+
         try {
             $this->validate([
-                'file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+                'file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:15360',
             ], [
                 'file.required' => __('admin.import_ai.validation_file_required'),
                 'file.mimes'    => __('admin.import_ai.validation_file_mimes'),

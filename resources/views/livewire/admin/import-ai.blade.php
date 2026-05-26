@@ -34,19 +34,19 @@
         }
     </style>
 
-    {{-- Overlay durante análisis IA — controlado por JS puro para no depender de Alpine --}}
+    {{-- Overlay durante subida/análisis IA — controlado por JS puro --}}
     <div id="import-ai-overlay"
          style="display: none;"
          class="fixed inset-0 z-[100] flex items-center justify-center bg-white/75 backdrop-blur-[1px] px-4"
          aria-live="polite" aria-busy="true">
         <div class="max-w-md w-full rounded-2xl border border-gray-200 bg-white shadow-lg p-6 text-center">
             <p class="text-5xl mb-3" aria-hidden="true"><span class="butterfly-anim"><img src="{{ asset('img/butterfly.svg') }}" alt="" style="width:56px;height:56px;display:inline-block;"></span></p>
-            <p class="text-base font-semibold text-gray-800">Analizando la carta con IA…</p>
-            <p class="text-sm text-gray-500 mt-2">Leyendo el archivo y extrayendo productos. Puede tardar hasta un minuto.</p>
+            <p id="import-ai-overlay-title" class="text-base font-semibold text-gray-800">Subiendo archivo…</p>
+            <p id="import-ai-overlay-sub" class="text-sm text-gray-500 mt-2">Transfiriendo al servidor. Espera un momento.</p>
             <div class="import-ai-progress-track mt-5" role="progressbar" aria-valuetext="Trabajando">
                 <div class="import-ai-progress-fill"></div>
             </div>
-            <p class="text-xs text-gray-400 mt-3">No cierres esta pestaña.</p>
+            <p id="import-ai-overlay-foot" class="text-xs text-gray-400 mt-3">No cierres esta pestaña.</p>
         </div>
     </div>
 
@@ -155,7 +155,7 @@
                     <p class="text-xs text-gray-400">JPG, PNG o PDF · máximo 15 MB</p>
                 </div>
             </div>
-            <input id="import-ai-file" type="file" wire:model="file" accept=".jpg,.jpeg,.png,.pdf"
+            <input id="import-ai-file" type="file" wire:model="file" accept=".jpg,.jpeg,.png,.pdf,.heic,.heif"
                    class="sr-only">
         </label>
 
@@ -409,6 +409,20 @@ window.addEventListener('import-ai-done', function () {
 });
 
 (function () {
+    function overlay() { return document.getElementById('import-ai-overlay'); }
+    function setText(titleId, subId, title, sub) {
+        var t = document.getElementById(titleId), s = document.getElementById(subId);
+        if (t) t.textContent = title;
+        if (s) s.textContent = sub;
+    }
+    function showOverlay(title, sub) {
+        setText('import-ai-overlay-title', 'import-ai-overlay-sub', title, sub);
+        var el = overlay(); if (el) el.style.display = 'flex';
+    }
+    function hideOverlay() {
+        var el = overlay(); if (el) el.style.display = 'none';
+    }
+
     function showUploadError(msg) {
         var box = document.getElementById('import-ai-file-error');
         var txt = document.getElementById('import-ai-file-error-msg');
@@ -423,16 +437,24 @@ window.addEventListener('import-ai-done', function () {
 
     function attachFileListener() {
         var input = document.getElementById('import-ai-file');
-        if (!input) return;
-        // Hide error when user picks a new file
+        if (!input || input._ncBound) return;
+        input._ncBound = true;
+
         input.addEventListener('change', hideUploadError);
-        // Livewire 3 dispatches this on the input element when upload fails
+
+        input.addEventListener('livewire-upload-start', function () {
+            showOverlay('Subiendo archivo…', 'Transfiriendo al servidor. Espera un momento.');
+        });
+        input.addEventListener('livewire-upload-finish', function () {
+            hideOverlay();
+        });
         input.addEventListener('livewire-upload-error', function (e) {
+            hideOverlay();
             var status = e.detail && e.detail.status;
-            var msg = 'Error desconocido al subir el archivo.';
-            if (status === 413 || status === 422) {
+            var msg;
+            if (status === 413) {
                 msg = 'El archivo es demasiado grande. Máximo permitido: 15 MB. Comprime la imagen o usa un PDF más ligero.';
-            } else if (status === 0 || status === null) {
+            } else if (!status || status === 0) {
                 msg = 'No se pudo conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo.';
             } else {
                 msg = 'Error ' + status + ' al subir el archivo. Inténtalo de nuevo.';
@@ -441,7 +463,15 @@ window.addEventListener('import-ai-done', function () {
         });
     }
 
-    // Attach on first load and after every Livewire re-render
+    // Restore overlay text to "analyzing" when the analyze button is clicked
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.closest && e.target.closest('[wire\\:click~="process"]')) {
+            setText('import-ai-overlay-title', 'import-ai-overlay-sub',
+                'Analizando la carta con IA…',
+                'Leyendo el archivo y extrayendo productos. Puede tardar hasta un minuto.');
+        }
+    }, true);
+
     document.addEventListener('livewire:initialized', attachFileListener);
     document.addEventListener('livewire:navigated', attachFileListener);
     Livewire.hook('commit', ({ succeed }) => { succeed(() => { queueMicrotask(attachFileListener); }) });
