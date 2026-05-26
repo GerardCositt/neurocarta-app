@@ -364,9 +364,13 @@
                 if (sb) sb.classList.remove('-translate-x-full');
                 if (ov) ov.classList.remove('hidden');
                 try { document.body.style.overflow = 'hidden'; } catch (e) {}
-                // Reset nav scroll after transition ends (200ms) so Productos is always first.
+                // Block auto-scroll to active item during slide-in; restore after transition.
                 const nav = document.getElementById('adminSidebarNav');
-                if (nav) { nav.scrollTop = 0; setTimeout(() => { nav.scrollTop = 0; }, 220); }
+                if (nav) {
+                    nav.style.overflowY = 'hidden';
+                    nav.scrollTop = 0;
+                    setTimeout(() => { nav.scrollTop = 0; nav.style.overflowY = ''; }, 220);
+                }
             }
             function closeAdminSidebar() {
                 const sb = document.getElementById('adminSidebar');
