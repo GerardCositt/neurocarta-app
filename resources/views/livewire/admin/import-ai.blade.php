@@ -152,7 +152,7 @@
                 <div class="space-y-3 pointer-events-none">
                     <div class="text-5xl">📄</div>
                     <p class="text-sm font-medium text-gray-700">Haz clic para elegir archivo o usa el botón inferior</p>
-                    <p class="text-xs text-gray-400">JPG, PNG o PDF · máximo 10 MB</p>
+                    <p class="text-xs text-gray-400">JPG, PNG o PDF · máximo 15 MB</p>
                 </div>
             </div>
             <input id="import-ai-file" type="file" wire:model="file" accept=".jpg,.jpeg,.png,.pdf"
@@ -167,6 +167,12 @@
             @if(!$file)
                 <span class="text-xs text-gray-500">Ningún archivo seleccionado</span>
             @endif
+        </div>
+
+        {{-- Error de subida (tamaño excedido, red, etc.) —— llenado por JS --}}
+        <div id="import-ai-file-error" class="hidden mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+            <p class="text-sm font-semibold text-red-700">No se pudo cargar el archivo</p>
+            <p id="import-ai-file-error-msg" class="text-xs text-red-600 mt-0.5"></p>
         </div>
 
         @if($file)
@@ -401,4 +407,44 @@ window.addEventListener('import-ai-done', function () {
     var el = document.getElementById('import-ai-overlay');
     if (el) el.style.display = 'none';
 });
+
+(function () {
+    function showUploadError(msg) {
+        var box = document.getElementById('import-ai-file-error');
+        var txt = document.getElementById('import-ai-file-error-msg');
+        if (!box) return;
+        txt.textContent = msg;
+        box.classList.remove('hidden');
+    }
+    function hideUploadError() {
+        var box = document.getElementById('import-ai-file-error');
+        if (box) box.classList.add('hidden');
+    }
+
+    function attachFileListener() {
+        var input = document.getElementById('import-ai-file');
+        if (!input) return;
+        // Hide error when user picks a new file
+        input.addEventListener('change', hideUploadError);
+        // Livewire 3 dispatches this on the input element when upload fails
+        input.addEventListener('livewire-upload-error', function (e) {
+            var status = e.detail && e.detail.status;
+            var msg = 'Error desconocido al subir el archivo.';
+            if (status === 413 || status === 422) {
+                msg = 'El archivo es demasiado grande. Máximo permitido: 15 MB. Comprime la imagen o usa un PDF más ligero.';
+            } else if (status === 0 || status === null) {
+                msg = 'No se pudo conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo.';
+            } else {
+                msg = 'Error ' + status + ' al subir el archivo. Inténtalo de nuevo.';
+            }
+            showUploadError(msg);
+        });
+    }
+
+    // Attach on first load and after every Livewire re-render
+    document.addEventListener('livewire:initialized', attachFileListener);
+    document.addEventListener('livewire:navigated', attachFileListener);
+    Livewire.hook('commit', ({ succeed }) => { succeed(() => { queueMicrotask(attachFileListener); }) });
+    attachFileListener();
+})();
 </script>
