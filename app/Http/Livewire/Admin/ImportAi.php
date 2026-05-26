@@ -202,9 +202,6 @@ class ImportAi extends Component
 
             $selectedProductsCount = $this->totalSelected();
             $this->aiCredits()->ensureCanAfford(AiCreditService::ACTION_IMPORT_MENU);
-            if ($this->generateImages && $selectedProductsCount > 0) {
-                $this->aiCredits()->ensureCanAfford(AiCreditService::ACTION_IMPORT_MENU_PRODUCT_IMAGE, $selectedProductsCount);
-            }
 
             $rid           = session('admin_restaurant_id');
             $allergenMap   = $this->buildAllergenMap();
@@ -248,11 +245,17 @@ class ImportAi extends Component
                     ]);
 
                     if ($this->generateImages && $this->productImageAi()->isConfigured()) {
-                        $generatedPath = $this->productImageAi()->safelyGenerateForProduct($product);
-                        if ($generatedPath) {
-                            $product->photo = $generatedPath;
-                            $product->save();
-                            $generatedImages++;
+                        try {
+                            $this->aiCredits()->ensureCanAfford(AiCreditService::ACTION_IMPORT_MENU_PRODUCT_IMAGE);
+                            $generatedPath = $this->productImageAi()->safelyGenerateForProduct($product);
+                            if ($generatedPath) {
+                                $product->photo = $generatedPath;
+                                $product->save();
+                                $this->aiCredits()->spend(AiCreditService::ACTION_IMPORT_MENU_PRODUCT_IMAGE, 1, ['source' => 'import_ai']);
+                                $generatedImages++;
+                            }
+                        } catch (InsufficientAiCreditsException $e) {
+                            // Credits exhausted mid-import — product saved without image
                         }
                     }
 
@@ -274,11 +277,6 @@ class ImportAi extends Component
             $this->aiCredits()->spend(AiCreditService::ACTION_IMPORT_MENU, 1, [
                 'selected_products' => $selectedProductsCount,
             ]);
-            if ($generatedImages > 0) {
-                $this->aiCredits()->spend(AiCreditService::ACTION_IMPORT_MENU_PRODUCT_IMAGE, $generatedImages, [
-                    'source' => 'import_ai',
-                ]);
-            }
 
             $this->dispatch('aiCreditsUpdated');
             $this->dispatch('navigationMenuRefresh');

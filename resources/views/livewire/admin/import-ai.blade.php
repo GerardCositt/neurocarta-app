@@ -294,6 +294,22 @@
             @endforeach
         </div>
 
+        @if(!$aiCredits['uses_client_key'] && !$aiCredits['is_demo_unlimited'] && $totalSelected > 0)
+        @php
+            $estimatedImgCost = $generateImages ? ($imageCost * $totalSelected) : 0;
+            $estimatedTotal   = $importCost + $estimatedImgCost;
+            $availableCredits = $aiCredits['credits'];
+        @endphp
+        <div class="mt-4 rounded-xl border {{ $estimatedTotal > $availableCredits ? 'border-amber-200 bg-amber-50' : 'border-gray-100 bg-gray-50' }} px-4 py-3 text-xs text-gray-600">
+            <span class="font-semibold">Coste estimado:</span>
+            {{ $importCost }} (importar) @if($generateImages) + {{ $imageCost }} × {{ $totalSelected }} productos = <span class="font-semibold">{{ $estimatedTotal }} créditos</span>@else = <span class="font-semibold">{{ $importCost }} créditos</span>@endif
+            · Tienes {{ $availableCredits }} créditos.
+            @if($estimatedTotal > $availableCredits && $generateImages)
+                <span class="text-amber-700 font-medium">Con tus créditos se generarán imágenes hasta agotarlos y el resto de productos se importarán sin imagen.</span>
+            @endif
+        </div>
+        @endif
+
         <div class="mt-6 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
             <button type="button" wire:click="restart"
                     class="px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
