@@ -168,6 +168,10 @@ class StripeWebhookController extends Controller
             'period_end'             => $periodEnd->toDateTimeString(),
         ]);
 
+        // Limpiar el bypass de caché cross-subdominio: ya no es necesario porque
+        // la suscripción está activa y CheckPublicMenuSubscription lo detectará en BD.
+        cache()->forget("checkout_just_paid_{$subscription->account_id}");
+
         // Welcome bonus: 500 credits for Pro/Premium annual subscriptions (one-time, on first activation).
         if ($billingInterval === 'annual' && in_array($planCode, ['pro', 'premium'], true)) {
             $account = $subscription->account()->with('restaurants')->first();

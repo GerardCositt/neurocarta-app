@@ -184,6 +184,19 @@ class CheckoutController extends Controller
     public function success(Request $request)
     {
         session(['checkout_just_completed' => now()->timestamp]);
+
+        // Cache key cross-subdominio: la sesión sólo funciona en app.neurocarta.ai,
+        // pero la carta pública vive en {slug}.neurocarta.ai. Guardamos en caché del
+        // servidor (no en cookie) para que CheckPublicMenuSubscription pueda leerlo
+        // mientras el webhook de Stripe llega y activa la suscripción.
+        $user = $request->user();
+        if ($user) {
+            $account = $user->accounts()->first();
+            if ($account) {
+                cache()->put("checkout_just_paid_{$account->id}", true, now()->addMinutes(15));
+            }
+        }
+
         return view('checkout.success');
     }
 

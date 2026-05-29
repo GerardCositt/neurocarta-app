@@ -29,6 +29,15 @@ class CheckPublicMenuSubscription
             : null;
 
         if (! $subscription) {
+            // Bypass de race condition: el usuario acaba de pagar pero el webhook de Stripe
+            // aún no ha procesado y activado la suscripción. La sesión de app.neurocarta.ai
+            // no es accesible desde subdominos de restaurante, por eso usamos caché del servidor.
+            // CheckoutController::success() escribe esta clave; se limpia cuando el webhook activa.
+            $justPaidCacheKey = $account ? "checkout_just_paid_{$account->id}" : null;
+            if ($justPaidCacheKey && cache()->has($justPaidCacheKey)) {
+                return $next($request);
+            }
+
             if ($request->expectsJson()) {
                 return response()->json(
                     ['message' => 'This restaurant\'s subscription is inactive. Orders are not accepted.'],
