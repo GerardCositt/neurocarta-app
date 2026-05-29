@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SubscriptionActivated;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Stripe\StripeClient;
 
 class CheckoutController extends Controller
@@ -185,19 +188,143 @@ class CheckoutController extends Controller
     {
         session(['checkout_just_completed' => now()->timestamp]);
 
-        // Cache key cross-subdominio: la sesión sólo funciona en app.neurocarta.ai,
-        // pero la carta pública vive en {slug}.neurocarta.ai. Guardamos en caché del
-        // servidor (no en cookie) para que CheckPublicMenuSubscription pueda leerlo
-        // mientras el webhook de Stripe llega y activa la suscripción.
-        $user = $request->user();
-        if ($user) {
-            $account = $user->accounts()->first();
-            if ($account) {
-                cache()->put("checkout_just_paid_{$account->id}", true, now()->addMinutes(15));
+        // Activación directa: no esperamos al webhook de Stripe.
+        // Stripe pasa el session_id en la URL; lo usamos para activar la suscripción
+        // y enviar el email de confirmación ahora mismo.
+        // Si falla (Stripe API error, sesión ya procesada, etc.) el webhook lo reintenta.
+        $sessionId = $request->query('session_id');
+        $activated = false;
+
+        if ($sessionId && config('stripe.secret')) {
+            $activated = $this->activateFromCheckoutSession($sessionId);
+        }
+
+        // Cache fallback cross-subdominio: si la activación directa no pudo completarse,
+        // damos una ventana de 15 min para que el webhook llegue mientras la carta sigue accesible.
+        if (! $activated) {
+            $user = $request->user();
+            if ($user) {
+                $account = $user->accounts()->first();
+                if ($account) {
+                    cache()->put("checkout_just_paid_{$account->id}", true, now()->addMinutes(15));
+                }
             }
         }
 
         return view('checkout.success');
+    }
+
+    /**
+     * Activa la suscripción directamente desde el session_id de Stripe que viene en la success_url.
+     * Duplica el resultado final de handleCheckoutCompleted() del webhook, pero de forma síncrona
+     * y desde el navegador del usuario — sin depender de la llegada del webhook.
+     * El webhook sigue siendo idempotente: si stripe_subscription_id ya está guardado, no hace nada.
+     */
+    private function activateFromCheckoutSession(string $sessionId): bool
+    {
+        try {
+            $stripe  = new StripeClient(config('stripe.secret'));
+            $session = $stripe->checkout->sessions->retrieve($sessionId, [
+                'expand' => ['subscription'],
+            ]);
+
+            if (($session->mode ?? null) !== 'subscription') {
+                return false;
+            }
+
+            $meta           = $session->metadata ?? null;
+            $subscriptionId = $meta->subscription_id ?? null;
+            $planCode       = $meta->plan_code        ?? null;
+            $billingInterval = $meta->billing_interval ?? null;
+
+            if (! $subscriptionId) {
+                Log::warning('CheckoutSuccess: session_id sin subscription_id en metadata.', [
+                    'session_id' => $sessionId,
+                ]);
+                return false;
+            }
+
+            $subscription = Subscription::find((int) $subscriptionId);
+            if (! $subscription) {
+                Log::error('CheckoutSuccess: subscription no encontrada.', [
+                    'subscription_id' => $subscriptionId,
+                ]);
+                return false;
+            }
+
+            // Ya activa: nada que hacer (puede que el webhook llegara antes).
+            if ($subscription->status === 'active') {
+                return true;
+            }
+
+            $stripeSub = $session->subscription;
+            if (! $stripeSub) {
+                Log::warning('CheckoutSuccess: session sin subscription expandida.', [
+                    'session_id' => $sessionId,
+                ]);
+                return false;
+            }
+
+            // Stripe puede devolver el objeto expandido o solo el ID.
+            if (is_string($stripeSub)) {
+                $stripeSub = $stripe->subscriptions->retrieve($stripeSub);
+            }
+
+            $stripeSubscriptionId = $stripeSub->id;
+
+            // Idempotencia: el webhook ya lo procesó antes que nosotros.
+            if ($subscription->stripe_subscription_id === $stripeSubscriptionId) {
+                return true;
+            }
+
+            $periodStart   = isset($stripeSub->current_period_start)
+                ? Carbon::createFromTimestamp($stripeSub->current_period_start) : null;
+            $periodEnd     = isset($stripeSub->current_period_end)
+                ? Carbon::createFromTimestamp($stripeSub->current_period_end) : null;
+            $stripePriceId = $stripeSub->items->data[0]->price->id ?? null;
+
+            $subscription->update([
+                'status'                  => 'active',
+                'stripe_subscription_id'  => $stripeSubscriptionId,
+                'stripe_price_id'         => $stripePriceId,
+                'plan_code'               => $planCode       ?? $subscription->plan_code,
+                'billing_interval'        => $billingInterval ?? $subscription->billing_interval,
+                'current_period_start_at' => $periodStart,
+                'current_period_end_at'   => $periodEnd,
+                'grace_period_ends_at'    => null,
+                'canceled_at'             => null,
+            ]);
+
+            // Limpiar el cache fallback: la suscripción ya está activa en BD.
+            cache()->forget("checkout_just_paid_{$subscription->account_id}");
+
+            Log::info('CheckoutSuccess: suscripción activada directamente desde session_id.', [
+                'subscription_id'        => $subscription->id,
+                'stripe_subscription_id' => $stripeSubscriptionId,
+                'plan_code'              => $planCode,
+            ]);
+
+            // Email de confirmación: se envía aquí (no en el webhook) para que llegue de inmediato.
+            // El webhook es idempotente — al ver stripe_subscription_id ya guardado, no reenvía.
+            try {
+                $users = $subscription->account?->users ?? collect();
+                foreach ($users as $user) {
+                    Mail::to($user->email)->send(new SubscriptionActivated($user, $subscription));
+                }
+            } catch (\Throwable $e) {
+                Log::error('CheckoutSuccess: fallo al enviar email de activación — ' . $e->getMessage(), [
+                    'subscription_id' => $subscription->id,
+                ]);
+            }
+
+            return true;
+
+        } catch (\Throwable $e) {
+            Log::error('CheckoutSuccess: activación directa fallida — ' . $e->getMessage(), [
+                'session_id' => $sessionId,
+            ]);
+            return false;
+        }
     }
 
     public function cancel(Request $request)
