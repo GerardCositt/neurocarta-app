@@ -28,7 +28,7 @@ class PlanEntitlementService
             'categories'  => 6,
         ],
         self::PLAN_PRO => [
-            'restaurants' => 1,
+            'restaurants' => 2,
             'products'    => 250,
             'categories'  => 15,
         ],
@@ -210,7 +210,7 @@ class PlanEntitlementService
         }
 
         if ($kind === 'restaurants') {
-            return "El plan {$planName} incluye {$limit} restaurante. Mejora a Premium para gestionar hasta 3 restaurantes.";
+            return "El plan {$planName} incluye hasta {$limit} restaurantes. Mejora a Premium para gestionar hasta 3.";
         }
 
         return "Has alcanzado el límite de {$label} del plan {$planName} ({$limit}). Mejora tu plan para continuar.";

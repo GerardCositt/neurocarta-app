@@ -26,12 +26,12 @@ class AuthenticateApiKey
 
         $restaurant = $apiKey->restaurant;
         $account    = $restaurant->account;
-        $sub        = $account?->subscriptions()->latest()->first();
-        $plan       = $sub?->plan_code ?? '';
+        $sub  = $account?->subscriptions()->latest()->first();
+        $plan = $sub?->plan_code ?? '';
 
         $plansWithApi = ['pro', 'premium', 'trial'];
-        if (! in_array($plan, $plansWithApi, true)) {
-            return response()->json(['error' => 'El acceso a la API requiere plan Pro o Premium'], 403);
+        if (! $sub || ! $sub->isActive() || ! in_array($plan, $plansWithApi, true)) {
+            return response()->json(['error' => 'El acceso a la API requiere plan Pro o Premium activo'], 403);
         }
 
         $apiKey->update(['last_used_at' => now()]);
