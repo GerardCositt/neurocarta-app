@@ -47,8 +47,8 @@ yarn-error.log
 *.dump
 *.backup
 
-# Fotos demo opcionales (no versionar stock; usar local/demo-product-images/ o CDN)
-/public/demo/*.jpg
-/public/demo/*.jpeg
-/public/demo/*.png
-/public/demo/*.webp
+# Carpeta local de imágenes hero para desarrollo (no commitear)
+/local/demo-product-images/*.jpg
+/local/demo-product-images/*.jpeg
+/local/demo-product-images/*.png
+/local/demo-product-images/*.webp
