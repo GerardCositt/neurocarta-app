@@ -32,6 +32,9 @@ final class ProductPhotoUrl
 
                 return rtrim($base, '/').'/'.$suffix;
             }
+
+            // Sin CDN → imágenes en public/demo/ (incluidas en el repo)
+            return asset($photo);
         }
 
         return asset('storage/'.$photo);

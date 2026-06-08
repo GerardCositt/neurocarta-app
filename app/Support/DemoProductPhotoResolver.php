@@ -77,7 +77,8 @@ final class DemoProductPhotoResolver
                 Storage::disk('public')->put($normalized, $bytes);
             }
 
-            return Storage::disk('public')->exists($normalized) ? $normalized : null;
+            // Return the key regardless — ProductPhotoUrl serves from public/demo/ when no CDN is set.
+            return $normalized;
         }
 
         return null;
