@@ -199,6 +199,8 @@ return [
         'offer_badge' => 'Etiqueta',
         'offer_start' => 'Início',
         'offer_end' => 'Fim',
+        'offer_dates_hint' => 'Sem datas a promoção aparece indefinidamente. Defina uma data de fim para removê-la automaticamente.',
+        'optional' => 'opcional',
         'visibility_title' => 'Visibilidade na carta',
         'visibility_hint' => 'Na carta pública a ordem automática é: :featured → :recommended → :offer → ordem manual (arraste as linhas na lista).',
         'visibility_featured_word' => 'destaque',

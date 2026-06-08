@@ -199,6 +199,8 @@ return [
         'offer_badge' => 'Badge',
         'offer_start' => 'Début',
         'offer_end' => 'Fin',
+        'offer_dates_hint' => 'Sans dates, l'offre s'affiche indéfiniment. Définissez une date de fin pour la retirer automatiquement.',
+        'optional' => 'optionnel',
         'visibility_title' => 'Visibilité sur la carte',
         'visibility_hint' => 'Sur la carte publique, l’ordre automatique est : :featured → :recommended → :offer → ordre manuel (glisser les lignes dans la liste).',
         'visibility_featured_word' => 'à la une',

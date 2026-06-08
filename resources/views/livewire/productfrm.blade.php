@@ -165,10 +165,11 @@
                             @if($canUseOffers ?? true)
                             <div class="admin-inset admin-inset--danger p-3 space-y-2.5">
                                 <label class="flex items-center gap-2.5 cursor-pointer">
-                                    <input type="checkbox" wire:model="offer"
+                                    <input type="checkbox" wire:model.live="offer"
                                            class="form-checkbox w-4 h-4 rounded text-red-500 border-gray-300 focus:ring-red-300 cursor-pointer">
                                     <span class="text-sm font-semibold text-gray-700">{{ __('admin.product_form.offer_show') }}</span>
                                 </label>
+                                @if($offer)
                                 <div class="grid grid-cols-3 gap-2">
                                     <div>
                                         <label class="block text-xs text-gray-500 mb-1">{{ __('admin.product_form.offer_badge') }}</label>
@@ -176,16 +177,18 @@
                                                class="w-full border border-red-200 rounded-lg py-1.5 px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-200 bg-white">
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-gray-500 mb-1">{{ __('admin.product_form.offer_start') }}</label>
+                                        <label class="block text-xs text-gray-500 mb-1">{{ __('admin.product_form.offer_start') }} <span class="text-gray-400">({{ __('admin.product_form.optional') }})</span></label>
                                         <input type="date" wire:model="offer_start"
                                                class="w-full border border-red-200 rounded-lg py-1.5 px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-200 bg-white">
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-gray-500 mb-1">{{ __('admin.product_form.offer_end') }}</label>
+                                        <label class="block text-xs text-gray-500 mb-1">{{ __('admin.product_form.offer_end') }} <span class="text-gray-400">({{ __('admin.product_form.optional') }})</span></label>
                                         <input type="date" wire:model="offer_end"
                                                class="w-full border border-red-200 rounded-lg py-1.5 px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-200 bg-white">
                                     </div>
                                 </div>
+                                <p class="text-xs text-gray-400">{{ __('admin.product_form.offer_dates_hint') }}</p>
+                                @endif
                             </div>
                             @else
                             <div class="admin-inset p-3 flex items-center gap-2 text-xs text-gray-400 border border-gray-200 rounded-xl bg-gray-50">

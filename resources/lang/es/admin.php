@@ -214,6 +214,8 @@ return [
         'offer_badge' => 'Badge',
         'offer_start' => 'Inicio',
         'offer_end' => 'Fin',
+        'offer_dates_hint' => 'Sin fechas la oferta se muestra indefinidamente. Pon fecha de fin para que desaparezca automáticamente.',
+        'optional' => 'opcional',
         'visibility_title' => 'Visibilidad en carta',
         'visibility_hint' => 'En la carta pública el orden automático es: :featured → :recommended → :offer → número de orden (arrastrar filas en el listado).',
         'visibility_featured_word' => 'destacado',

@@ -210,6 +210,8 @@ return [
         'offer_badge' => 'Badge',
         'offer_start' => 'Start',
         'offer_end' => 'End',
+        'offer_dates_hint' => 'Without dates the offer shows indefinitely. Set an end date to remove it automatically.',
+        'optional' => 'optional',
         'visibility_title' => 'Menu visibility',
         'visibility_hint' => 'On the public menu the automatic order is: :featured → :recommended → :offer → manual order (drag rows in the list).',
         'visibility_featured_word' => 'featured',
