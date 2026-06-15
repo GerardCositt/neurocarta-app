@@ -13,7 +13,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-4">
             <div class="flex-1">
                 <h2 class="text-xl font-bold text-gray-900">Traducciones</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Gestiona los textos de la carta en múltiples idiomas con DeepL.</p>
+                <p class="text-sm text-gray-500 mt-0.5">Gestiona los textos de la carta en múltiples idiomas.</p>
             </div>
 
             {{-- Selector de idioma destino --}}
@@ -31,7 +31,7 @@
         {{-- ── Uso mensual DeepL ──────────────────────── --}}
         <div class="mt-5 p-4 rounded-xl bg-gray-50 border border-gray-100">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700">Uso mensual DeepL</span>
+                <span class="text-sm font-medium text-gray-700">Uso mensual de traducción</span>
                 <span class="text-xs text-gray-500">
                     {{ number_format($used) }} / 499.999 caracteres
                     &nbsp;·&nbsp;
