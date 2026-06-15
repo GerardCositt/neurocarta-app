@@ -69,7 +69,7 @@ class ApiSettings extends Component
     public function render()
     {
         $restaurant = $this->restaurant();
-        $hasApi     = $restaurant ? PlanFeatureGate::check('api', $restaurant->account) : false;
+        $hasApi     = $restaurant ? PlanFeatureGate::allows('api') : false;
 
         return view('livewire.admin.api-settings', [
             'hasApi'     => $hasApi,
