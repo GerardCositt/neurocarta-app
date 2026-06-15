@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>503 — Cocina cerrada por mantenimiento · NeuroCarta.ai</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=20260615">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}?v=20260615">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
