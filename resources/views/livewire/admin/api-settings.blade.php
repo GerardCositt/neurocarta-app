@@ -123,6 +123,21 @@
                     &nbsp;·&nbsp; Formato: JSON
                 </p>
             </div>
+
+            {{-- Documentación --}}
+            <div class="mt-6 border-t border-gray-100 pt-5 flex items-center justify-between gap-4 flex-wrap">
+                <div>
+                    <p class="text-sm font-semibold text-gray-700">Documentación completa</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Referencia de endpoints, parámetros y ejemplos cURL.</p>
+                </div>
+                <a href="{{ route('settings.api.docs.download') }}"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-900 hover:bg-gray-700 text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                    Descargar documentación
+                </a>
+            </div>
         @endif
     </div>
 </div>

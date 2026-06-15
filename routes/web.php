@@ -239,6 +239,13 @@ Route::middleware(['auth:sanctum', 'verified', 'admin.restaurant', 'subscription
         return view('settings.api');
     })->name('settings.api');
 
+    Route::get('/settings/api/docs/download', function () {
+        $file = base_path('docs/api-v1.md');
+        return response()->download($file, 'neurocarta-api-v1.md', [
+            'Content-Type' => 'text/markdown; charset=utf-8',
+        ]);
+    })->name('settings.api.docs.download');
+
     Route::get('/settings/privacy', [\App\Http\Controllers\PrivacyController::class, 'show'])->name('settings.privacy');
     Route::get('/settings/privacy/export', [\App\Http\Controllers\PrivacyController::class, 'export'])->name('settings.privacy.export');
     Route::delete('/settings/privacy', [\App\Http\Controllers\PrivacyController::class, 'destroy'])->name('settings.privacy.destroy');
